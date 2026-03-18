@@ -6,19 +6,19 @@ namespace BaiCuoiKy.Models
     {
             public int Id { get; set; }
 
-            public string Title { get; set; }
+            public string Title { get; set; } = string.Empty;
 
-            public string Description { get; set; }
+            public string Description { get; set; } = string.Empty;
 
             public decimal Price { get; set; }
 
             public double Area { get; set; }
 
-            public string Address { get; set; }
+            public string Address { get; set; } = string.Empty;
 
-            public string District { get; set; }
+            public string District { get; set; } = string.Empty;
 
-            public string City { get; set; }
+            public string City { get; set; } = string.Empty;
 
             public bool IsAvailable { get; set; } = true;
 
@@ -29,7 +29,7 @@ namespace BaiCuoiKy.Models
             public User Owner { get; set; }
 
             // Navigation
-            public ICollection<RoomImage> Images { get; set; }
+            public ICollection<Anhphong> Images { get; set; }
             public ICollection<Review> Reviews { get; set; }
     }
 }

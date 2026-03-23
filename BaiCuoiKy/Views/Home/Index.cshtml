@@ -1,8 +1,57 @@
-﻿@{
-    ViewData["Title"] = "Home Page";
-}
+﻿@model List<Tro>
 
-<div class="text-center">
-    <h1 class="display-4">Welcome</h1>
-    <p>Hello <a href="https://learn.microsoft.com/aspnet/core">building Web apps with ASP.NET Core</a>.</p>
+<div class="home-container">
+
+    <!-- HERO -->
+    <div class="hero">
+        <h1>Tìm Phòng Trọ & Nhà Cho Thuê</h1>
+        <p>Nhanh Chóng - An Toàn - Tiện Lợi</p>
+
+        <div class="search-box">
+            <select><option>Khu vực</option></select>
+            <select><option>Loại hình</option></select>
+            <select><option>Giá</option></select>
+            <input type="text" placeholder="Tìm kiếm..." />
+            <button>Tìm Kiếm</button>
+        </div>
+    </div>
+
+    <!-- PHÒNG -->
+    <div class="section">
+        <h2>Phòng Trọ Nổi Bật</h2>
+
+        <div class="room-list">
+            @foreach (var item in Model)
+            {
+                var img = item.AnhPhongs.FirstOrDefault()?.Url ?? "/images/no-image.jpg";
+
+                <div class="room-card">
+                    <img src="@img" />
+
+                    <h3>@item.TieuDe</h3>
+                    <p class="price">@item.Gia.ToString("N0") VNĐ</p>
+                    <p>@item.DiaChi</p>
+                </div>
+            }
+        </div>
+    </div>
+
+    <!-- LOẠI -->
+    <div class="section">
+        <h2>Tìm Theo Loại Hình</h2>
+
+        <div class="category-list">
+            <div class="category">Phòng Trọ</div>
+            <div class="category">Căn Hộ Mini</div>
+            <div class="category">Nhà Nguyên Căn</div>
+            <div class="category">Ký Túc Xá</div>
+        </div>
+    </div>
+
+    <!-- CTA -->
+    <div class="cta">
+        <h2>Đăng Tin Cho Thuê Ngay!</h2>
+        <button>Đăng Tin Ngay</button>
+    </div>
+
 </div>

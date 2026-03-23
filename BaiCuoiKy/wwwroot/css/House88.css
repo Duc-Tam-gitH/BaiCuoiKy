@@ -1,90 +1,77 @@
-﻿body {
-    margin: 0;
-    font-family: Arial;
-    background: linear-gradient(135deg, #1a0033, #3b0a6b);
+﻿.home-container {
+    background: #0f0c29;
     color: white;
 }
 
-/* Navbar */
-.navbar {
-    display: flex;
-    justify-content: space-between;
-    padding: 15px 40px;
-    background: rgba(0,0,0,0.3);
-}
-
-.logo {
-    font-size: 24px;
-    font-weight: bold;
-}
-
-.menu a {
-    margin: 0 15px;
-    color: white;
-    text-decoration: none;
-}
-
-/* Hero */
+/* HERO */
 .hero {
     text-align: center;
-    padding: 80px 20px;
+    padding: 80px;
+    background: linear-gradient(135deg, #2a0845, #6441a5);
 }
 
     .hero h1 {
         font-size: 40px;
     }
 
-/* Search */
-.search-box input, .search-box button {
-    padding: 10px;
-    margin: 5px;
-    border-radius: 5px;
-    border: none;
+.search-box {
+    margin-top: 20px;
+    display: flex;
+    justify-content: center;
+    gap: 10px;
 }
 
-.search-box button {
-    background: #a855f7;
-    color: white;
-}
-
-/* Section */
-.section {
-    padding: 40px;
-}
-
-.cards {
+/* ROOM */
+.room-list {
     display: flex;
     gap: 20px;
+    flex-wrap: wrap;
 }
 
-.card {
-    background: #2a0a4a;
+.room-card {
+    width: 250px;
+    background: #1a1a2e;
     border-radius: 10px;
     overflow: hidden;
-    width: 250px;
+    transition: 0.3s;
 }
 
-    .card img {
+    .room-card:hover {
+        transform: translateY(-5px);
+    }
+
+    .room-card img {
         width: 100%;
         height: 150px;
         object-fit: cover;
     }
 
-.card-body {
-    padding: 10px;
+.price {
+    color: #8a2be2;
 }
 
-/* Button */
-.btn-post {
+/* CATEGORY */
+.category-list {
+    display: flex;
+    gap: 20px;
+}
+
+.category {
+    background: #2a0845;
+    padding: 20px;
+    border-radius: 10px;
+}
+
+/* CTA */
+.cta {
     text-align: center;
-    padding: 40px;
+    padding: 50px;
+    background: #2a0845;
 }
 
-    .btn-post button {
-        padding: 15px 30px;
-        background: #9333ea;
-        color: white;
+    .cta button {
+        background: #8a2be2;
+        padding: 10px 20px;
         border: none;
-        border-radius: 10px;
-        font-size: 18px;
+        color: white;
     }

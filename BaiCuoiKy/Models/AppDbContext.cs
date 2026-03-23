@@ -17,6 +17,8 @@ namespace BaiCuoiKy.Models
         public DbSet<Review> Reviews { get; set; }
         public DbSet<Booking> Bookings { get; set; }
         public DbSet<Favorite> Favorites { get; set; } // 🔥 thêm mới
+        public DbSet<Tro> Tros { get; set; }
+        public DbSet<AnhPhong> AnhPhongs { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {

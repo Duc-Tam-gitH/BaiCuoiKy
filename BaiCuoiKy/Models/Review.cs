@@ -1,18 +1,23 @@
-﻿namespace BaiCuoiKy.Models
+﻿using System.ComponentModel.DataAnnotations;
+namespace BaiCuoiKy.Models
 {
+    
     public class Review
     {
         public int Id { get; set; }
 
-        public int Rating { get; set; } // 1-5
-        public required string Comment { get; set; }
-        public DateTime NgayDanhGia { get; set; }
+        [Range(1, 5)]
+        public int Rating { get; set; }
 
-        // FK
+        [Required]
+        public string Comment { get; set; }
+
+        public DateTime NgayDanhGia { get; set; } = DateTime.Now;
+
         public int UserId { get; set; }
-        public required User User { get; set; }
+        public User? User { get; set; }
 
         public int TroId { get; set; }
-        public required Tro Tro { get; set; }
+        public Tro? Tro { get; set; }
     }
 }

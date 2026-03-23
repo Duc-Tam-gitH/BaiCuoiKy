@@ -1,0 +1,44 @@
+﻿@*
+    For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
+*@
+@{
+}
+<nav class="navbar">
+    <div class="nav-left">
+        <a asp-controller="Home" asp-action="Index" class="logo">
+            🏠 Tìm Phòng
+        </a>
+
+        <a asp-controller="Home" asp-action="Index">Trang chủ</a>
+        <a asp-controller="Tro" asp-action="Index">Danh mục</a>
+    </div>
+
+    <div class="nav-right">
+        <!-- 🔍 Search -->
+        <form asp-controller="Tro" asp-action="Search" method="get">
+            <input type="text" name="keyword" placeholder="Tìm trọ..." />
+        </form>
+
+        @if (User.Identity?.IsAuthenticated == true)
+        {
+            <a asp-controller="Tro" asp-action="Create" class="btn-post">
+                + Đăng tin
+            </a>
+
+            <a asp-controller="Booking" asp-action="Index">Đặt phòng</a>
+
+            <a asp-controller="Account" asp-action="Profile">👤</a>
+
+            <form asp-controller="Account" asp-action="Logout" method="post">
+                <button class="btn-logout">Đăng xuất</button>
+            </form>
+        }
+        else
+        {
+            <a asp-controller="Account" asp-action="Login">Đăng nhập</a>
+            <a asp-controller="Account" asp-action="Register" class="btn-register">
+                Đăng ký
+            </a>
+        }
+    </div>
+</nav>

@@ -7,13 +7,23 @@
         <h1>Tìm Phòng Trọ & Nhà Cho Thuê</h1>
         <p>Nhanh Chóng - An Toàn - Tiện Lợi</p>
 
-        <div class="search-box">
-            <select><option>Khu vực</option></select>
-            <select><option>Loại hình</option></select>
-            <select><option>Giá</option></select>
-            <input type="text" placeholder="Tìm kiếm..." />
-            <button>Tìm Kiếm</button>
-        </div>
+        <!-- SEARCH -->
+        <form asp-controller="Tro" asp-action="Search" method="get" class="search-box">
+            <select name="khuvuc">
+                <option value="">Khu vực</option>
+            </select>
+
+            <select name="loai">
+                <option value="">Loại hình</option>
+            </select>
+
+            <select name="gia">
+                <option value="">Giá</option>
+            </select>
+
+            <input type="text" name="keyword" placeholder="Tìm kiếm..." />
+            <button type="submit">Tìm Kiếm</button>
+        </form>
     </div>
 
     <!-- PHÒNG -->
@@ -21,18 +31,35 @@
         <h2>Phòng Trọ Nổi Bật</h2>
 
         <div class="room-list">
-            @foreach (var item in Model)
+
+            @if (Model != null && Model.Any())
             {
-                var img = item.AnhPhongs.FirstOrDefault()?.Url ?? "/images/no-image.jpg";
+                foreach (var item in Model)
+                {
+                    var img = item.AnhPhongs != null && item.AnhPhongs.Any()
+                    ? item.AnhPhongs.First().Url
+                    : "/images/no-image.jpg";
 
-                <div class="room-card">
-                    <img src="@img" />
+                    <a asp-controller="Tro" asp-action="Details" asp-route-id="@item.Id">
+                        <div class="room-card">
+                            <img src="@img" loading="lazy" />
 
-                    <h3>@item.TieuDe</h3>
-                    <p class="price">@item.Gia.ToString("N0") VNĐ</p>
-                    <p>@item.DiaChi</p>
-                </div>
+                            <h3>@item.TieuDe</h3>
+
+                            <p class="price">
+                                @String.Format("{0:N0} VNĐ", item.Gia)
+                            </p>
+
+                            <p>@item.DiaChi</p>
+                        </div>
+                    </a>
+                }
             }
+            else
+            {
+                <p>Không có phòng nào</p>
+            }
+
         </div>
     </div>
 
@@ -51,7 +78,10 @@
     <!-- CTA -->
     <div class="cta">
         <h2>Đăng Tin Cho Thuê Ngay!</h2>
-        <button>Đăng Tin Ngay</button>
+
+        <a asp-controller="Tro" asp-action="Create" class="btn btn-warning">
+            Đăng Tin Ngay
+        </a>
     </div>
 
 </div>

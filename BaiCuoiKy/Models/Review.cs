@@ -4,17 +4,15 @@
     {
         public int Id { get; set; }
 
-        public int Rating { get; set; } // 1 - 5
+        public int Rating { get; set; } // 1-5
+        public required string Comment { get; set; }
+        public DateTime NgayDanhGia { get; set; }
 
-        public string Comment { get; set; } = string.Empty;
-
-        public DateTime CreatedAt { get; set; } = DateTime.Now;
-
-        // Foreign key
+        // FK
         public int UserId { get; set; }
-        public User User { get; set; }
+        public required User User { get; set; }
 
-        public int RoomId { get; set; }
-        public Tro Room { get; set; }
+        public int TroId { get; set; }
+        public required Tro Tro { get; set; }
     }
 }

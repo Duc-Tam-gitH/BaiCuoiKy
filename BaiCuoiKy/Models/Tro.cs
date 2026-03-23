@@ -1,35 +1,28 @@
-﻿using Microsoft.AspNetCore.Mvc.ViewEngines;
-
-namespace BaiCuoiKy.Models
+﻿namespace BaiCuoiKy.Models
 {
     public class Tro
     {
-            public int Id { get; set; }
+        public int Id { get; set; }
 
-            public string Title { get; set; } = string.Empty;
+        public required string TieuDe { get; set; }
+        public required string MoTa { get; set; }
 
-            public string Description { get; set; } = string.Empty;
+        public decimal Gia { get; set; }
+        public double DienTich { get; set; }
 
-            public decimal Price { get; set; }
+        public required string DiaChi { get; set; }
 
-            public double Area { get; set; }
+        public bool TrangThai { get; set; } // true = đã duyệt
 
-            public string Address { get; set; } = string.Empty;
+        public DateTime NgayDang { get; set; }
 
-            public string District { get; set; } = string.Empty;
+        // FK
+        public int UserId { get; set; }
+        public required User User { get; set; }
 
-            public string City { get; set; } = string.Empty;
-
-            public bool IsAvailable { get; set; } = true;
-
-            public DateTime CreatedAt { get; set; } = DateTime.Now;
-
-            // Foreign key
-            public int OwnerId { get; set; }
-            public User Owner { get; set; }
-
-            // Navigation
-            public ICollection<Anhphong> Images { get; set; }
-            public ICollection<Review> Reviews { get; set; }
+        // Quan hệ
+        public ICollection<AnhPhong> AnhPhongs { get; set; }
+        public ICollection<Booking> Bookings { get; set; }
+        public ICollection<Review> Reviews { get; set; }
     }
 }

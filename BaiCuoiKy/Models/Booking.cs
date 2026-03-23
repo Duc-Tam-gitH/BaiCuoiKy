@@ -4,15 +4,14 @@
     {
         public int Id { get; set; }
 
-        public DateTime BookingDate { get; set; }
+        public DateTime NgayDat { get; set; }
+        public required string TrangThai { get; set; } // Pending, Approved, Cancel
 
-        public string Status { get; set; } // Pending, Approved, Rejected
-
-        // Foreign key
+        // FK
         public int UserId { get; set; }
-        public User User { get; set; }
+        public required User User { get; set; }
 
-        public int RoomId { get; set; }
-        public Tro Room { get; set; }
+        public int TroId { get; set; }
+        public required Tro Tro { get; set; }
     }
 }

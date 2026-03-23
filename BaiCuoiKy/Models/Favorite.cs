@@ -1,12 +1,12 @@
 ﻿namespace BaiCuoiKy.Models
 {
-    public class AnhPhong
+    public class Favorite
     {
         public int Id { get; set; }
 
-        public required string Url { get; set; }
+        public int UserId { get; set; }
+        public required User User { get; set; }
 
-        // FK
         public int TroId { get; set; }
         public required Tro Tro { get; set; }
     }

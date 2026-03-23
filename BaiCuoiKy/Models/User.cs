@@ -6,20 +6,18 @@ namespace BaiCuoiKy.Models
     {
         public int Id { get; set; }
 
-        public string FullName { get; set; } = string.Empty;
+        public required string Username { get; set; }
+        public required string Password { get; set; }
 
-        public string Email { get; set; } = string.Empty;
+        public required string FullName { get; set; }
+        public required string Email { get; set; }
+        public required string Phone { get; set; }
 
-        public string Password { get; set; } = string.Empty;
+        public required string Role { get; set; } // Admin, ChuTro, Khach
 
-        public string Phone { get; set; } = string.Empty;
-
-        public string Role { get; set; } // "Customer" | "Owner" 
-
-        public DateTime CreatedAt { get; set; } = DateTime.Now;
-
-        // Navigation
-        public ICollection<Tro> Rooms { get; set; } // Chủ trọ đăng
-        public ICollection<Review> Reviews { get; set; }
+        // Quan hệ
+        public required ICollection<Tro> Tros { get; set; }
+        public required ICollection<Booking> Bookings { get; set; }
+        public required ICollection<Review> Reviews { get; set; }
     }
 }

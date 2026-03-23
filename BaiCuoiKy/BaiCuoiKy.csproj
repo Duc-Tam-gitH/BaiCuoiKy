@@ -17,6 +17,7 @@
 
   <ItemGroup>
     <Folder Include="Views\Khachthue\" />
+    <Folder Include="Views\Khachthue\" />
   </ItemGroup>
 
 </Project>

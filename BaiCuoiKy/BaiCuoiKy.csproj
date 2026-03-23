@@ -18,7 +18,6 @@
   <ItemGroup>
     <Folder Include="Views\Admin\" />
     <Folder Include="Views\Chutro\" />
-    <Folder Include="Views\Khachthue\" />
   </ItemGroup>
 
 </Project>

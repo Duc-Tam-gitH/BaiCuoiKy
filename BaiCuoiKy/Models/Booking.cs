@@ -1,17 +1,21 @@
-﻿namespace BaiCuoiKy.Models
+﻿using System;
+
+namespace BaiCuoiKy.Models
 {
     public class Booking
     {
         public int Id { get; set; }
 
         public DateTime NgayDat { get; set; }
-        public required string TrangThai { get; set; } // Pending, Approved, Cancel
+        public DateTime NgayNhan { get; set; }
+
+        public string TrangThai { get; set; } // "Chờ duyệt" / "Đã duyệt"
 
         // FK
         public int UserId { get; set; }
-        public required User User { get; set; }
+        public User User { get; set; }
 
         public int TroId { get; set; }
-        public required Tro Tro { get; set; }
+        public Tro Tro { get; set; }
     }
 }

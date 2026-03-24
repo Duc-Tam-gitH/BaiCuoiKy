@@ -93,3 +93,26 @@
     padding: 50px;
     background: var(--secondary);
 }
+/* ===== BOOKINGS ===== */
+
+.booking-page {
+    padding: 30px;
+}
+
+    .booking-page h2 {
+        margin-bottom: 20px;
+    }
+
+    .booking-page table {
+        margin-top: 20px;
+        border-radius: 10px;
+        overflow: hidden;
+    }
+
+    .booking-page tr {
+        transition: 0.3s;
+    }
+
+        .booking-page tr:hover {
+            background-color: #2a0845;
+        }

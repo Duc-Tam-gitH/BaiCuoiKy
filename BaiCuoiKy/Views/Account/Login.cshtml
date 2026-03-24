@@ -1,0 +1,46 @@
+﻿@model BaiCuoiKy.Models.ViewModel.LoginViewModel
+@{
+    Layout = null;
+}
+<link rel="stylesheet" href="~/css/auth.css" />
+
+<div class="auth-wrapper">
+
+    <div class="auth-card">
+
+        <div class="auth-left">
+            <div class="auth-logo">Shopping</div>
+        </div>
+
+        <div class="auth-right">
+
+            <h2>Đăng nhập</h2>
+
+            <p>
+                Nếu bạn chưa có tài khoản,
+                <a asp-action="Register">đăng ký ngay</a>
+            </p>
+
+            <form asp-action="Login">
+
+                <input asp-for="Email" class="auth-input" placeholder="Email" />
+
+                <input asp-for="Password" type="password"
+                       class="auth-input"
+                       placeholder="Mật khẩu" />
+
+                <button class="auth-btn">
+                    Đăng nhập
+                </button>
+
+            </form>
+
+            <div class="auth-link">
+                <a href="#">Quên mật khẩu?</a>
+            </div>
+
+        </div>
+
+    </div>
+
+</div>

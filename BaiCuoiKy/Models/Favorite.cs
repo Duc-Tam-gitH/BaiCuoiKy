@@ -5,9 +5,9 @@
         public int Id { get; set; }
 
         public int UserId { get; set; }
-        public required User User { get; set; }
+        public User User { get; set; }   // ❌ bỏ required
 
         public int TroId { get; set; }
-        public required Tro Tro { get; set; }
+        public Tro Tro { get; set; }     // ❌ bỏ required
     }
 }

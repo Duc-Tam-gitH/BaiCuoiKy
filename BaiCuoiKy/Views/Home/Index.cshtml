@@ -11,12 +11,15 @@
 
 <div class="home-container">
 
-    <section class="hero text-center py-5" style="background: #f8f9fa;">
+    <section class="hero">
         <h1>Tìm Phòng Trọ & Nhà Cho Thuê</h1>
         <p>Nhanh Chóng - An Toàn - Tiện Lợi</p>
 
+
+        <div class="container">
+        
         @* Lưu ý: Nếu chưa có TroController, hãy đổi asp-controller="Home" *@
-        <form asp-controller="Home" asp-action="Search" method="get" class="search-box d-flex justify-content-center gap-2 flex-wrap">
+            <form asp-controller="Home" asp-action="Search" method="get" class="search-box">
             <select name="khuvuc" class="form-select w-auto">
                 <option value="">Khu vực</option>
                 <option>Hồ Chí Minh</option>
@@ -44,6 +47,7 @@
                 🔍 Tìm Kiếm
             </button>
         </form>
+        </div>
     </section>
 
     <section class="container mt-5">

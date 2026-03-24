@@ -12,8 +12,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace BaiCuoiKy.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    [Migration("20260318100056_InitDatabase")]
-    partial class InitDatabase
+    [Migration("20260324045600_AddFavorite")]
+    partial class AddFavorite
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -25,7 +25,7 @@ namespace BaiCuoiKy.Migrations
 
             SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder);
 
-            modelBuilder.Entity("BaiCuoiKy.Models.Anhphong", b =>
+            modelBuilder.Entity("BaiCuoiKy.Models.AnhPhong", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -33,18 +33,18 @@ namespace BaiCuoiKy.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
-                    b.Property<string>("ImageUrl")
+                    b.Property<int>("TroId")
+                        .HasColumnType("int");
+
+                    b.Property<string>("Url")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<int>("RoomId")
-                        .HasColumnType("int");
-
                     b.HasKey("Id");
 
-                    b.HasIndex("RoomId");
+                    b.HasIndex("TroId");
 
-                    b.ToTable("RoomImages");
+                    b.ToTable("AnhPhong");
                 });
 
             modelBuilder.Entity("BaiCuoiKy.Models.Booking", b =>
@@ -55,26 +55,47 @@ namespace BaiCuoiKy.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
-                    b.Property<DateTime>("BookingDate")
+                    b.Property<DateTime>("NgayDat")
                         .HasColumnType("datetime2");
 
-                    b.Property<int>("RoomId")
-                        .HasColumnType("int");
+                    b.Property<DateTime>("NgayNhan")
+                        .HasColumnType("datetime2");
 
-                    b.Property<string>("Status")
+                    b.Property<string>("TrangThai")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
+
+                    b.Property<int>("TroId")
+                        .HasColumnType("int");
 
                     b.Property<int>("UserId")
                         .HasColumnType("int");
 
                     b.HasKey("Id");
 
-                    b.HasIndex("RoomId");
+                    b.HasIndex("TroId");
 
                     b.HasIndex("UserId");
 
                     b.ToTable("Bookings");
+                });
+
+            modelBuilder.Entity("BaiCuoiKy.Models.Favorite", b =>
+                {
+                    b.Property<int>("UserId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("TroId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("Id")
+                        .HasColumnType("int");
+
+                    b.HasKey("UserId", "TroId");
+
+                    b.HasIndex("TroId");
+
+                    b.ToTable("Favorites");
                 });
 
             modelBuilder.Entity("BaiCuoiKy.Models.Review", b =>
@@ -89,13 +110,13 @@ namespace BaiCuoiKy.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<DateTime>("CreatedAt")
+                    b.Property<DateTime>("NgayDanhGia")
                         .HasColumnType("datetime2");
 
                     b.Property<int>("Rating")
                         .HasColumnType("int");
 
-                    b.Property<int>("RoomId")
+                    b.Property<int>("TroId")
                         .HasColumnType("int");
 
                     b.Property<int>("UserId")
@@ -103,7 +124,7 @@ namespace BaiCuoiKy.Migrations
 
                     b.HasKey("Id");
 
-                    b.HasIndex("RoomId");
+                    b.HasIndex("TroId");
 
                     b.HasIndex("UserId");
 
@@ -118,47 +139,39 @@ namespace BaiCuoiKy.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
-                    b.Property<string>("Address")
+                    b.Property<string>("DiaChi")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<double>("Area")
+                    b.Property<double>("DienTich")
                         .HasColumnType("float");
 
-                    b.Property<string>("City")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<DateTime>("CreatedAt")
-                        .HasColumnType("datetime2");
-
-                    b.Property<string>("Description")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("District")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<bool>("IsAvailable")
-                        .HasColumnType("bit");
-
-                    b.Property<int>("OwnerId")
-                        .HasColumnType("int");
-
-                    b.Property<decimal>("Price")
+                    b.Property<decimal>("Gia")
                         .HasPrecision(18, 2)
                         .HasColumnType("decimal(18,2)");
 
-                    b.Property<string>("Title")
+                    b.Property<string>("MoTa")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<DateTime>("NgayDang")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("TieuDe")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<bool>("TrangThai")
+                        .HasColumnType("bit");
+
+                    b.Property<int>("UserId")
+                        .HasColumnType("int");
+
                     b.HasKey("Id");
 
-                    b.HasIndex("OwnerId");
+                    b.HasIndex("UserId");
 
-                    b.ToTable("Rooms");
+                    b.ToTable("Tro");
                 });
 
             modelBuilder.Entity("BaiCuoiKy.Models.User", b =>
@@ -168,9 +181,6 @@ namespace BaiCuoiKy.Migrations
                         .HasColumnType("int");
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
-
-                    b.Property<DateTime>("CreatedAt")
-                        .HasColumnType("datetime2");
 
                     b.Property<string>("Email")
                         .IsRequired()
@@ -192,83 +202,114 @@ namespace BaiCuoiKy.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<string>("Username")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
                     b.HasKey("Id");
 
                     b.ToTable("Users");
                 });
 
-            modelBuilder.Entity("BaiCuoiKy.Models.Anhphong", b =>
+            modelBuilder.Entity("BaiCuoiKy.Models.AnhPhong", b =>
                 {
-                    b.HasOne("BaiCuoiKy.Models.Tro", "Room")
-                        .WithMany("Images")
-                        .HasForeignKey("RoomId")
+                    b.HasOne("BaiCuoiKy.Models.Tro", "Tro")
+                        .WithMany("AnhPhongs")
+                        .HasForeignKey("TroId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.Navigation("Room");
+                    b.Navigation("Tro");
                 });
 
             modelBuilder.Entity("BaiCuoiKy.Models.Booking", b =>
                 {
-                    b.HasOne("BaiCuoiKy.Models.Tro", "Room")
-                        .WithMany()
-                        .HasForeignKey("RoomId")
+                    b.HasOne("BaiCuoiKy.Models.Tro", "Tro")
+                        .WithMany("Bookings")
+                        .HasForeignKey("TroId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
                     b.HasOne("BaiCuoiKy.Models.User", "User")
-                        .WithMany()
+                        .WithMany("Bookings")
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.Navigation("Tro");
+
+                    b.Navigation("User");
+                });
+
+            modelBuilder.Entity("BaiCuoiKy.Models.Favorite", b =>
+                {
+                    b.HasOne("BaiCuoiKy.Models.Tro", "Tro")
+                        .WithMany("Favorites")
+                        .HasForeignKey("TroId")
+                        .OnDelete(DeleteBehavior.NoAction)
+                        .IsRequired();
+
+                    b.HasOne("BaiCuoiKy.Models.User", "User")
+                        .WithMany("Favorites")
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.Navigation("Room");
+                    b.Navigation("Tro");
 
                     b.Navigation("User");
                 });
 
             modelBuilder.Entity("BaiCuoiKy.Models.Review", b =>
                 {
-                    b.HasOne("BaiCuoiKy.Models.Tro", "Room")
+                    b.HasOne("BaiCuoiKy.Models.Tro", "Tro")
                         .WithMany("Reviews")
-                        .HasForeignKey("RoomId")
+                        .HasForeignKey("TroId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
                     b.HasOne("BaiCuoiKy.Models.User", "User")
                         .WithMany("Reviews")
                         .HasForeignKey("UserId")
-                        .OnDelete(DeleteBehavior.Cascade)
+                        .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
-                    b.Navigation("Room");
+                    b.Navigation("Tro");
 
                     b.Navigation("User");
                 });
 
             modelBuilder.Entity("BaiCuoiKy.Models.Tro", b =>
                 {
-                    b.HasOne("BaiCuoiKy.Models.User", "Owner")
-                        .WithMany("Rooms")
-                        .HasForeignKey("OwnerId")
+                    b.HasOne("BaiCuoiKy.Models.User", "User")
+                        .WithMany("Tros")
+                        .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.Navigation("Owner");
+                    b.Navigation("User");
                 });
 
             modelBuilder.Entity("BaiCuoiKy.Models.Tro", b =>
                 {
-                    b.Navigation("Images");
+                    b.Navigation("AnhPhongs");
+
+                    b.Navigation("Bookings");
+
+                    b.Navigation("Favorites");
 
                     b.Navigation("Reviews");
                 });
 
             modelBuilder.Entity("BaiCuoiKy.Models.User", b =>
                 {
+                    b.Navigation("Bookings");
+
+                    b.Navigation("Favorites");
+
                     b.Navigation("Reviews");
 
-                    b.Navigation("Rooms");
+                    b.Navigation("Tros");
                 });
 #pragma warning restore 612, 618
         }

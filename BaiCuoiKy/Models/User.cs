@@ -13,11 +13,12 @@ namespace BaiCuoiKy.Models
         public required string Email { get; set; }
         public required string Phone { get; set; }
 
-        public required string Role { get; set; } // Admin, ChuTro, Khach
+        public required string Role { get; set; } // (nâng cấp sau -> enum)
 
         // Quan hệ
-        public required ICollection<Tro> Tros { get; set; }
-        public required ICollection<Booking> Bookings { get; set; }
-        public required ICollection<Review> Reviews { get; set; }
+        public ICollection<Tro> Tros { get; set; } = new List<Tro>();
+        public ICollection<Booking> Bookings { get; set; } = new List<Booking>();
+        public ICollection<Review> Reviews { get; set; } = new List<Review>();
+        public ICollection<Favorite> Favorites { get; set; } = new List<Favorite>();
     }
 }

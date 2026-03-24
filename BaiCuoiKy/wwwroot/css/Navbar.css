@@ -2,11 +2,11 @@
     NAVBAR
 ========================= */
 .navbar {
-    background: var(--primary); /* Đổi sang màu Navy đậm cho sang */
+    background: var(--primary);
     display: flex;
     justify-content: space-between;
     align-items: center;
-    padding: 0.8rem 10%; /* Dùng % để tự co giãn theo màn hình lớn */
+    padding: 0.8rem 10%;
     box-shadow: 0 4px 20px rgba(0, 0, 0, 0.2);
     position: sticky;
     top: 0;
@@ -14,7 +14,9 @@
     transition: all 0.3s ease;
 }
 
-/* Link điều hướng bên trái */
+/* =========================
+    NAV LEFT
+========================= */
 .nav-left {
     display: flex;
     align-items: center;
@@ -27,9 +29,9 @@
         letter-spacing: 0.5px;
         position: relative;
         color: white;
+        text-decoration: none;
     }
 
-        /* Hiệu ứng gạch chân khi hover cho link */
         .nav-left a::after {
             content: '';
             position: absolute;
@@ -45,70 +47,88 @@
             width: 100%;
         }
 
-/* Khu vực bên phải (Search + Buttons) */
+/* =========================
+    NAV RIGHT
+========================= */
 .nav-right {
     display: flex;
     align-items: center;
-    gap: 20px;
+    gap: 15px;
 }
-
-    /* Ô Search trong Navbar */
-    .nav-right .search-container {
-        position: relative;
-        display: flex;
-        align-items: center;
-    }
-
-    .nav-right input {
-        background: rgba(255, 255, 255, 0.1);
-        border: 1px solid rgba(255, 255, 255, 0.2);
-        padding: 8px 15px;
-        border-radius: 20px;
-        color: white;
-        font-size: 0.9rem;
-        width: 180px;
-        transition: 0.3s;
-    }
-
-        .nav-right input:focus {
-            width: 240px;
-            background: white;
-            color: var(--primary);
-            outline: none;
-        }
 
 /* =========================
-    BUTTONS
+    BUTTON BASE
 ========================= */
-.btn-post,
-.btn-register {
-    background: var(--accent);
-    padding: 8px 20px;
-    border-radius: 50px; /* Bo tròn hoàn toàn cho hiện đại */
-    color: white;
-    font-weight: 700;
+.btn {
+    padding: 8px 18px;
+    border-radius: 50px;
     font-size: 0.9rem;
-    box-shadow: 0 4px 10px rgba(237, 0, 90, 0.2);
+    font-weight: 600;
     border: none;
+    cursor: pointer;
+    transition: 0.3s;
+    text-decoration: none;
+    display: inline-block;
 }
 
-    .btn-post:hover,
-    .btn-register:hover {
+/* =========================
+    SEARCH BUTTON
+========================= */
+.btn-primary {
+    background: var(--accent);
+    color: white;
+    font-weight: 700;
+    box-shadow: 0 4px 10px rgba(237, 0, 90, 0.2);
+}
+
+    .btn-primary:hover {
         background: var(--accent-hover);
         transform: translateY(-2px);
         box-shadow: 0 6px 15px rgba(237, 0, 90, 0.4);
-        color: white;
     }
 
-/* LOGOUT (Dạng Outlined) */
+    .btn-primary:active {
+        transform: scale(0.95);
+    }
+
+/* =========================
+    REGISTER (NỔI BẬT)
+========================= */
+.btn-register {
+    background: var(--accent);
+    color: white;
+    font-weight: 700;
+    box-shadow: 0 4px 10px rgba(237, 0, 90, 0.3);
+}
+
+    .btn-register:hover {
+        background: var(--accent-hover);
+        transform: translateY(-2px);
+        box-shadow: 0 6px 15px rgba(237, 0, 90, 0.5);
+    }
+
+/* =========================
+    LOGIN (NHẸ)
+========================= */
+.btn-login {
+    background: transparent;
+    border: 2px solid rgba(255,255,255,0.6);
+    color: white;
+}
+
+    .btn-login:hover {
+        background: rgba(255,255,255,0.1);
+        border-color: white;
+        transform: translateY(-2px);
+    }
+
+/* =========================
+    LOGOUT
+========================= */
 .btn-logout {
     border: 2px solid var(--accent);
     background: transparent;
     color: var(--accent);
-    padding: 7px 18px;
-    border-radius: 50px;
-    font-weight: 600;
-    transition: 0.3s;
 }
 
     .btn-logout:hover {
@@ -117,7 +137,7 @@
     }
 
 /* =========================
-    RESPONSIVE (MOBILE)
+    RESPONSIVE
 ========================= */
 @media (max-width: 992px) {
     .navbar {
@@ -126,10 +146,6 @@
 
     .nav-left {
         gap: 15px;
-    }
-
-    .nav-right input {
-        display: none; /* Ẩn search bar nhỏ trên mobile để tránh chật chội */
     }
 }
 
@@ -143,5 +159,6 @@
     .nav-right {
         width: 100%;
         justify-content: center;
+        flex-wrap: wrap;
     }
 }

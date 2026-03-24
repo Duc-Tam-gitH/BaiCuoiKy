@@ -37,10 +37,10 @@ namespace BaiCuoiKy.Models
 
             // User - Tro (1 - N)
             modelBuilder.Entity<Tro>()
-                .HasOne(t => t.User)
-                .WithMany(u => u.Tros)
-                .HasForeignKey(t => t.UserId)
-                .OnDelete(DeleteBehavior.Cascade);
+             .HasOne(t => t.User)
+             .WithMany(u => u.Tros)
+             .HasForeignKey(t => t.UserId)
+             .OnDelete(DeleteBehavior.Cascade);
 
             // Tro - AnhPhong (1 - N)
             modelBuilder.Entity<AnhPhong>()
@@ -51,17 +51,17 @@ namespace BaiCuoiKy.Models
 
             // User - Booking (1 - N)
             modelBuilder.Entity<Booking>()
-                .HasOne(b => b.User)
-                .WithMany(u => u.Bookings)
-                .HasForeignKey(b => b.UserId)
-                .OnDelete(DeleteBehavior.Restrict); // tránh xoá user mất lịch
+           .HasOne(b => b.User)
+           .WithMany(u => u.Bookings)
+           .HasForeignKey(b => b.UserId)
+           .OnDelete(DeleteBehavior.Restrict);
 
             // Tro - Booking (1 - N)
             modelBuilder.Entity<Booking>()
-                .HasOne(b => b.Tro)
-                .WithMany(t => t.Bookings)
-                .HasForeignKey(b => b.TroId)
-                .OnDelete(DeleteBehavior.Cascade);
+             .HasOne(b => b.Tro)
+             .WithMany(t => t.Bookings)
+             .HasForeignKey(b => b.TroId)
+             .OnDelete(DeleteBehavior.Cascade);
 
             // User - Review (1 - N)
             modelBuilder.Entity<Review>()
@@ -84,14 +84,16 @@ namespace BaiCuoiKy.Models
                 .HasKey(f => new { f.UserId, f.TroId });
 
             modelBuilder.Entity<Favorite>()
-                .HasOne(f => f.User)
-                .WithMany()
-                .HasForeignKey(f => f.UserId);
+            .HasOne(f => f.User)
+            .WithMany(u => u.Favorites)
+            .HasForeignKey(f => f.UserId)
+            .OnDelete(DeleteBehavior.Cascade); // hoặc Restrict
 
             modelBuilder.Entity<Favorite>()
                 .HasOne(f => f.Tro)
-                .WithMany()
-                .HasForeignKey(f => f.TroId);
+                .WithMany(t => t.Favorites)
+                .HasForeignKey(f => f.TroId)
+                .OnDelete(DeleteBehavior.NoAction); // 🔥 FIX lỗi
         }
     }
 }

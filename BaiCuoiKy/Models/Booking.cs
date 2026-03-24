@@ -6,10 +6,11 @@ namespace BaiCuoiKy.Models
     {
         public int Id { get; set; }
 
-        public DateTime NgayDat { get; set; }
+        public DateTime NgayDat { get; set; } = DateTime.Now;
         public DateTime NgayNhan { get; set; }
 
-        public string TrangThai { get; set; } // "Chờ duyệt" / "Đã duyệt"
+        public string TrangThai { get; set; } = "ChoDuyet";
+        
 
         // FK
         public int UserId { get; set; }

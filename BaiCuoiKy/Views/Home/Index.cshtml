@@ -1,90 +1,105 @@
-﻿@model List<Tro>
+﻿@using BaiCuoiKy.Models
+@model IEnumerable<BaiCuoiKy.Models.Tro>
+
+@{
+    ViewData["Title"] = "Trang Chủ - Thuê Phòng";
+}
+
 @section Styles {
-    <link rel="stylesheet" href="~/css/home.css" />
+    <link rel="stylesheet" href="~/css/House88.css" asp-append-version="true" />
 }
 
 <div class="home-container">
 
-    <!-- HERO -->
-    <div class="hero">
+    <section class="hero text-center py-5" style="background: #f8f9fa;">
         <h1>Tìm Phòng Trọ & Nhà Cho Thuê</h1>
         <p>Nhanh Chóng - An Toàn - Tiện Lợi</p>
 
-        <!-- SEARCH -->
-        <form asp-controller="Tro" asp-action="Search" method="get" class="search-box">
-            <select name="khuvuc">
+        @* Lưu ý: Nếu chưa có TroController, hãy đổi asp-controller="Home" *@
+        <form asp-controller="Home" asp-action="Search" method="get" class="search-box d-flex justify-content-center gap-2 flex-wrap">
+            <select name="khuvuc" class="form-select w-auto">
                 <option value="">Khu vực</option>
+                <option>Hồ Chí Minh</option>
+                <option>Hà Nội</option>
+                <option>Đà Nẵng</option>
             </select>
 
-            <select name="loai">
+            <select name="loai" class="form-select w-auto">
                 <option value="">Loại hình</option>
+                <option>Phòng trọ</option>
+                <option>Căn hộ mini</option>
+                <option>Nhà nguyên căn</option>
             </select>
 
-            <select name="gia">
+            <select name="gia" class="form-select w-auto">
                 <option value="">Giá</option>
+                <option value="1">Dưới 2 triệu</option>
+                <option value="2">2 - 5 triệu</option>
+                <option value="3">Trên 5 triệu</option>
             </select>
 
-            <input type="text" name="keyword" placeholder="Tìm kiếm..." />
-            <button type="submit">Tìm Kiếm</button>
+            <input type="text" name="keyword" class="form-control w-auto" placeholder="Nhập từ khóa..." />
+
+            <button type="submit" class="btn btn-primary">
+                🔍 Tìm Kiếm
+            </button>
         </form>
-    </div>
+    </section>
 
-    <!-- PHÒNG -->
-    <div class="section">
-        <h2>Phòng Trọ Nổi Bật</h2>
+    <section class="container mt-5">
+        <div class="section-header mb-4">
+            <h2>Phòng Trọ Nổi Bật</h2>
+        </div>
 
-        <div class="room-list">
-
+        <div class="row">
             @if (Model != null && Model.Any())
             {
                 foreach (var item in Model)
                 {
-                    var img = item.AnhPhongs != null && item.AnhPhongs.Any()
+                    // Logic lấy ảnh: Kiểm tra list AnhPhongs từ Model Tro.cs
+                    var img = (item.AnhPhongs != null && item.AnhPhongs.Any())
                     ? item.AnhPhongs.First().Url
-                    : "/images/no-image.jpg";
+                    : "/images/favicon.ico"; // Tạm thời dùng favicon nếu chưa có ảnh no-image
 
-                    <a asp-controller="Tro" asp-action="Details" asp-route-id="@item.Id">
-                        <div class="room-card">
-                            <img src="@img" loading="lazy" />
-
-                            <h3>@item.TieuDe</h3>
-
-                            <p class="price">
-                                @String.Format("{0:N0} VNĐ", item.Gia)
-                            </p>
-
-                            <p>@item.DiaChi</p>
-                        </div>
-                    </a>
+                    <div class="col-md-4">
+                        <a asp-controller="Tro" asp-action="Details" asp-route-id="@item.Id" class="room-link">
+                            <div class="room-card">
+                                <div class="room-img">
+                                    <img src="@img" alt="@item.TieuDe" loading="lazy" />
+                                </div>
+                                <div class="room-body mt-2">
+                                    <h3 class="room-title h5">@item.TieuDe</h3>
+                                    <p class="price text-danger fw-bold">
+                                        @String.Format("{0:N0} VNĐ", item.Gia)
+                                    </p>
+                                    <p class="location small text-muted">
+                                        📍 @item.DiaChi
+                                    </p>
+                                </div>
+                            </div>
+                        </a>
+                    </div>
                 }
             }
             else
             {
-                <p>Không có phòng nào</p>
+                <div class="col-12 text-center py-5">
+                    <p class="display-6">😢 Hiện chưa có phòng nào</p>
+                </div>
             }
-
         </div>
-    </div>
+    </section>
 
-    <!-- LOẠI -->
-    <div class="section">
-        <h2>Tìm Theo Loại Hình</h2>
+    <section class="container mt-5 text-center">
+        <h2 class="mb-4">Tin tức </h2>
+    </section>
 
-        <div class="category-list">
-            <div class="category">Phòng Trọ</div>
-            <div class="category">Căn Hộ Mini</div>
-            <div class="category">Nhà Nguyên Căn</div>
-            <div class="category">Ký Túc Xá</div>
-        </div>
-    </div>
-
-    <!-- CTA -->
-    <div class="cta">
+    <section class="cta bg-primary text-white text-center py-5 mt-5 rounded">
         <h2>Đăng Tin Cho Thuê Ngay!</h2>
-
-        <a asp-controller="Tro" asp-action="Create" class="btn btn-warning">
-            Đăng Tin Ngay
+        <p>Tiếp cận hàng ngàn khách hàng tiềm năng mỗi ngày</p>
+        <a asp-controller="Tro" asp-action="Create" class="btn btn-light btn-lg mt-3">
+            🚀 Đăng Tin Ngay
         </a>
-    </div>
+    </section>
 
 </div>

@@ -1,123 +1,127 @@
 ﻿/* =========================
-   ROOT + GLOBAL
+    ROOT + GLOBAL
 ========================= */
 :root {
-    --primary: #002641;
-    --secondary: #013a58;
-    --accent: #ED005A;
+    --primary: #002641;      /* Navy đậm */
+    --secondary: #013a58;    /* Navy nhẹ hơn */
+    --accent: #ED005A;       /* Hồng đặc trưng */
     --accent-hover: #c4004b;
-    --text: #ffffff;
+    --text-dark: #1a2b3b;    /* Dùng cho nền sáng */
+    --text-light: #ffffff;   /* Dùng cho nền tối */
+    --bg-body: #f8fafc;      /* Nền trang nên dùng màu sáng cho sạch */
+    --shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
 }
 
 html {
-    font-size: 14px;
+    font-size: 16px;
     position: relative;
     min-height: 100%;
 }
 
-@media (min-width: 768px) {
-    html {
-        font-size: 16px;
-    }
-}
-
 body {
     margin: 0;
-    margin-bottom: 60px;
-    background: var(--primary);
-    color: var(--text);
-    font-family: 'Segoe UI', sans-serif;
+    margin-bottom: 80px; /* Tăng khoảng cách cho footer */
+    background: var(--bg-body); /* Đổi lại nền sáng cho chuyên nghiệp */
+    color: var(--text-dark);
+    font-family: 'Inter', 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    line-height: 1.6;
 }
 
 /* =========================
-   GLOBAL ELEMENTS
+    GLOBAL ELEMENTS
 ========================= */
 a {
     text-decoration: none;
-    color: var(--text);
-    transition: 0.2s;
+    color: inherit;
+    transition: all 0.2s ease-in-out;
 }
 
-    a:hover {
-        color: var(--accent);
-    }
+a:hover {
+    color: var(--accent);
+}
 
+/* Container chuẩn Bootstrap */
 .container {
-    padding: 20px;
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 20px;
 }
 
 /* =========================
-   BUTTON
+    BUTTONS (Đậm chất Modern)
 ========================= */
 .btn {
-    border-radius: 8px;
-    padding: 8px 16px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: 600;
+    border-radius: 10px; /* Bo góc tròn hơn nhìn sẽ hiện đại */
+    padding: 10px 24px;
+    border: none;
+    cursor: pointer;
     transition: 0.3s;
 }
 
 .btn-primary {
     background: var(--accent);
-    border: none;
-    color: white;
+    color: white !important;
+    box-shadow: 0 4px 10px rgba(237, 0, 90, 0.2);
 }
 
-    .btn-primary:hover {
-        background: var(--accent-hover);
-    }
+.btn-primary:hover {
+    background: var(--accent-hover);
+    transform: translateY(-2px);
+    box-shadow: 0 6px 15px rgba(237, 0, 90, 0.3);
+}
 
 /* =========================
-   FORM
+    FORM CONTROLS (Giống trong ảnh của bạn)
 ========================= */
-.form-control {
-    border-radius: 6px;
-    border: none;
-    padding: 10px;
+.form-control, select {
+    background: white;
+    border: 1px solid #e2e8f0;
+    border-radius: 8px;
+    padding: 12px 15px;
+    color: var(--text-dark);
+    font-size: 0.95rem;
+    transition: 0.2s;
 }
 
-    .form-control:focus {
-        outline: none;
-        box-shadow: 0 0 0 2px var(--accent);
-    }
+.form-control:focus {
+    outline: none;
+    border-color: var(--accent);
+    box-shadow: 0 0 0 3px rgba(237, 0, 90, 0.1);
+}
 
 /* =========================
-   CARD (dùng chung)
+    CARD NỔI BẬT
 ========================= */
 .card {
-    background: var(--secondary);
-    border-radius: 10px;
-    border: none;
-    color: white;
+    background: white;
+    border-radius: 15px;
+    border: 1px solid rgba(0,0,0,0.05);
+    padding: 15px;
+    box-shadow: var(--shadow);
+    color: var(--text-dark); /* Card trên nền sáng thì chữ phải tối */
+    transition: 0.3s;
+}
+
+.card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 12px 20px rgba(0, 38, 65, 0.1);
 }
 
 /* =========================
-   FOOTER
+    FOOTER (Navy đặc trưng)
 ========================= */
 footer {
     position: absolute;
     bottom: 0;
     width: 100%;
-    height: 60px;
-    background: var(--secondary);
+    height: 70px;
+    background: var(--primary); /* Footer dùng màu tối là chuẩn */
+    color: var(--text-light);
     display: flex;
     align-items: center;
     justify-content: center;
-}
-
-/* =========================
-   FIX FOCUS (ASP.NET default)
-========================= */
-.btn:focus,
-.btn:active:focus,
-.btn-link.nav-link:focus,
-.form-check-input:focus {
-    box-shadow: 0 0 0 2px var(--accent);
-}
-
-/* =========================
-   RESPONSIVE
-========================= */
-@media (max-width: 768px) {
-    .container {
-        padding: 10px;
-    }
 }

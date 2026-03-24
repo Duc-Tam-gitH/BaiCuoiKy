@@ -1,66 +1,147 @@
-﻿.navbar {
-    background: var(--secondary);
+﻿/* =========================
+    NAVBAR
+========================= */
+.navbar {
+    background: var(--primary); /* Đổi sang màu Navy đậm cho sang */
     display: flex;
     justify-content: space-between;
     align-items: center;
-    padding: 12px 40px;
-    box-shadow: 0 4px 15px rgba(0,0,0,0.3);
+    padding: 0.8rem 10%; /* Dùng % để tự co giãn theo màn hình lớn */
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.2);
     position: sticky;
     top: 0;
-    z-index: 999;
+    z-index: 1000;
+    transition: all 0.3s ease;
 }
 
+/* Link điều hướng bên trái */
 .nav-left {
     display: flex;
-    gap: 20px;
+    align-items: center;
+    gap: 30px;
 }
 
+    .nav-left a {
+        font-weight: 600;
+        font-size: 0.95rem;
+        letter-spacing: 0.5px;
+        position: relative;
+        color: white;
+    }
+
+        /* Hiệu ứng gạch chân khi hover cho link */
+        .nav-left a::after {
+            content: '';
+            position: absolute;
+            width: 0;
+            height: 2px;
+            bottom: -5px;
+            left: 0;
+            background-color: var(--accent);
+            transition: 0.3s;
+        }
+
+        .nav-left a:hover::after {
+            width: 100%;
+        }
+
+/* Khu vực bên phải (Search + Buttons) */
 .nav-right {
     display: flex;
     align-items: center;
-    gap: 15px;
+    gap: 20px;
 }
 
-    /* SEARCH */
-    .nav-right input {
-        padding: 8px 12px;
-        border-radius: 6px;
-        border: none;
+    /* Ô Search trong Navbar */
+    .nav-right .search-container {
+        position: relative;
+        display: flex;
+        align-items: center;
     }
 
-/* BUTTON */
+    .nav-right input {
+        background: rgba(255, 255, 255, 0.1);
+        border: 1px solid rgba(255, 255, 255, 0.2);
+        padding: 8px 15px;
+        border-radius: 20px;
+        color: white;
+        font-size: 0.9rem;
+        width: 180px;
+        transition: 0.3s;
+    }
+
+        .nav-right input:focus {
+            width: 240px;
+            background: white;
+            color: var(--primary);
+            outline: none;
+        }
+
+/* =========================
+    BUTTONS
+========================= */
 .btn-post,
 .btn-register {
     background: var(--accent);
-    padding: 8px 14px;
-    border-radius: 6px;
+    padding: 8px 20px;
+    border-radius: 50px; /* Bo tròn hoàn toàn cho hiện đại */
     color: white;
-    transition: 0.3s;
+    font-weight: 700;
+    font-size: 0.9rem;
+    box-shadow: 0 4px 10px rgba(237, 0, 90, 0.2);
+    border: none;
 }
 
     .btn-post:hover,
     .btn-register:hover {
         background: var(--accent-hover);
+        transform: translateY(-2px);
+        box-shadow: 0 6px 15px rgba(237, 0, 90, 0.4);
+        color: white;
     }
 
-/* LOGOUT */
+/* LOGOUT (Dạng Outlined) */
 .btn-logout {
-    border: 1px solid var(--accent);
+    border: 2px solid var(--accent);
     background: transparent;
     color: var(--accent);
-    padding: 6px 12px;
-    border-radius: 6px;
+    padding: 7px 18px;
+    border-radius: 50px;
+    font-weight: 600;
+    transition: 0.3s;
 }
 
     .btn-logout:hover {
         background: var(--accent);
-        color: white;
+        color: white !important;
     }
 
-/* MOBILE */
-@media (max-width: 768px) {
+/* =========================
+    RESPONSIVE (MOBILE)
+========================= */
+@media (max-width: 992px) {
+    .navbar {
+        padding: 15px 20px;
+    }
+
+    .nav-left {
+        gap: 15px;
+    }
+
+    .nav-right input {
+        display: none; /* Ẩn search bar nhỏ trên mobile để tránh chật chội */
+    }
+}
+
+@media (max-width: 576px) {
     .navbar {
         flex-direction: column;
-        gap: 10px;
+        gap: 15px;
+        padding: 20px;
+    }
+
+    .nav-right {
+        width: 100%;
+        justify-content: center;
     }
 }

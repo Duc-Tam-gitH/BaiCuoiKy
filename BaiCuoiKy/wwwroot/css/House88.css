@@ -1,95 +1,168 @@
-﻿.home-container {
-    background: var(--primary);
+﻿:root {
+    /* Hệ màu chủ đạo của bạn */
+    --primary: #002641; /* Deep Navy - Chuyên nghiệp, vững chãi */
+    --accent: #ED005A; /* Vibrant Pink - Năng động, nổi bật */
+    --accent-hover: #c4004a;
+    /* Màu bổ trợ */
+    --bg-light: #f4f7f9; /* Nền xám xanh nhạt để dịu mắt */
+    --secondary: #ffffff;
+    --text-main: #1a2b3b;
+    --text-muted: #64748b;
+    --shadow-soft: 0 4px 20px rgba(0, 38, 65, 0.08);
+    --shadow-accent: 0 10px 20px rgba(237, 0, 90, 0.2);
+    --transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
 }
 
-/* HERO */
+body {
+    background-color: var(--bg-light);
+    color: var(--text-main);
+    font-family: 'Inter', system-ui, -apple-system, sans-serif;
+}
+
+/* HERO SECTION */
 .hero {
     text-align: center;
-    padding: 80px;
-    background: linear-gradient(135deg, var(--primary), #004d73);
+    padding: 100px 20px;
+    /* Gradient từ Navy sang tone tối hơn để làm nổi bật text trắng */
+    background: linear-gradient(135deg, var(--primary) 0%, #001a2d 100%);
+    color: white;
+    border-bottom-left-radius: 50px;
+    border-bottom-right-radius: 50px;
 }
 
     .hero h1 {
-        font-size: 40px;
+        font-size: 3.2rem;
+        font-weight: 800;
+        margin-bottom: 1rem;
+        letter-spacing: -1px;
     }
 
-/* SEARCH */
+/* SEARCH BOX */
 .search-box {
-    margin-top: 20px;
-    display: flex;
-    justify-content: center;
-    gap: 10px;
+    max-width: 950px;
+    margin: -40px auto 0; /* Đẩy box lên trên phần Hero một chút */
+    background: var(--secondary);
+    padding: 25px;
+    border-radius: 20px;
+    box-shadow: 0 15px 35px rgba(0, 0, 0, 0.1);
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+    gap: 15px;
+    border: 1px solid rgba(0, 38, 65, 0.05);
 }
 
-    .search-box select,
-    .search-box input {
-        padding: 10px;
-        border-radius: 6px;
-        border: none;
+    .search-box select, .search-box input {
+        padding: 12px;
+        border: 1.5px solid #e2e8f0;
+        border-radius: 12px;
+        outline: none;
+        transition: var(--transition);
     }
 
-    .search-box button {
-        background: var(--accent);
-        color: white;
-        border: none;
-        padding: 10px 20px;
-        border-radius: 6px;
-    }
-
-        .search-box button:hover {
-            background: var(--accent-hover);
+        .search-box select:focus, .search-box input:focus {
+            border-color: var(--primary);
+            box-shadow: 0 0 0 4px rgba(0, 38, 65, 0.1);
         }
 
-/* ROOM */
+.btn-search {
+    background: var(--accent);
+    color: white;
+    border: none;
+    border-radius: 12px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    cursor: pointer;
+    transition: var(--transition);
+}
+
+    .btn-search:hover {
+        background: var(--accent-hover);
+        transform: translateY(-3px);
+        box-shadow: var(--shadow-accent);
+    }
+
+/* ROOM CARD */
 .room-list {
-    display: flex;
-    gap: 20px;
-    flex-wrap: wrap;
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+    gap: 30px;
+    padding: 60px 0;
 }
 
 .room-card {
-    width: 250px;
     background: var(--secondary);
-    border-radius: 10px;
+    border-radius: 20px;
     overflow: hidden;
-    transition: 0.3s;
+    box-shadow: var(--shadow-soft);
+    transition: var(--transition);
+    border: 1px solid rgba(0, 38, 65, 0.03);
 }
 
     .room-card:hover {
-        transform: translateY(-5px);
-        box-shadow: 0 10px 25px rgba(237, 0, 90, 0.3);
+        transform: scale(1.02);
+        box-shadow: 0 20px 40px rgba(0, 38, 65, 0.12);
     }
 
-    .room-card img {
-        width: 100%;
-        height: 150px;
-        object-fit: cover;
-    }
+.room-img img {
+    height: 220px;
+    width: 100%;
+    object-fit: cover;
+}
+
+.room-body {
+    padding: 20px;
+}
 
 .price {
-    color: var(--accent);
-    font-weight: bold;
+    color: var(--accent); /* Dùng màu hồng cho giá tiền để kích thích click */
+    font-size: 1.4rem;
+    font-weight: 800;
+    margin-bottom: 5px;
+}
+
+.room-title {
+    color: var(--primary); /* Tiêu đề màu Navy cho sang */
+    font-size: 1.15rem;
+    font-weight: 700;
 }
 
 /* CATEGORY */
-.category-list {
-    display: flex;
-    gap: 20px;
-}
-
 .category {
     background: var(--secondary);
-    padding: 20px;
-    border-radius: 10px;
+    border: 2px solid transparent;
+    padding: 30px 15px;
+    border-radius: 18px;
+    transition: var(--transition);
+    text-align: center;
+    box-shadow: var(--shadow-soft);
 }
 
     .category:hover {
-        background: var(--accent);
+        border-color: var(--accent);
+        background: rgba(237, 0, 90, 0.02);
+        color: var(--accent);
     }
 
 /* CTA */
 .cta {
-    text-align: center;
-    padding: 50px;
-    background: var(--secondary);
+    background: var(--primary);
+    color: white;
+    padding: 70px 30px;
+    border-radius: 30px;
+    margin: 80px 0;
+    position: relative;
 }
+
+    .cta .btn-primary {
+        background: var(--accent);
+        padding: 15px 40px;
+        font-size: 1.2rem;
+        border-radius: 50px;
+        font-weight: 700;
+        text-decoration: none;
+        color: white;
+        display: inline-block;
+        margin-top: 20px;
+        box-shadow: var(--shadow-accent);
+    }

@@ -1,22 +1,123 @@
+﻿/* =========================
+   ROOT + GLOBAL
+========================= */
+:root {
+    --primary: #002641;
+    --secondary: #013a58;
+    --accent: #ED005A;
+    --accent-hover: #c4004b;
+    --text: #ffffff;
+}
+
 html {
-  font-size: 14px;
+    font-size: 14px;
+    position: relative;
+    min-height: 100%;
 }
 
 @media (min-width: 768px) {
-  html {
-    font-size: 16px;
-  }
-}
-
-.btn:focus, .btn:active:focus, .btn-link.nav-link:focus, .form-control:focus, .form-check-input:focus {
-  box-shadow: 0 0 0 0.1rem white, 0 0 0 0.25rem #258cfb;
-}
-
-html {
-  position: relative;
-  min-height: 100%;
+    html {
+        font-size: 16px;
+    }
 }
 
 body {
-  margin-bottom: 60px;
+    margin: 0;
+    margin-bottom: 60px;
+    background: var(--primary);
+    color: var(--text);
+    font-family: 'Segoe UI', sans-serif;
+}
+
+/* =========================
+   GLOBAL ELEMENTS
+========================= */
+a {
+    text-decoration: none;
+    color: var(--text);
+    transition: 0.2s;
+}
+
+    a:hover {
+        color: var(--accent);
+    }
+
+.container {
+    padding: 20px;
+}
+
+/* =========================
+   BUTTON
+========================= */
+.btn {
+    border-radius: 8px;
+    padding: 8px 16px;
+    transition: 0.3s;
+}
+
+.btn-primary {
+    background: var(--accent);
+    border: none;
+    color: white;
+}
+
+    .btn-primary:hover {
+        background: var(--accent-hover);
+    }
+
+/* =========================
+   FORM
+========================= */
+.form-control {
+    border-radius: 6px;
+    border: none;
+    padding: 10px;
+}
+
+    .form-control:focus {
+        outline: none;
+        box-shadow: 0 0 0 2px var(--accent);
+    }
+
+/* =========================
+   CARD (dùng chung)
+========================= */
+.card {
+    background: var(--secondary);
+    border-radius: 10px;
+    border: none;
+    color: white;
+}
+
+/* =========================
+   FOOTER
+========================= */
+footer {
+    position: absolute;
+    bottom: 0;
+    width: 100%;
+    height: 60px;
+    background: var(--secondary);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+/* =========================
+   FIX FOCUS (ASP.NET default)
+========================= */
+.btn:focus,
+.btn:active:focus,
+.btn-link.nav-link:focus,
+.form-check-input:focus {
+    box-shadow: 0 0 0 2px var(--accent);
+}
+
+/* =========================
+   RESPONSIVE
+========================= */
+@media (max-width: 768px) {
+    .container {
+        padding: 10px;
+    }
 }

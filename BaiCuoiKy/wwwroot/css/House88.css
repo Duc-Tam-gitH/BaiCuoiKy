@@ -1,25 +1,44 @@
 ﻿.home-container {
-    background: #0f0c29;
-    color: white;
+    background: var(--primary);
 }
 
 /* HERO */
 .hero {
     text-align: center;
     padding: 80px;
-    background: linear-gradient(135deg, #2a0845, #6441a5);
+    background: linear-gradient(135deg, var(--primary), #004d73);
 }
 
     .hero h1 {
         font-size: 40px;
     }
 
+/* SEARCH */
 .search-box {
     margin-top: 20px;
     display: flex;
     justify-content: center;
     gap: 10px;
 }
+
+    .search-box select,
+    .search-box input {
+        padding: 10px;
+        border-radius: 6px;
+        border: none;
+    }
+
+    .search-box button {
+        background: var(--accent);
+        color: white;
+        border: none;
+        padding: 10px 20px;
+        border-radius: 6px;
+    }
+
+        .search-box button:hover {
+            background: var(--accent-hover);
+        }
 
 /* ROOM */
 .room-list {
@@ -30,7 +49,7 @@
 
 .room-card {
     width: 250px;
-    background: #1a1a2e;
+    background: var(--secondary);
     border-radius: 10px;
     overflow: hidden;
     transition: 0.3s;
@@ -38,6 +57,7 @@
 
     .room-card:hover {
         transform: translateY(-5px);
+        box-shadow: 0 10px 25px rgba(237, 0, 90, 0.3);
     }
 
     .room-card img {
@@ -47,7 +67,8 @@
     }
 
 .price {
-    color: #8a2be2;
+    color: var(--accent);
+    font-weight: bold;
 }
 
 /* CATEGORY */
@@ -57,21 +78,18 @@
 }
 
 .category {
-    background: #2a0845;
+    background: var(--secondary);
     padding: 20px;
     border-radius: 10px;
 }
+
+    .category:hover {
+        background: var(--accent);
+    }
 
 /* CTA */
 .cta {
     text-align: center;
     padding: 50px;
-    background: #2a0845;
+    background: var(--secondary);
 }
-
-    .cta button {
-        background: #8a2be2;
-        padding: 10px 20px;
-        border: none;
-        color: white;
-    }

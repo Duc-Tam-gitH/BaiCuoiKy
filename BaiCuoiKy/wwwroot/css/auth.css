@@ -20,6 +20,7 @@
     overflow: hidden;
     background: white;
     box-shadow: 0 20px 40px rgba(0, 38, 65, 0.1);
+    position: relative;
 }
 
 /* ===== LEFT (branding) ===== */
@@ -131,4 +132,21 @@
 
     .toggle-password:hover {
         color: var(--accent);
+    }
+
+/* ===== CLOSE BUTTON ===== */
+.auth-close {
+    position: absolute;
+    top: 15px;
+    right: 18px;
+    font-size: 22px;
+    font-weight: bold;
+    color: #94a3b8;
+    cursor: pointer;
+    transition: 0.2s;
+}
+
+    .auth-close:hover {
+        color: var(--accent);
+        transform: scale(1.2);
     }

@@ -5,7 +5,8 @@ namespace BaiCuoiKy.Models
 {
     public class AppDbContext : IdentityDbContext<ApplicationUser>
     {
-        public AppDbContext(DbContextOptions<AppDbContext> options) : base(options)
+        public AppDbContext(DbContextOptions<AppDbContext> options)
+            : base(options)
         {
         }
 
@@ -19,6 +20,7 @@ namespace BaiCuoiKy.Models
         {
             base.OnModelCreating(modelBuilder);
 
+            // Giá tiền
             modelBuilder.Entity<Tro>()
                 .Property(t => t.Gia)
                 .HasPrecision(18, 2);
@@ -30,7 +32,7 @@ namespace BaiCuoiKy.Models
                 .HasForeignKey(t => t.UserId)
                 .OnDelete(DeleteBehavior.Cascade);
 
-            // AnhPhong
+            // Ảnh phòng
             modelBuilder.Entity<AnhPhong>()
                 .HasOne(a => a.Tro)
                 .WithMany(t => t.AnhPhongs)
@@ -67,7 +69,8 @@ namespace BaiCuoiKy.Models
             modelBuilder.Entity<Favorite>()
                 .HasOne(f => f.User)
                 .WithMany(u => u.Favorites)
-                .HasForeignKey(f => f.UserId);
+                .HasForeignKey(f => f.UserId)
+                .OnDelete(DeleteBehavior.Cascade);
 
             modelBuilder.Entity<Favorite>()
                 .HasOne(f => f.Tro)

@@ -6,6 +6,12 @@
 
 <div class="auth-wrapper">
     <div class="auth-card">
+        <div class="auth-card">
+
+            <!-- CLOSE -->
+            <a asp-controller="Home" asp-action="Index" class="auth-close">
+                ✕
+            </a>
 
         <div class="auth-left">
             <div class="auth-logo">House88</div>
@@ -23,6 +29,7 @@
             <div asp-validation-summary="All" class="text-danger"></div>
 
             <form asp-action="Register" method="post">
+
 
                 <!-- Email -->
                 <input asp-for="Email"

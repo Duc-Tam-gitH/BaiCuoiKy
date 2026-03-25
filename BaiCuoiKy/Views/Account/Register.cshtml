@@ -5,48 +5,45 @@
 <link rel="stylesheet" href="~/css/auth.css" />
 
 <div class="auth-wrapper">
-
     <div class="auth-card">
-
-        <!-- LEFT IMAGE -->
         <div class="auth-left">
-            <div class="auth-logo">Shopping</div>
+            <div class="auth-logo">House88</div>
         </div>
 
-        <!-- RIGHT FORM -->
         <div class="auth-right">
-
             <h2>Đăng ký</h2>
-
             <p>
                 Nếu bạn đã có tài khoản,
                 <a asp-action="Login">đăng nhập</a>
             </p>
 
-            <form asp-action="Register">
+            <div asp-validation-summary="All" class="text-danger" style="font-size: 13px; margin-bottom: 10px;"></div>
 
+            <form asp-action="Register" method="post">
                 <input asp-for="Email"
                        class="auth-input"
                        placeholder="Email" />
 
+                <select asp-for="SelectedRole" class="auth-input" style="background-color: black;">
+                    <option value="">-- Bạn đăng ký là: --</option>
+                    <option value="Khachthue">Khách thuê phòng</option>
+                    <option value="Chutro">Chủ cho thuê trọ</option>
+                </select>
+
                 <input asp-for="Password"
                        type="password"
                        class="auth-input"
-                       placeholder="Mật khẩu" />
+                       placeholder="Mật khẩu (ít nhất 6 ký tự)" />
 
                 <input asp-for="ConfirmPassword"
                        type="password"
                        class="auth-input"
                        placeholder="Nhập lại mật khẩu" />
 
-                <button class="auth-btn">
+                <button type="submit" class="auth-btn">
                     Đăng ký
                 </button>
-
             </form>
-
         </div>
-
     </div>
-
 </div>

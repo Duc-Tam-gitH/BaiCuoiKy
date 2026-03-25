@@ -10,73 +10,71 @@
 }
 
 <div class="home-container">
-
+    @* --- Phần Hero và Search Giữ Nguyên --- *@
     <section class="hero">
         <h1>Tìm Phòng Trọ & Nhà Cho Thuê</h1>
         <p>Nhanh Chóng - An Toàn - Tiện Lợi</p>
-
-
         <div class="container">
-        
-        @* Lưu ý: Nếu chưa có TroController, hãy đổi asp-controller="Home" *@
             <form asp-controller="Home" asp-action="Search" method="get" class="search-box">
-            <select name="khuvuc" class="form-select w-auto">
-                <option value="">Khu vực</option>
-                <option>Hồ Chí Minh</option>
-                <option>Hà Nội</option>
-                <option>Đà Nẵng</option>
-            </select>
+                <select name="khuvuc" class="form-select w-auto">
+                    <option value="">Khu vực</option>
+                    <option>Hồ Chí Minh</option>
+                    <option>Hà Nội</option>
+                    <option>Đà Nẵng</option>
+                </select>
 
-            <select name="loai" class="form-select w-auto">
-                <option value="">Loại hình</option>
-                <option>Phòng trọ</option>
-                <option>Căn hộ mini</option>
-                <option>Nhà nguyên căn</option>
-            </select>
+                <select name="loai" class="form-select w-auto">
+                    <option value="">Loại hình</option>
+                    <option>Phòng trọ</option>
+                    <option>Căn hộ mini</option>
+                    <option>Nhà nguyên căn</option>
+                </select>
 
-            <select name="gia" class="form-select w-auto">
-                <option value="">Giá</option>
-                <option value="1">Dưới 2 triệu</option>
-                <option value="2">2 - 5 triệu</option>
-                <option value="3">Trên 5 triệu</option>
-            </select>
+                <select name="gia" class="form-select w-auto">
+                    <option value="">Giá</option>
+                    <option value="1">Dưới 2 triệu</option>
+                    <option value="2">2 - 5 triệu</option>
+                    <option value="3">Trên 5 triệu</option>
+                </select>
 
-            <input type="text" name="keyword" class="form-control w-auto" placeholder="Nhập từ khóa..." />
+                <input type="text" name="keyword" class="form-control w-auto" placeholder="Nhập từ khóa..." />
 
-            <button type="submit" class="btn btn-primary">
-                🔍 Tìm Kiếm
-            </button>
-        </form>
+                <button type="submit" class="btn btn-primary">
+                    🔍 Tìm Kiếm
+                </button>
+            </form>
         </div>
     </section>
 
+    @* --- PHẦN CHỈNH SỬA: PHÒNG TRỌ NỔI BẬT --- *@
     <section class="container mt-5">
         <div class="section-header mb-4">
-            <h2>Phòng Trọ Nổi Bật</h2>
+            <h2 class="fw-bold">Phòng Trọ Nổi Bật</h2>
         </div>
 
-        <div class="row">
+        @* g-4: Tạo khoảng cách đều giữa các Card *@
+        <div class="row g-4">
             @if (Model != null && Model.Any())
             {
                 foreach (var item in Model)
                 {
-                    // Logic lấy ảnh: Kiểm tra list AnhPhongs từ Model Tro.cs
                     var img = (item.AnhPhongs != null && item.AnhPhongs.Any())
                     ? item.AnhPhongs.First().Url
-                    : "/images/favicon.ico"; // Tạm thời dùng favicon nếu chưa có ảnh no-image
+                    : "/images/favicon.ico";
 
-                    <div class="col-md-4">
-                        <a asp-controller="Tro" asp-action="Details" asp-route-id="@item.Id" class="room-link">
-                            <div class="room-card">
-                                <div class="room-img">
-                                    <img src="@img" alt="@item.TieuDe" loading="lazy" />
+                    @* THAY ĐỔI: col-lg-3 để chia 4 cột trên màn hình máy tính *@
+                    <div class="col-md-6 col-lg-3">
+                        <a asp-controller="Tro" asp-action="Details" asp-route-id="@item.Id" class="text-decoration-none">
+                            <div class="room-card card h-100 border-0 shadow-sm overflow-hidden">
+                                <div class="room-img-container">
+                                    <img src="@img" alt="@item.TieuDe" class="card-img-top" loading="lazy" />
                                 </div>
-                                <div class="room-body mt-2">
-                                    <h3 class="room-title h5">@item.TieuDe</h3>
-                                    <p class="price text-danger fw-bold">
+                                <div class="card-body p-3">
+                                    <h3 class="room-title h6 fw-bold text-dark text-truncate">@item.TieuDe</h3>
+                                    <p class="price text-danger fw-bold mb-1">
                                         @String.Format("{0:N0} VNĐ", item.Gia)
                                     </p>
-                                    <p class="location small text-muted">
+                                    <p class="location small text-muted mb-0 text-truncate">
                                         📍 @item.DiaChi
                                     </p>
                                 </div>
@@ -94,16 +92,16 @@
         </div>
     </section>
 
+    @* --- Các phần Tin tức và CTA Giữ Nguyên --- *@
     <section class="container mt-5 text-center">
-        <h2 class="mb-4">Tin tức </h2>
+        <h2 class="mb-4">Tin tức</h2>
     </section>
 
-    <section class="cta bg-primary text-white text-center py-5 mt-5 rounded">
+    <section class="cta bg-primary text-white text-center py-5 mt-5 rounded mx-3">
         <h2>Đăng Tin Cho Thuê Ngay!</h2>
         <p>Tiếp cận hàng ngàn khách hàng tiềm năng mỗi ngày</p>
-        <a asp-controller="Tro" asp-action="Create" class="btn btn-light btn-lg mt-3">
+        <a asp-controller="Tro" asp-action="Create" class="btn btn-light btn-lg mt-3 rounded-pill px-4">
             🚀 Đăng Tin Ngay
         </a>
     </section>
-
 </div>

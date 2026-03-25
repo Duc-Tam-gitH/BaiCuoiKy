@@ -1,5 +1,63 @@
-﻿@*
-    For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
-*@
+﻿@model BaiCuoiKy.Models.Tro
+
 @{
+    ViewData["Title"] = "Đăng tin mới";
+}
+
+<div class="container mt-5">
+    <div class="card shadow border-0 rounded-4 p-4">
+        <h2 class="fw-bold text-primary mb-4"><i class="fa-solid fa-plus-circle me-2"></i>Đăng tin phòng mới</h2>
+
+        <form asp-controller="Chutro" asp-action="Create" method="post" enctype="multipart/form-data">
+            <div class="row">
+                <div class="col-md-8">
+                    <div class="mb-3">
+                        <label asp-for="TieuDe" class="form-label fw-bold">Tiêu đề bài đăng</label>
+                        <input asp-for="TieuDe" class="form-control rounded-3" placeholder="Ví dụ: Căn hộ Studio Quận 7 full nội thất" />
+                        <span asp-validation-for="TieuDe" class="text-danger"></span>
+                    </div>
+
+                    <div class="mb-3">
+                        <label asp-for="MoTa" class="form-label fw-bold">Mô tả chi tiết</label>
+                        <textarea asp-for="MoTa" class="form-control rounded-3" rows="6" placeholder="Mô tả về tiện ích, giờ giấc, nội thất..."></textarea>
+                        <span asp-validation-for="MoTa" class="text-danger"></span>
+                    </div>
+                </div>
+
+                <div class="col-md-4">
+                    <div class="mb-3">
+                        <label asp-for="Gia" class="form-label fw-bold">Giá thuê (VNĐ/tháng)</label>
+                        <input asp-for="Gia" type="number" class="form-control rounded-3" />
+                    </div>
+
+                    <div class="mb-3">
+                        <label asp-for="DienTich" class="form-label fw-bold">Diện tích (m²)</label>
+                        <input asp-for="DienTich" type="number" class="form-control rounded-3" />
+                    </div>
+
+                    <div class="mb-3">
+                        <label asp-for="DiaChi" class="form-label fw-bold">Địa chỉ chính xác</label>
+                        <input asp-for="DiaChi" class="form-control rounded-3" placeholder="Số nhà, tên đường, phường, quận..." />
+                    </div>
+
+                    <div class="mb-3">
+                        <label class="form-label fw-bold">Hình ảnh phòng (Chọn nhiều ảnh)</label>
+                        <input type="file" name="files" class="form-control rounded-3" multiple accept="image/*" />
+                        <small class="text-muted">Nên chọn ít nhất 3 ảnh rõ nét.</small>
+                    </div>
+                </div>
+            </div>
+
+            <div class="text-end mt-4">
+                <a asp-action="MyRooms" class="btn btn-light rounded-pill px-4 me-2">Hủy bỏ</a>
+                <button type="submit" class="btn btn-primary rounded-pill px-5 fw-bold">🚀 Đăng tin ngay</button>
+            </div>
+        </form>
+    </div>
+</div>
+
+@section Scripts {
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
 }

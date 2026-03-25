@@ -125,3 +125,38 @@ footer {
     align-items: center;
     justify-content: center;
 }
+/* Container ảnh để ép kích thước bằng nhau */
+.room-img-container {
+    height: 180px; /* Độ cao cố định cho ảnh */
+    overflow: hidden;
+    background-color: #f8f9fa;
+}
+
+    .room-img-container img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover; /* Quan trọng: Ảnh sẽ tự cắt để lấp đầy khung mà không bị méo */
+        transition: transform 0.3s ease;
+    }
+
+/* Hiệu ứng hover cho card */
+.room-card {
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+    border-radius: 12px;
+}
+
+    .room-card:hover {
+        transform: translateY(-8px);
+        box-shadow: 0 10px 20px rgba(0,0,0,0.15) !important;
+    }
+
+        .room-card:hover img {
+            transform: scale(1.1);
+        }
+
+/* Cắt ngắn tiêu đề nếu quá dài để không làm vỡ hàng */
+.text-truncate {
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}

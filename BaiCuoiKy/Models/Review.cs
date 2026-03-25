@@ -14,8 +14,8 @@ namespace BaiCuoiKy.Models
 
         public DateTime NgayDanhGia { get; set; } = DateTime.Now;
 
-        public int UserId { get; set; }
-        public User? User { get; set; }
+        public string UserId { get; set; }
+        public ApplicationUser User { get; set; }
 
         public int TroId { get; set; }
         public Tro? Tro { get; set; }

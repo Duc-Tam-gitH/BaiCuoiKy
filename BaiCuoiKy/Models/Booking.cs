@@ -10,11 +10,11 @@ namespace BaiCuoiKy.Models
         public DateTime NgayNhan { get; set; }
 
         public string TrangThai { get; set; } = "ChoDuyet";
-        
+
 
         // FK
-        public int UserId { get; set; }
-        public User User { get; set; }
+        public string UserId { get; set; }
+        public ApplicationUser User { get; set; }
 
         public int TroId { get; set; }
         public Tro Tro { get; set; }

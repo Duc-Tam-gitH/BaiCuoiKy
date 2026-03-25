@@ -17,8 +17,8 @@
         public DateTime NgayDang { get; set; } = DateTime.Now;
 
         // FK
-        public int UserId { get; set; }
-        public required User User { get; set; }
+        public string UserId { get; set; }
+        public ApplicationUser User { get; set; }
 
         // Quan hệ
         public ICollection<AnhPhong> AnhPhongs { get; set; } = new List<AnhPhong>();

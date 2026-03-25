@@ -8,6 +8,6 @@
 
         // FK
         public int TroId { get; set; }
-        public required Tro Tro { get; set; }
+        public  Tro? Tro { get; set; }
     }
 }

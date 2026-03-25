@@ -5,11 +5,10 @@
 <link rel="stylesheet" href="~/css/auth.css" />
 
 <div class="auth-wrapper">
-
     <div class="auth-card">
 
         <div class="auth-left">
-            <div class="auth-logo">Shopping</div>
+            <div class="auth-logo">House88</div>
         </div>
 
         <div class="auth-right">
@@ -21,18 +20,41 @@
                 <a asp-action="Register">đăng ký ngay</a>
             </p>
 
-            <form asp-action="Login">
+            <div asp-validation-summary="All" class="text-danger"></div>
 
-                <input asp-for="Email" class="auth-input" placeholder="Email" />
+            <form asp-action="Login" method="post">
 
-                <input asp-for="Password" type="password"
-                       class="auth-input"
-                       placeholder="Mật khẩu" />
+                <!-- Email -->
+                <input asp-for="Email"
+                       class="form-control auth-input"
+                       placeholder="Email"
+                       required />
+                <span asp-validation-for="Email" class="text-danger"></span>
 
-                <button class="auth-btn">
+                <!-- Password -->
+                <div class="password-wrapper">
+                    <input asp-for="Password"
+                           type="password"
+                           id="loginPassword"
+                           class="form-control auth-input"
+                           placeholder="Mật khẩu"
+                           required />
+                    <span class="toggle-password"
+                          onclick="togglePassword('loginPassword', this)">
+                        👁️
+                    </span>
+                </div>
+                <span asp-validation-for="Password" class="text-danger"></span>
+
+                <!-- Remember -->
+                <div style="margin-top: 10px;">
+                    <input asp-for="RememberMe" />
+                    <label asp-for="RememberMe">Ghi nhớ đăng nhập</label>
+                </div>
+
+                <button type="submit" class="btn btn-primary auth-btn">
                     Đăng nhập
                 </button>
-
             </form>
 
             <div class="auth-link">
@@ -40,7 +62,19 @@
             </div>
 
         </div>
-
     </div>
-
 </div>
+
+<script>
+    function togglePassword(inputId, el) {
+        const input = document.getElementById(inputId);
+
+        if (input.type === "password") {
+            input.type = "text";
+            el.textContent = "🙈";
+        } else {
+            input.type = "password";
+            el.textContent = "👁️";
+        }
+    }
+</script>

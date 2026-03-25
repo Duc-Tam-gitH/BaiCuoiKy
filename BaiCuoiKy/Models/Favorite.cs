@@ -4,8 +4,8 @@
     {
         public int Id { get; set; }
 
-        public int UserId { get; set; }
-        public User User { get; set; }   // ❌ bỏ required
+        public string UserId { get; set; }
+        public ApplicationUser User { get; set; }
 
         public int TroId { get; set; }
         public Tro Tro { get; set; }     // ❌ bỏ required

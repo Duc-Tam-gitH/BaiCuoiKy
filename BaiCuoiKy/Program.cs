@@ -78,15 +78,30 @@ app.MapControllerRoute(
 using (var scope = app.Services.CreateScope())
 {
     var roleManager = scope.ServiceProvider.GetRequiredService<RoleManager<IdentityRole>>();
+    var userManager = scope.ServiceProvider.GetRequiredService<UserManager<ApplicationUser>>();
 
-    string[] roles = { "Khachthue", "Chutro" };
+    // Tạo role
+    if (!await roleManager.RoleExistsAsync("Admin"))
+        await roleManager.CreateAsync(new IdentityRole("Admin"));
 
-    foreach (var role in roles)
+    if (!await roleManager.RoleExistsAsync("Customer"))
+        await roleManager.CreateAsync(new IdentityRole("Customer"));
+
+    // Tạo admin account
+    var adminEmail = "admin@gmail.com";
+    var admin = await userManager.FindByEmailAsync(adminEmail);
+
+    if (admin == null)
     {
-        if (!await roleManager.RoleExistsAsync(role))
+        var newAdmin = new ApplicationUser
         {
-            await roleManager.CreateAsync(new IdentityRole(role));
-        }
+            UserName = adminEmail,
+            Email = adminEmail,
+            FullName = "Admin"
+        };
+
+        await userManager.CreateAsync(newAdmin, "Admin@123");
+        await userManager.AddToRoleAsync(newAdmin, "Admin");
     }
 }
 

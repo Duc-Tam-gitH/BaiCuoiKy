@@ -1,4 +1,5 @@
-﻿/* auth.css */
+﻿/* auth.css - Đã cập nhật màu nút và kích thước container */
+@import url('auth.css');
 .auth-wrapper {
     display: flex;
     justify-content: center;
@@ -13,7 +14,9 @@
     display: flex;
     width: 100%;
     max-width: 900px;
-    height: 600px;
+    /* CẬP NHẬT: Xóa chiều cao cố định, dùng auto và min-height */
+    height: auto;
+    min-height: 500px; /* Đảm bảo khung đủ lớn cho các nội dung khác */
     background: #1e293b; /* Nền form tối */
     border-radius: 15px;
     overflow: hidden;
@@ -31,7 +34,6 @@
     align-items: flex-end;
     padding: 40px;
 }
-
 
     .auth-sidebar::before {
         content: "";
@@ -85,7 +87,8 @@
 }
 
 .auth-form-section a {
-    color: #fbbf24; /* Màu vàng điểm nhấn */
+    /* CẬP NHẬT: Màu liên kết cũng chuyển sang màu xanh dương đậm hoặc màu bạn muốn */
+    color: #fbbf24; /* Bạn có muốn đổi màu liên kết này luôn không? Giờ nó vẫn màu vàng */
     text-decoration: none;
 }
 
@@ -102,11 +105,14 @@
     box-sizing: border-box;
 }
 
-.auth-btn-yellow {
+/* CẬP NHẬT: Đổi tên class và màu nút sang màu xanh dương đậm */
+.auth-btn-blue {
     width: 100%;
     padding: 13px;
-    background-color: #fbbf24; /* Màu vàng giống mẫu */
-    color: #0f172a;
+    /* CẬP NHẬT: Màu nền mới */
+    background-color: #ED005A;
+    /* CẬP NHẬT: Màu chữ trên nền xanh đậm nên là trắng */
+    color: white;
     border: none;
     border-radius: 8px;
     font-weight: bold;
@@ -116,8 +122,9 @@
     transition: 0.3s;
 }
 
-    .auth-btn-yellow:hover {
-        background-color: #f59e0b;
+    .auth-btn-blue:hover {
+       
+        background-color: #002641;
     }
 
 .password-wrapper {

@@ -48,10 +48,13 @@ namespace BaiCuoiKy.Controllers
 
             if (result.Succeeded)
             {
-                // Gán role (đã tạo sẵn trong Program.cs)
-                if (!string.IsNullOrEmpty(model.SelectedRole))
+                if (result.Succeeded)
                 {
-                    await _userManager.AddToRoleAsync(user, model.SelectedRole);
+                    // Gán mặc định role Customer
+                    await _userManager.AddToRoleAsync(user, "Customer");
+
+                    await _signInManager.SignInAsync(user, isPersistent: false);
+                    return RedirectToAction("Index", "Home");
                 }
 
                 // Tự động đăng nhập

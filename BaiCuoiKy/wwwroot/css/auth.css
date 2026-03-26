@@ -1,152 +1,132 @@
-﻿/* =========================
-    AUTH (LOGIN / REGISTER)
-========================= */
-
-/* wrapper */
+﻿/* auth.css */
 .auth-wrapper {
+    display: flex;
+    justify-content: center;
+    align-items: center;
     min-height: 100vh;
+    background-color: #0f172a; /* Nền tối sâu */
+    font-family: 'Segoe UI', sans-serif;
+    padding: 20px;
+}
+
+.auth-container {
     display: flex;
-    justify-content: center;
-    align-items: center;
-    background: linear-gradient(135deg, #f8fafc, #eef2f7);
-}
-
-/* card */
-.auth-card {
-    width: 900px;
-    min-height: 520px;
-    display: flex;
-    border-radius: 16px;
-    overflow: hidden;
-    background: white;
-    box-shadow: 0 20px 40px rgba(0, 38, 65, 0.1);
-    position: relative;
-}
-
-/* ===== LEFT (branding) ===== */
-.auth-left {
-    width: 45%;
-    background: linear-gradient(135deg, var(--primary), var(--secondary));
-    color: white;
-    position: relative;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    text-align: center;
-    padding: 30px;
-}
-
-    .auth-left h2 {
-        font-size: 26px;
-        margin-bottom: 10px;
-    }
-
-    .auth-left p {
-        font-size: 14px;
-        opacity: 0.9;
-    }
-
-/* logo */
-.auth-logo {
-    position: absolute;
-    bottom: 20px;
-    left: 25px;
-    font-size: 28px;
-    font-weight: bold;
-    color: var(--accent);
-}
-
-/* ===== RIGHT (form) ===== */
-.auth-right {
-    width: 55%;
-    padding: 50px 40px;
-}
-
-    /* title */
-    .auth-right h2 {
-        font-size: 28px;
-        margin-bottom: 5px;
-    }
-
-    .auth-right p {
-        font-size: 14px;
-        color: #64748b;
-        margin-bottom: 20px;
-    }
-
-    /* input dùng lại form-control */
-    .auth-right .form-control {
-        margin-top: 12px;
-    }
-
-/* button dùng lại btn */
-.auth-btn {
     width: 100%;
-    margin-top: 20px;
+    max-width: 900px;
+    height: 600px;
+    background: #1e293b; /* Nền form tối */
+    border-radius: 15px;
+    overflow: hidden;
+    box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.3);
 }
 
-/* link */
-.auth-link {
-    margin-top: 15px;
-    font-size: 14px;
-    color: #64748b;
+/* Phần bên trái: Chứa ảnh tro.png và logo */
+.auth-sidebar {
+    flex: 1;
+    position: relative;
+    background-image: url('/images/tro.png'); /* Ảnh phòng của bạn */
+    background-size: cover;
+    background-position: center;
+    display: flex;
+    align-items: flex-end;
+    padding: 40px;
 }
 
-    .auth-link a {
-        color: var(--accent);
-        font-weight: 500;
+
+    .auth-sidebar::before {
+        content: "";
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: rgba(30, 41, 59, 0.7); /* Màu xanh đen phủ lên ảnh tro.png */
+        z-index: 1;
     }
 
-        .auth-link a:hover {
-            text-decoration: underline;
-        }
+.auth-sidebar-content {
+    position: relative;
+    z-index: 2; /* Đẩy logo lên trên lớp phủ */
+}
 
-/* close */
+    .auth-sidebar-content img {
+        height: 80px;
+        width: auto;
+    }
+
+/* Phần bên phải: Form đăng nhập/đăng ký */
+.auth-form-section {
+    flex: 1;
+    padding: 50px;
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    color: white;
+}
+
 .auth-close {
     position: absolute;
-    right: 15px;
-    top: 10px;
-    font-size: 20px;
+    top: 20px;
+    right: 20px;
     color: #94a3b8;
-    cursor: pointer;
+    text-decoration: none;
+    font-size: 20px;
 }
 
-    .auth-close:hover {
-        color: var(--accent);
+.auth-form-section h2 {
+    margin: 0 0 10px 0;
+    font-size: 28px;
+}
+
+.auth-form-section p {
+    color: #94a3b8;
+    margin-bottom: 30px;
+}
+
+.auth-form-section a {
+    color: #fbbf24; /* Màu vàng điểm nhấn */
+    text-decoration: none;
+}
+
+/* Custom Input cho giao diện tối */
+.auth-input-dark {
+    width: 100%;
+    padding: 12px 15px;
+    margin: 10px 0;
+    background: #0f172a;
+    border: 1px solid #334155;
+    border-radius: 8px;
+    color: white;
+    outline: none;
+    box-sizing: border-box;
+}
+
+.auth-btn-yellow {
+    width: 100%;
+    padding: 13px;
+    background-color: #fbbf24; /* Màu vàng giống mẫu */
+    color: #0f172a;
+    border: none;
+    border-radius: 8px;
+    font-weight: bold;
+    font-size: 16px;
+    margin-top: 20px;
+    cursor: pointer;
+    transition: 0.3s;
+}
+
+    .auth-btn-yellow:hover {
+        background-color: #f59e0b;
     }
 
-/* ===== PASSWORD TOGGLE ===== */
 .password-wrapper {
     position: relative;
 }
 
 .toggle-password {
     position: absolute;
-    right: 12px;
-    top: 50%;
-    transform: translateY(-50%);
+    right: 15px;
+    top: 22px;
     cursor: pointer;
-    font-size: 14px;
-    color: #64748b;
 }
-
-    .toggle-password:hover {
-        color: var(--accent);
-    }
-
-/* ===== CLOSE BUTTON ===== */
-.auth-close {
-    position: absolute;
-    top: 15px;
-    right: 18px;
-    font-size: 22px;
-    font-weight: bold;
-    color: #94a3b8;
-    cursor: pointer;
-    transition: 0.2s;
-}
-
-    .auth-close:hover {
-        color: var(--accent);
-        transform: scale(1.2);
-    }

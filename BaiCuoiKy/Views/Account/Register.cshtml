@@ -1,102 +1,93 @@
 ﻿@model BaiCuoiKy.Models.ViewModel.RegisterViewModel
 @{
-    Layout = null;
+    Layout = null; // Ngắt kết nối với _Layout chung để dùng giao diện tối này
 }
-<link rel="stylesheet" href="~/css/auth.css" />
 
-<div class="auth-wrapper">
-    <div class="auth-card">
-        <div class="auth-card">
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Đăng ký - House88</title>
+    <link rel="stylesheet" href="~/css/auth.css" />
+</head>
+<body>
+    <div class="auth-wrapper">
+        <div class="auth-container">
 
-            <!-- CLOSE -->
-            <a asp-controller="Home" asp-action="Index" class="auth-close">
-                ✕
-            </a>
-
-        <div class="auth-left">
-            <div class="auth-logo">House88</div>
-        </div>
-
-        <div class="auth-right">
-
-            <h2>Đăng ký</h2>
-
-            <p>
-                Nếu bạn đã có tài khoản,
-                <a asp-action="Login">đăng nhập</a>
-            </p>
-
-            <div asp-validation-summary="All" class="text-danger"></div>
-
-            <form asp-action="Register" method="post">
-
-
-                <!-- Email -->
-                <input asp-for="Email"
-                       class="form-control auth-input"
-                       placeholder="Email"
-                       required />
-                <span asp-validation-for="Email" class="text-danger"></span>
-
-                <!-- Role -->
-                <select asp-for="SelectedRole"
-                        class="form-control auth-input"
-                        required>
-                    <option value="">-- Bạn đăng ký là: --</option>
-                    <option value="Khachthue">Khách thuê phòng</option>
-                    <option value="Chutro">Chủ cho thuê trọ</option>
-                </select>
-
-                <!-- Password -->
-                <div class="password-wrapper">
-                    <input asp-for="Password"
-                           type="password"
-                           id="registerPassword"
-                           class="form-control auth-input"
-                           placeholder="Mật khẩu"
-                           required />
-                    <span class="toggle-password"
-                          onclick="togglePassword('registerPassword', this)">
-                        👁️
-                    </span>
+            <div class="auth-sidebar">
+                <div class="auth-sidebar-content">
+                    <img src="/images/logo.png" alt="House88" style="width: 450px; height: auto; display: block;" />
                 </div>
-                <span asp-validation-for="Password" class="text-danger"></span>
+            </div>
 
-                <!-- Confirm -->
-                <div class="password-wrapper">
-                    <input asp-for="ConfirmPassword"
-                           type="password"
-                           id="confirmPassword"
-                           class="form-control auth-input"
-                           placeholder="Nhập lại mật khẩu"
-                           required />
-                    <span class="toggle-password"
-                          onclick="togglePassword('confirmPassword', this)">
-                        👁️
-                    </span>
-                </div>
-                <span asp-validation-for="ConfirmPassword" class="text-danger"></span>
+            <div class="auth-form-section">
+                <a asp-controller="Home" asp-action="Index" class="auth-close">✕</a>
 
-                <button type="submit" class="btn btn-primary auth-btn">
-                    Đăng ký
-                </button>
+                <h2>Đăng ký</h2>
+                <p>
+                    Nếu bạn đã có tài khoản,
+                    <a asp-action="Login">Đăng nhập</a>
+                </p>
 
-            </form>
+                <div asp-validation-summary="ModelOnly" class="text-danger"></div>
 
+                <form asp-action="Register" method="post">
+
+                    <div class="form-group">
+                        <input asp-for="FullName" class="auth-input-dark" placeholder="Họ và tên" required />
+                        <span asp-validation-for="FullName" class="text-danger"></span>
+                    </div>
+
+                    <div class="form-group">
+                        <input asp-for="Email" class="auth-input-dark" placeholder="Email" required />
+                        <span asp-validation-for="Email" class="text-danger"></span>
+                    </div>
+
+                    <div class="form-group">
+                        <select asp-for="SelectedRole" class="auth-input-dark" required>
+                            <option value="">-- Bạn đăng ký là: --</option>
+                            <option value="Khachthue">Khách thuê phòng</option>
+                            <option value="Chutro">Chủ cho thuê trọ</option>
+                        </select>
+                        <span asp-validation-for="SelectedRole" class="text-danger"></span>
+                    </div>
+
+                    <div class="form-group">
+                        <div class="password-wrapper">
+                            <input asp-for="Password" type="password" id="registerPassword" class="auth-input-dark" placeholder="Mật khẩu" required />
+                            <span class="toggle-password" onclick="togglePassword('registerPassword', this)">👁️</span>
+                        </div>
+                        <span asp-validation-for="Password" class="text-danger"></span>
+                    </div>
+
+                    <div class="form-group">
+                        <div class="password-wrapper">
+                            <input asp-for="ConfirmPassword" type="password" id="confirmPassword" class="auth-input-dark" placeholder="Nhập lại mật khẩu" required />
+                            <span class="toggle-password" onclick="togglePassword('confirmPassword', this)">👁️</span>
+                        </div>
+                        <span asp-validation-for="ConfirmPassword" class="text-danger"></span>
+                    </div>
+
+                    <button type="submit" class="auth-btn-yellow">Đăng ký</button>
+                </form>
+
+            </div>
         </div>
     </div>
-</div>
 
-<script>
-    function togglePassword(inputId, el) {
-        const input = document.getElementById(inputId);
-
-        if (input.type === "password") {
-            input.type = "text";
-            el.textContent = "🙈";
-        } else {
-            input.type = "password";
-            el.textContent = "👁️";
+    <script>
+        // Hàm ẩn/hiện mật khẩu
+        function togglePassword(inputId, el) {
+            const input = document.getElementById(inputId);
+            if (input.type === "password") {
+                input.type = "text";
+                el.textContent = "🙈";
+            } else {
+                input.type = "password";
+                el.textContent = "👁️";
+            }
         }
-    }
-</script>
+    </script>
+</body>
+</html>

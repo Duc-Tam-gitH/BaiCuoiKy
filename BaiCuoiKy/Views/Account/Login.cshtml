@@ -2,83 +2,61 @@
 @{
     Layout = null;
 }
-<link rel="stylesheet" href="~/css/auth.css" />
 
-<div class="auth-wrapper">
-    <div class="auth-card">
-
-        <div class="auth-left">
-            <div class="auth-logo">House88</div>
-        </div>
-
-        <div class="auth-right">
-
-            <h2>Đăng nhập</h2>
-
-            <p>
-                Nếu bạn chưa có tài khoản,
-                <a asp-action="Register">đăng ký ngay</a>
-            </p>
-
-            <div asp-validation-summary="All" class="text-danger"></div>
-
-            <form asp-action="Login" method="post">
-
-                <!-- Email -->
-                <input asp-for="Email"
-                       class="form-control auth-input"
-                       placeholder="Email"
-                       required />
-                <span asp-validation-for="Email" class="text-danger"></span>
-
-                <!-- Password -->
-                <div class="password-wrapper">
-                    <input asp-for="Password"
-                           type="password"
-                           id="loginPassword"
-                           class="form-control auth-input"
-                           placeholder="Mật khẩu"
-                           required />
-                    <span class="toggle-password"
-                          onclick="togglePassword('loginPassword', this)">
-                        👁️
-                    </span>
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Đăng nhập - House88</title>
+    <link rel="stylesheet" href="~/css/auth.css" />
+</head>
+<body>
+    <div class="auth-wrapper">
+        <div class="auth-container">
+            <div class="auth-sidebar">
+                <div class="auth-sidebar-content">
+                    <img src="/images/logo.png" alt="House88" style="width: 450px; height: auto; display: block;" />
                 </div>
-                <span asp-validation-for="Password" class="text-danger"></span>
-
-                <!-- Remember -->
-                <div style="margin-top: 10px;">
-                    <input asp-for="RememberMe" />
-                    <label asp-for="RememberMe">Ghi nhớ đăng nhập</label>
-                </div>
-
-                <button type="submit" class="btn btn-primary auth-btn">
-                    Đăng nhập
-                </button>
-            </form>
-
-            <div class="auth-link">
-                <a href="#">Quên mật khẩu?</a>
             </div>
 
+            <div class="auth-form-section">
+                <a asp-controller="Home" asp-action="Index" class="auth-close">✕</a>
+
+                <h2>Đăng nhập</h2>
+                <p>Nếu bạn chưa có tài khoản, <a asp-action="Register">đăng ký ngay</a></p>
+
+                <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+
+                <form asp-action="Login" method="post">
+                    <input asp-for="Email" class="auth-input-dark" placeholder="Email" required />
+
+                    <div class="password-wrapper">
+                        <input asp-for="Password" type="password" id="loginPassword" class="auth-input-dark" placeholder="Mật khẩu" required />
+                        <span class="toggle-password" onclick="togglePassword('loginPassword', this)">👁️</span>
+                    </div>
+
+                    <div style="margin-top: 15px; font-size: 14px; color: #94a3b8;">
+                        <input asp-for="RememberMe" />
+                        <label asp-for="RememberMe">Ghi nhớ đăng nhập</label>
+                    </div>
+
+                    <button type="submit" class="auth-btn-yellow">Đăng nhập</button>
+                </form>
+
+                <div style="margin-top: 20px; text-align: center;">
+                    <a href="#" style="font-size: 14px; color: #94a3b8;">Quên mật khẩu?</a>
+                </div>
+            </div>
         </div>
-        <!-- CLOSE -->
-        <a asp-controller="Home" asp-action="Index" class="auth-close">
-            ✕
-        </a>
     </div>
-</div>
 
-<script>
-    function togglePassword(inputId, el) {
-        const input = document.getElementById(inputId);
-
-        if (input.type === "password") {
-            input.type = "text";
-            el.textContent = "🙈";
-        } else {
-            input.type = "password";
-            el.textContent = "👁️";
+    <script>
+        function togglePassword(inputId, el) {
+            const input = document.getElementById(inputId);
+            input.type = input.type === "password" ? "text" : "password";
+            el.textContent = input.type === "password" ? "👁️" : "🙈";
         }
-    }
-</script>
+    </script>
+</body>
+</html>

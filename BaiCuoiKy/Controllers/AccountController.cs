@@ -40,6 +40,8 @@ namespace BaiCuoiKy.Controllers
             {
                 UserName = model.Email,
                 Email = model.Email,
+                FullName = model.FullName, // Chắc chắn dòng này có giá trị
+                Address = "" // Gán giá trị mặc định nếu form đăng ký không có ô nhập địa chỉ
             };
 
             var result = await _userManager.CreateAsync(user, model.Password);

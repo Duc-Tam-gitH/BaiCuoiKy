@@ -18,7 +18,7 @@
 
         // FK
         public string UserId { get; set; }
-        public ApplicationUser User { get; set; }
+        public required ApplicationUser User { get; set; }
 
         // Quan hệ
         public ICollection<AnhPhong> AnhPhongs { get; set; } = new List<AnhPhong>();

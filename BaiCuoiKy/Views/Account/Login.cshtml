@@ -44,8 +44,14 @@
                     <button type="submit" class="auth-btn-blue">Đăng nhập</button>
                 </form>
 
-                <div style="margin-top: 20px; text-align: center;">
-                    <a href="#" style="font-size: 14px; color: #94a3b8;">Quên mật khẩu?</a>
+                <div class="text-center mt-2">
+                    <a asp-controller="Account" asp-action="ForgotPassword"
+                       class="text-decoration-none small fw-bold"
+                       style="color: rgba(255,255,255,0.6); transition: 0.3s;"
+                       onmouseover="this.style.color='#ED005A'"
+                       onmouseout="this.style.color='rgba(255,255,255,0.6)'">
+                        Quên mật khẩu?
+                    </a>
                 </div>
             </div>
         </div>

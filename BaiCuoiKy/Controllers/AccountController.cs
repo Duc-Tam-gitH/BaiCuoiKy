@@ -3,6 +3,8 @@ using BaiCuoiKy.Models.ViewModel;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using System.Net.Mail;
+using System.Net;
 
 namespace BaiCuoiKy.Controllers
 {
@@ -165,6 +167,96 @@ namespace BaiCuoiKy.Controllers
                 ModelState.AddModelError("", error.Description);
             }
             return View("Profile", model);
+        }
+        // GET: Quên mật khẩu
+        [HttpGet]
+        public IActionResult ForgotPassword() => View();
+
+        [HttpPost]
+        [AllowAnonymous]
+        public async Task<IActionResult> ForgotPassword(ForgotPasswordViewModel model)
+        {
+            if (ModelState.IsValid)
+            {
+                var user = await _userManager.FindByEmailAsync(model.Email);
+                if (user != null)
+                {
+                    var token = await _userManager.GeneratePasswordResetTokenAsync(user);
+                    var callbackUrl = Url.Action("ResetPassword", "Account",
+                        new { token, email = model.Email }, Request.Scheme);
+
+                    // --- ĐOẠN CODE GỬI EMAIL THẬT ---
+                    try
+                    {
+                        var fromAddress = new MailAddress("hoangnam01645994528@gmail.com", "House88 Hỗ trợ");
+                        var toAddress = new MailAddress(model.Email);
+                        string fromPassword = "sslu ezce txez krua"; // Mật khẩu ứng dụng
+
+                        string subject = "Đặt lại mật khẩu - House88";
+                        string body = $"Chào bạn, vui lòng nhấn vào link sau để đổi mật khẩu: <a href='{callbackUrl}'>Nhấn vào đây</a>";
+
+                        var smtp = new SmtpClient
+                        {
+                            Host = "smtp.gmail.com",
+                            Port = 587,
+                            EnableSsl = true,
+                            DeliveryMethod = SmtpDeliveryMethod.Network,
+                            UseDefaultCredentials = false,
+                            Credentials = new NetworkCredential(fromAddress.Address, fromPassword)
+                        };
+
+                        using (var message = new MailMessage(fromAddress, toAddress)
+                        {
+                            Subject = subject,
+                            Body = body,
+                            IsBodyHtml = true
+                        })
+                        {
+                            await smtp.SendMailAsync(message);
+                        }
+                    }
+                    catch (Exception ex)
+                    {
+                        // Nếu lỗi gửi mail, bạn có thể log lỗi ở đây
+                        ModelState.AddModelError("", "Lỗi gửi mail: " + ex.Message);
+                        return View(model);
+                    }
+                }
+
+                // Sau khi gửi xong (hoặc nếu user ko tồn tại), chuyển hướng sang trang thông báo
+                return RedirectToAction("ForgotPasswordConfirmation");
+            }
+            return View(model);
+        }
+
+        // GET: Trang đặt lại mật khẩu mới
+        [HttpGet]
+        public IActionResult ResetPassword(string token, string email)
+        {
+            if (token == null || email == null) return RedirectToAction("Index", "Home");
+            return View(new ResetPasswordViewModel { Token = token, Email = email });
+        }
+
+        // POST: Lưu mật khẩu mới
+        [HttpPost]
+        public async Task<IActionResult> ResetPassword(ResetPasswordViewModel model)
+        {
+            if (!ModelState.IsValid) return View(model);
+
+            var user = await _userManager.FindByEmailAsync(model.Email);
+            if (user == null) return RedirectToAction("ResetPasswordConfirmation");
+
+            var result = await _userManager.ResetPasswordAsync(user, model.Token, model.Password);
+            if (result.Succeeded) return RedirectToAction("ResetPasswordConfirmation");
+
+            foreach (var error in result.Errors) ModelState.AddModelError("", error.Description);
+            return View();
+        }
+        [HttpGet]
+        [AllowAnonymous]
+        public IActionResult ForgotPasswordConfirmation()
+        {
+            return View();
         }
     }
 }

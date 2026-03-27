@@ -17,6 +17,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <Folder Include="Models\Admin\" />
     <Folder Include="Views\Khachthue\" />
     <Folder Include="Views\Khachthue\" />
   </ItemGroup>

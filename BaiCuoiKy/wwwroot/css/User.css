@@ -1,0 +1,31 @@
+﻿
+{
+    width: 35px;
+    height: 35px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: white;
+    font-weight: bold;
+    font-size: 14px;
+}
+
+.table > tbody > tr:hover {
+    background-color: rgba(0, 123, 255, 0.05);
+    transition: all 0.3s ease;
+}
+
+.btn-group .btn {
+    margin: 0 2px;
+}
+
+.badge {
+    padding: 6px 10px;
+    font-weight: 500;
+}
+
+.card {
+    border-radius: 10px;
+}
+

@@ -3,3 +3,244 @@
 *@
 @{
 }
+<!DOCTYPE html>
+<html lang="vi">
+    <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Đăng nhập - House88</title>
+    <link rel="stylesheet" href="~/css/User.css" />
+    </head>
+    <body>
+    <div class="container-fluid mt-4">
+        <!-- Header -->
+        <div class="row mb-4">
+            <div class="col-md-12">
+                <div class="card shadow-sm border-0">
+                    <div class="card-body">
+                        <div class="d-flex justify-content-between align-items-center">
+                            <div>
+                                <h3 class="mb-0 text-primary">
+                                    <i class="fas fa-users me-2"></i>Quản lý tài khoản
+                                </h3>
+                                <p class="text-muted mt-2 mb-0">Tổng số: @Model.Count() tài khoản</p>
+                            </div>
+                            <div>
+                                <a asp-action="Index" class="btn btn-outline-primary me-2">
+                                    <i class="fas fa-sync-alt"></i> Làm mới
+                                </a>
+                                <a asp-controller="Account" asp-action="Register" class="btn btn-primary">
+                                    <i class="fas fa-user-plus"></i> Thêm tài khoản
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Filter and Search Section -->
+        <div class="row mb-4">
+            <div class="col-md-12">
+                <div class="card shadow-sm border-0">
+                    <div class="card-body">
+                        <form method="get" asp-action="Index" class="row g-3">
+                            <!-- Search -->
+                            <div class="col-md-4">
+                                <div class="input-group">
+                                    <span class="input-group-text bg-white">
+                                        <i class="fas fa-search text-muted"></i>
+                                    </span>
+                                    <input type="text" class="form-control" name="searchString"
+                                           value="@ViewBag.CurrentSearch" placeholder="Tìm theo tên, email, số điện thoại...">
+                                </div>
+                            </div>
+
+                            <!-- Role Filter -->
+                            <div class="col-md-3">
+                                <select name="roleFilter" class="form-select" onchange="this.form.submit()">
+                                    @foreach (var role in ViewBag.RolesList)
+                                    {
+                                        if (role == ViewBag.CurrentRoleFilter || (ViewBag.CurrentRoleFilter == null && role == "All"))
+                                        {
+                                            <option value="@role" selected>@role</option>
+                                        }
+                                        else
+                                        {
+                                            <option value="@role">@role</option>
+                                        }
+                                    }
+                                </select>
+                            </div>
+
+                            <!-- Sort Order -->
+                            <div class="col-md-3">
+                                <select name="sortOrder" class="form-select" onchange="this.form.submit()">
+                                    <option value="name_asc" selected="@(ViewBag.CurrentSort == null || ViewBag.CurrentSort == "name_asc")">A-Z (Tên đăng nhập)</option>
+                                    <option value="name_desc" selected="@(ViewBag.CurrentSort == "name_desc")">Z-A (Tên đăng nhập)</option>
+                                    <option value="fullname" selected="@(ViewBag.CurrentSort == "fullname")">A-Z (Họ tên)</option>
+                                    <option value="fullname_desc" selected="@(ViewBag.CurrentSort == "fullname_desc")">Z-A (Họ tên)</option>
+                                    <option value="email" selected="@(ViewBag.CurrentSort == "email")">A-Z (Email)</option>
+                                    <option value="email_desc" selected="@(ViewBag.CurrentSort == "email_desc")">Z-A (Email)</option>
+                                    <option value="date" selected="@(ViewBag.CurrentSort == "date")">Mới nhất</option>
+                                    <option value="date_desc" selected="@(ViewBag.CurrentSort == "date_desc")">Cũ nhất</option>
+                                </select>
+                            </div>
+
+                            <!-- Search Button -->
+                            <div class="col-md-2">
+                                <button type="submit" class="btn btn-primary w-100">
+                                    <i class="fas fa-filter"></i> Lọc
+                                </button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Alert Messages -->
+        @if (TempData["Success"] != null)
+        {
+            <div class="alert alert-success alert-dismissible fade show shadow-sm" role="alert">
+                <i class="fas fa-check-circle me-2"></i> @TempData["Success"]
+                <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+            </div>
+        }
+
+        @if (TempData["Error"] != null)
+        {
+            <div class="alert alert-danger alert-dismissible fade show shadow-sm" role="alert">
+                <i class="fas fa-exclamation-circle me-2"></i> @TempData["Error"]
+                <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+            </div>
+        }
+
+        <!-- Users Table -->
+        <div class="row">
+            <div class="col-md-12">
+                <div class="card shadow-sm border-0">
+                    <div class="card-body p-0">
+                        <div class="table-responsive">
+                            <table class="table table-hover mb-0">
+                                <thead class="bg-light">
+                                    <tr>
+                                        <th class="ps-3">STT</th>
+                                        <th>Tên đăng nhập</th>
+                                        <th>Họ tên</th>
+                                        <th>Email</th>
+                                        <th>Số điện thoại</th>
+                                        <th>Vai trò</th>
+                                        <th>Tin đã đăng</th>
+                                        <th>Trạng thái</th>
+                                        <th class="text-center">Thao tác</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    @{
+                                        int index = 1;
+                                    }
+                                    @foreach (var item in Model)
+                                    {
+                                        <tr class="align-middle">
+                                            <td class="ps-3 fw-bold">@index</td>
+                                            <td>
+                                                <div class="d-flex align-items-center">
+                                                    <div class="avatar-circle me-2" style="background-color: #007bff;">
+                                                        <span>@item.User.UserName?.Substring(0, 1).ToUpper()</span>
+                                                    </div>
+                                                    <div>
+                                                        <strong>@item.User.UserName</strong>
+                                                    </div>
+                                                </div>
+                                            </td>
+                                            <td>@(item.User.FullName ?? "---")</td>
+                                            <td>@item.User.Email</td>
+                                            <td>@(item.User.PhoneNumber ?? "---")</td>
+                                            <td>
+                                                @foreach (var role in item.Roles)
+                                                {
+                                                    <span class="badge bg-info text-dark me-1">@role</span>
+                                                }
+                                                @if (!item.Roles.Any())
+                                                {
+                                                    <span class="badge bg-secondary">No Role</span>
+                                                }
+                                            </td>
+                                            <td>
+                                                <span class="badge bg-primary">@item.TotalTros bài</span>
+                                                <span class="badge bg-success ms-1">@item.TotalBookings đơn</span>
+                                            </td>
+                                            <td>
+                                                @if (item.User.LockoutEnd != null && item.User.LockoutEnd > DateTimeOffset.UtcNow)
+                                                {
+                                                    <span class="badge bg-danger">
+                                                        <i class="fas fa-lock me-1"></i>Đã khóa
+                                                    </span>
+                                                }
+                                                else
+                                                {
+                                                    <span class="badge bg-success">
+                                                        <i class="fas fa-unlock-alt me-1"></i>Hoạt động
+                                                    </span>
+                                                }
+                                            </td>
+                                            <td class="text-center">
+                                                <div class="btn-group" role="group">
+                                                    <a asp-action="Edit" asp-route-id="@item.User.Id"
+                                                       class="btn btn-sm btn-outline-primary" title="Chỉnh sửa">
+                                                        <i class="fas fa-edit"></i>
+                                                    </a>
+
+                                                    @if (item.User.LockoutEnd != null && item.User.LockoutEnd > DateTimeOffset.UtcNow)
+                                                    {
+                                                        <form asp-action="UnlockUser" method="post" class="d-inline">
+                                                            <input type="hidden" name="id" value="@item.User.Id" />
+                                                            <button type="submit" class="btn btn-sm btn-outline-success" title="Mở khóa"
+                                                                    onclick="return confirm('Bạn có chắc muốn mở khóa tài khoản này?')">
+                                                                <i class="fas fa-unlock"></i>
+                                                            </button>
+                                                        </form>
+                                                    }
+                                                    else
+                                                    {
+                                                        <form asp-action="LockUser" method="post" class="d-inline">
+                                                            <input type="hidden" name="id" value="@item.User.Id" />
+                                                            <button type="submit" class="btn btn-sm btn-outline-warning" title="Khóa tài khoản"
+                                                                    onclick="return confirm('Bạn có chắc muốn khóa tài khoản này?')">
+                                                                <i class="fas fa-lock"></i>
+                                                            </button>
+                                                        </form>
+                                                    }
+
+                                                    <form asp-action="Delete" method="post" class="d-inline">
+                                                        <input type="hidden" name="id" value="@item.User.Id" />
+                                                        <button type="submit" class="btn btn-sm btn-outline-danger" title="Xóa"
+                                                                onclick="return confirm('Bạn có chắc muốn xóa tài khoản này? Hành động này không thể hoàn tác!')">
+                                                            <i class="fas fa-trash-alt"></i>
+                                                        </button>
+                                                    </form>
+                                                </div>
+                                            </td>
+                                        </tr>
+                                        index++;
+                                    }
+                                </tbody>
+                            </table>
+                        </div>
+
+                        @if (!Model.Any())
+                        {
+                            <div class="text-center py-5">
+                                <i class="fas fa-users fa-3x text-muted mb-3"></i>
+                                <p class="text-muted">Không tìm thấy tài khoản nào.</p>
+                            </div>
+                        }
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    </body>
+</html>

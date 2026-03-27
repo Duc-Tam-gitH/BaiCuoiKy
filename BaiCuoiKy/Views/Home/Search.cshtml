@@ -1,5 +1,33 @@
-﻿@*
-    For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
-*@
-@{
-}
+﻿<div class="search-hero">
+    <div class="container">
+        <h1>Tìm Phòng Trọ & Nhà Cho Thuê</h1>
+
+        <div class="search-filter-box">
+            <form asp-action="Search" method="get" class="row g-3 align-items-center">
+                <div class="col-md-3">
+                    <select name="khuvuc" class="form-select">
+                        <option value="">Khu vực</option>
+                    </select>
+                </div>
+                <div class="col-md-2">
+                    <select name="loaihinh" class="form-select">
+                        <option value="">Loại hình</option>
+                    </select>
+                </div>
+                <div class="col-md-2">
+                    <select name="gia" class="form-select">
+                        <option value="">Giá</option>
+                    </select>
+                </div>
+                <div class="col-md-3">
+                    <input type="text" name="tukhoa" class="form-control" placeholder="Nhập từ khóa...">
+                </div>
+                <div class="col-md-2">
+                    <button type="submit" class="btn btn-search w-100" style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; border: none;">
+                        <i class="fa-solid fa-magnifying-glass"></i>Tìm kiếm 
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>

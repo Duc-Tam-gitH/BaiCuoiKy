@@ -1,9 +1,12 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using System.Security.Claims;
 using BaiCuoiKy.Models;
 
 namespace BaiCuoiKy.Controllers
 {
+    [Authorize(Roles = "Khachthue")]
     public class KhachthueController : Controller
     {
         private readonly AppDbContext _context;
@@ -13,15 +16,20 @@ namespace BaiCuoiKy.Controllers
             _context = context;
         }
 
-        // 📌 Danh sách booking
-        public IActionResult Bookings()
+        // Action hiển thị danh sách yêu thích
+        public async Task<IActionResult> Favorites()
         {
-            var data = _context.Bookings
-                .Include(b => b.Tro)
-                .Include(b => b.User)
-                .ToList();
+            var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+            if (string.IsNullOrEmpty(userId)) return RedirectToAction("Login", "Account");
 
-            return View(data);
+            var favorites = await _context.Favorites
+                .Where(f => f.UserId == userId)
+                .Include(f => f.Tro)
+                    .ThenInclude(t => t.AnhPhongs) // Lấy ảnh để hiển thị trên Card
+                .Select(f => f.Tro)
+                .ToListAsync();
+
+            return View(favorites);
         }
     }
 }

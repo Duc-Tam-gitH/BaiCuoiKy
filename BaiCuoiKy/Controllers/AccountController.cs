@@ -33,37 +33,46 @@ namespace BaiCuoiKy.Controllers
         [HttpPost]
         public async Task<IActionResult> Register(RegisterViewModel model)
         {
-            if (!ModelState.IsValid)
-                return View(model);
+            // 1. Gán mặc định Role là Khachthue vì bạn đã bỏ Chutro
+            model.SelectedRole = "Khachthue";
 
+            // Xóa kiểm tra hợp lệ cho Role vì mình đã gán cứng ở trên
+            ModelState.Remove("SelectedRole");
+
+            if (!ModelState.IsValid)
+            {
+                return View(model);
+            }
+
+            // 2. Tạo đối tượng User
             var user = new ApplicationUser
             {
                 UserName = model.Email,
                 Email = model.Email,
-                FullName = model.FullName, // Chắc chắn dòng này có giá trị
-                Address = "" // Gán giá trị mặc định nếu form đăng ký không có ô nhập địa chỉ
+                FullName = model.FullName,
+                Address = "" // Để trống hoặc gán mặc định
             };
 
+            // 3. Thực hiện tạo tài khoản
             var result = await _userManager.CreateAsync(user, model.Password);
 
             if (result.Succeeded)
             {
-                if (result.Succeeded)
+                // 🔥 QUAN TRỌNG: Tự động tạo Role "Khachthue" nếu máy bạn chưa có trong DB
+                if (!await _roleManager.RoleExistsAsync("Khachthue"))
                 {
-                    // Gán mặc định role Customer
-                    await _userManager.AddToRoleAsync(user, "Customer");
-
-                    await _signInManager.SignInAsync(user, isPersistent: false);
-                    return RedirectToAction("Index", "Home");
+                    await _roleManager.CreateAsync(new IdentityRole("Khachthue"));
                 }
 
-                // Tự động đăng nhập
-                await _signInManager.SignInAsync(user, isPersistent: false);
+                // 4. Gán quyền Khachthue cho người dùng mới
+                await _userManager.AddToRoleAsync(user, "Khachthue");
 
+                // 5. Đăng nhập và chuyển hướng về trang chủ
+                await _signInManager.SignInAsync(user, isPersistent: false);
                 return RedirectToAction("Index", "Home");
             }
 
-            // Hiển thị lỗi
+            // 6. Nếu có lỗi (mật khẩu yếu, trùng email...), hiển thị ra màn hình
             foreach (var error in result.Errors)
             {
                 ModelState.AddModelError("", error.Description);

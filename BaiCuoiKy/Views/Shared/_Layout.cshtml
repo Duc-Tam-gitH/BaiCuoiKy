@@ -1,40 +1,37 @@
 ﻿<!DOCTYPE html>
-<html lang="en">
+<html lang="vi">
 <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>@ViewData["Title"] - BaiCuoiKy</title>
+    <title>@ViewData["Title"] - House88</title>
 
     <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
-
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
 
     <link rel="stylesheet" href="~/css/site.css" />
     <link rel="stylesheet" href="~/css/navbar.css" />
     <link rel="stylesheet" href="~/css/auth.css" />
 
-
-    @RenderSection("Styles", required: false)
+    @if (IsSectionDefined("Styles"))
+    {
+        @RenderSection("Styles", required: false)
+    }
 </head>
-<body>
+<body class="d-flex flex-column min-vh-100">
+    <header>
+        @await Html.PartialAsync("_Header")
+        @await Html.PartialAsync("_Navbar")
+    </header>
 
-    <!-- HEADER -->
-    @await Html.PartialAsync("_Header")
-
-    <!-- NAVBAR -->
-    @await Html.PartialAsync("_Navbar")
-
-    <!-- MAIN -->
-    <main role="main">
+    <main role="main" class="flex-grow-1">
         @RenderBody()
     </main>
 
-    <!-- FOOTER -->
     @await Html.PartialAsync("_Footer")
 
     <script src="~/lib/jquery/dist/jquery.min.js"></script>
     <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
-
     @RenderSection("Scripts", required: false)
 </body>
 </html>

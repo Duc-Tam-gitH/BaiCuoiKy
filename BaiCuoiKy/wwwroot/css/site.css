@@ -1,177 +1,97 @@
-﻿/* =========================
-    ROOT + GLOBAL
-========================= */
-@import url('site.css');
-:root {
-    --primary: #002641;      /* Navy đậm */
-    --secondary: #013a58;    /* Navy nhẹ hơn */
-    --accent: #ED005A;       /* Hồng đặc trưng */
-    --accent-hover: #c4004b;
-    --text-dark: #1a2b3b;    /* Dùng cho nền sáng */
-    --text-light: #ffffff;   /* Dùng cho nền tối */
-    --bg-body: #f8fafc;      /* Nền trang nên dùng màu sáng cho sạch */
-    --shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+﻿:root {
+    --primary: #001f3f;
+    --accent: #e91e63;
+    --bg-light: #f8f9fa;
 }
 
-html {
-    font-size: 16px;
-    position: relative;
-    min-height: 100%;
+html, body {
+    height: 100%;
+    margin: 0;
 }
 
 body {
-    margin: 0;
-    margin-bottom: 80px; /* Tăng khoảng cách cho footer */
-    background: var(--bg-body); /* Đổi lại nền sáng cho chuyên nghiệp */
-    color: var(--text-dark);
-    font-family: 'Inter', 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-    line-height: 1.6;
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
+    font-family: 'Inter', sans-serif;
+    background-color: var(--bg-light);
 }
 
-/* =========================
-    GLOBAL ELEMENTS
-========================= */
-a {
-    text-decoration: none;
-    color: inherit;
-    transition: all 0.2s ease-in-out;
+main {
+    flex: 1 0 auto;
 }
 
-a:hover {
-    color: var(--accent);
-}
-
-/* Container chuẩn Bootstrap */
-.container {
-    max-width: 1200px;
-    margin: 0 auto;
-    padding: 0 20px;
-}
-
-/* =========================
-    BUTTONS (Đậm chất Modern)
-========================= */
-.btn {
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-    font-weight: 600;
-    border-radius: 10px; /* Bo góc tròn hơn nhìn sẽ hiện đại */
-    padding: 10px 24px;
-    border: none;
-    cursor: pointer;
-    transition: 0.3s;
-}
-
-.btn-primary {
-    background: var(--accent);
-    color: white !important;
-    box-shadow: 0 4px 10px rgba(237, 0, 90, 0.2);
-}
-
-.btn-primary:hover {
-    background: var(--accent-hover);
-    transform: translateY(-2px);
-    box-shadow: 0 6px 15px rgba(237, 0, 90, 0.3);
-}
-
-/* =========================
-    FORM CONTROLS (Giống trong ảnh của bạn)
-========================= */
-.form-control, select {
-    background: white;
-    border: 1px solid #e2e8f0;
-    border-radius: 8px;
-    padding: 12px 15px;
-    color: var(--text-dark);
-    font-size: 0.95rem;
-    transition: 0.2s;
-}
-
-.form-control:focus {
-    outline: none;
-    border-color: var(--accent);
-    box-shadow: 0 0 0 3px rgba(237, 0, 90, 0.1);
-}
-
-/* =========================
-    CARD NỔI BẬT
-========================= */
-.card {
-    background: white;
-    border-radius: 15px;
-    border: 1px solid rgba(0,0,0,0.05);
-    padding: 15px;
-    box-shadow: var(--shadow);
-    color: var(--text-dark); /* Card trên nền sáng thì chữ phải tối */
-    transition: 0.3s;
-}
-
-.card:hover {
-    transform: translateY(-5px);
-    box-shadow: 0 12px 20px rgba(0, 38, 65, 0.1);
-}
-
-/* =========================
-    FOOTER (Navy đặc trưng)
-========================= */
 footer {
-    position: absolute;
-    bottom: 0;
-    width: 100%;
-    height: 70px;
-    background: var(--primary); /* Footer dùng màu tối là chuẩn */
-    color: var(--text-light);
+    flex-shrink: 0;
+    background-color: var(--primary);
+    color: white;
+    padding: 20px 0;
+    text-align: center;
+}
+
+/* =========================================
+   STYLE CHO BỘ LỌC TÌM KIẾM (SEARCH FILTER)
+   ========================================= */
+
+
+/* Vùng bao quanh màu Navy đậm */
+.search-hero {
+    background-color: #001f3f;
+    padding: 60px 0;
+    text-align: center;
+}
+
+    .search-hero h1 {
+        color: #ffffff;
+        font-weight: 800;
+        margin-bottom: 30px;
+    }
+
+/* Khung chứa các ô lọc */
+.search-filter-box {
+    background: #ffffff;
+    padding: 20px;
+    border-radius: 15px;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+    max-width: 1100px;
+    margin: 0 auto;
+}
+
+    /* ÉP CÁC PHẦN TỬ TRONG FORM NẰM TRÊN 1 HÀNG */
+    .search-filter-box form {
+        display: flex;
+        align-items: center;
+        gap: 10px; /* Khoảng cách giữa các ô */
+        flex-wrap: nowrap; /* Không cho phép nhảy dòng */
+    }
+
+    .search-filter-box .form-select,
+    .search-filter-box .form-control {
+        flex: 1; /* Các ô tự chia đều độ rộng */
+        border: 1px solid #e2e8f0;
+        border-radius: 10px;
+        height: 48px;
+    }
+
+/* Nút Tìm Kiếm Tím Gradient */
+.btn-search {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%) !important;
+    color: white !important;
+    border: none !important;
+    border-radius: 10px !important; /* Bo góc nhẹ cho đồng bộ với ô input */
+    padding: 0 25px;
+    height: 48px;
+    font-weight: 600;
+    white-space: nowrap; /* Không cho chữ bị xuống dòng */
     display: flex;
     align-items: center;
     justify-content: center;
-    margin-top: auto;
-}
-/* Container ảnh để ép kích thước bằng nhau */
-.room-img-container {
-    height: 180px; /* Độ cao cố định cho ảnh */
-    overflow: hidden;
-    background-color: #f8f9fa;
+    gap: 8px;
+    transition: 0.3s;
+    cursor: pointer;
 }
 
-    .room-img-container img {
-        width: 100%;
-        height: 100%;
-        object-fit: cover; /* Quan trọng: Ảnh sẽ tự cắt để lấp đầy khung mà không bị méo */
-        transition: transform 0.3s ease;
+    .btn-search:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 5px 15px rgba(118, 75, 162, 0.4);
     }
-
-/* Hiệu ứng hover cho card */
-.room-card {
-    transition: transform 0.3s ease, box-shadow 0.3s ease;
-    border-radius: 12px;
-}
-
-    .room-card:hover {
-        transform: translateY(-8px);
-        box-shadow: 0 10px 20px rgba(0,0,0,0.15) !important;
-    }
-
-        .room-card:hover img {
-            transform: scale(1.1);
-        }
-
-/* Cắt ngắn tiêu đề nếu quá dài để không làm vỡ hàng */
-.text-truncate {
-    overflow: hidden;
-    text-overflow: ellipsis;
-    white-space: nowrap;
-}
-/* Thêm vào site.css */
-.room-card .price {
-    color: var(--primary); /* Dùng màu Navy đậm cho giá tiền */
-    font-weight: bold;
-    font-size: 1.1rem;
-}
-
-.room-card .btn-detail {
-    background: var(--primary);
-    color: white;
-    border-radius: 8px;
-    padding: 5px 15px;
-}

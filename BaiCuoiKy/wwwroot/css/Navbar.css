@@ -214,3 +214,22 @@
         transform: translateX(-50%);
     }
 }
+/* Căn chỉnh kích thước ảnh chuông 3D */
+.bell-icon-img {
+    height: 28px; /* Độ cao vừa vặn với icon Profile */
+    width: auto;
+    transition: transform 0.3s ease;
+    cursor: pointer;
+}
+
+/* Hiệu ứng rung khi hover */
+.notification-bell-item:hover .bell-icon-img {
+    transform: scale(1.2) rotate(10deg);
+    filter: drop-shadow(0 0 8px rgba(237, 0, 90, 0.4));
+}
+
+/* Đảm bảo nav-right dàn hàng ngang */
+.nav-right {
+    display: flex;
+    align-items: center;
+}

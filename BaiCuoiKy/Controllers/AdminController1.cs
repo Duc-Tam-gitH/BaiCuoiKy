@@ -29,8 +29,37 @@ namespace BaiCuoiKy.Controllers
             _roleManager = roleManager;
             _context = context;
         }
+        // Hàm xử lý Duyệt hoặc Từ chối bài đăng
+        [HttpPost]
+        public async Task<IActionResult> UpdateStatus(int id, bool isApproved, string? reason)
+        {
+            var tro = await _context.Tros.FirstOrDefaultAsync(t => t.Id == id);
+            if (tro == null) return NotFound();
 
-        
+            // 1. Cập nhật trạng thái bài đăng (TrangThai: true = Duyệt, false = Từ chối)
+            tro.TrangThai = isApproved;
+
+            // 2. Tạo nội dung thông báo dựa trên hành động
+            string message = isApproved
+                ? $"✅ Tin đăng '{tro.TieuDe}' của bạn đã được phê duyệt và hiển thị trên hệ thống!"
+                : $"❌ Tin đăng '{tro.TieuDe}' bị từ chối. Lý do: {reason ?? "Không đạt tiêu chuẩn"}";
+
+            // 3. Lưu thông báo vào Database cho Chủ trọ
+            var notification = new Notification
+            {
+                UserId = tro.UserId, // Gửi cho chủ bài đăng
+                Message = message,
+                CreatedAt = DateTime.Now,
+                IsRead = false
+            };
+
+            _context.Notifications.Add(notification);
+            await _context.SaveChangesAsync();
+
+            TempData["Message"] = isApproved ? "Đã duyệt bài thành công!" : "Đã từ chối bài đăng.";
+            return RedirectToAction("ManagePosts"); // Hoặc trang quản lý của Admin
+        }
+
         private string GetInitials(string name)
         {
             if (string.IsNullOrEmpty(name)) return "A";

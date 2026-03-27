@@ -3,6 +3,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 using BaiCuoiKy.Models;
 using System.Diagnostics;
+using System.Security.Claims;
 
 namespace BaiCuoiKy.Controllers
 {
@@ -20,6 +21,19 @@ namespace BaiCuoiKy.Controllers
         // Shows latest approved rooms with images (limit to 20)
         public async Task<IActionResult> Index()
         {
+            var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+            if (userId != null)
+            {
+                // Lấy 5 thông báo mới nhất
+                ViewBag.Notifications = await _context.Notifications
+                    .Where(n => n.UserId == userId)
+                    .OrderByDescending(n => n.CreatedAt)
+                    .Take(5).ToListAsync();
+
+                // Đếm số thông báo chưa đọc để hiện lên Badge đỏ
+                ViewBag.NotiCount = await _context.Notifications
+                    .CountAsync(n => n.UserId == userId && !n.IsRead);
+            }
             try
             {
                 var danhSachTro = await _context.Tros

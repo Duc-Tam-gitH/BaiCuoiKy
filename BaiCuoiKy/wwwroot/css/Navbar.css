@@ -1,6 +1,13 @@
 ﻿/* =========================
-    NAVBAR (FIXED)
+    NAVBAR 
 ========================= */
+:root {
+    --primary: #001f3d; /* Màu xanh navy đậm của bạn */
+    --accent: #e91e63; /* Màu hồng/đỏ từ ảnh của bạn */
+    --accent-hover: #c2185b;
+    --dark-bg: #1e293b;
+}
+
 .navbar {
     background: var(--primary);
     display: flex;
@@ -14,7 +21,7 @@
 }
 
 /* =========================
-    NAV LEFT
+    NAV LEFT & LINKS
 ========================= */
 .nav-left {
     display: flex;
@@ -22,14 +29,16 @@
     gap: 25px;
 }
 
-    .nav-left a {
+    .nav-left a, .nav-link {
         font-size: 0.9rem;
         color: white;
         text-decoration: none;
         position: relative;
         font-weight: 500;
+        transition: 0.3s;
     }
 
+        /* Hiệu ứng gạch chân cho link bình thường */
         .nav-left a::after {
             content: '';
             position: absolute;
@@ -51,107 +60,137 @@
 .nav-right {
     display: flex;
     align-items: center;
-    gap: 10px;
+    gap: 15px;
 }
 
 /* =========================
     BUTTON BASE
 ========================= */
 .btn {
-    padding: 6px 14px;
-    border-radius: 20px;
+    padding: 8px 16px;
+    border-radius: 25px; /* Bo tròn hơn cho hiện đại */
     font-size: 0.85rem;
     border: none;
     cursor: pointer;
     text-decoration: none;
-    display: inline-block;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    transition: 0.3s;
+    font-weight: 500;
 }
 
-/* =========================
-    SEARCH
-========================= */
-.btn-primary {
+.btn-primary, .btn-register {
     background: var(--accent);
     color: white;
 }
 
-    .btn-primary:hover {
+    .btn-primary:hover, .btn-register:hover {
         background: var(--accent-hover);
+        transform: translateY(-2px);
     }
 
-/* =========================
-    REGISTER
-========================= */
-.btn-register {
-    background: var(--accent);
-    color: white;
-}
-
-/* =========================
-    LOGIN
-========================= */
 .btn-login {
-    border: 1px solid white;
+    border: 1px solid rgba(255,255,255,0.5);
     background: transparent;
     color: white;
 }
 
     .btn-login:hover {
         background: rgba(255,255,255,0.1);
+        border-color: white;
     }
 
 /* =========================
-    LOGOUT (FIX FORM BUG)
-========================= */
-form {
-    margin: 0;
-}
-
-.btn-logout {
-    border: 1px solid var(--accent);
-    background: transparent;
-    color: var(--accent);
-    padding: 6px 12px;
-}
-
-    .btn-logout:hover {
-        background: var(--accent);
-        color: white;
-    }
-
-/* =========================
-    DROPDOWN (FIX LỖI ẨN)
+    DROPDOWN TỔNG THỂ
 ========================= */
 .dropdown {
     position: relative;
 }
 
 .dropdown-menu {
-    display: none;
+    display: none; /* Mặc định ẩn */
     position: absolute;
-    top: 110%;
-    left: 0;
-    background: #1e293b;
-    min-width: 180px;
-    border-radius: 6px;
-    padding: 5px 0;
+    top: 120%;
+    background: var(--dark-bg);
+    min-width: 200px;
+    border-radius: 8px;
+    padding: 10px 0;
     list-style: none;
+    box-shadow: 0 10px 25px rgba(0,0,0,0.3);
+    border: 1px solid rgba(255,255,255,0.1);
     z-index: 1000;
 }
 
-    .dropdown-menu li a {
-        display: block;
-        padding: 8px 15px;
+/* Dropdown bên trái (Danh mục) */
+.nav-left .dropdown-menu {
+    left: 0;
+}
+
+/* Dropdown bên phải (User Icon) - Quan trọng để không tràn lề */
+.dropdown-menu-end {
+    right: 0 !important;
+    left: auto !important;
+}
+
+.dropdown-item {
+    display: block;
+    width: 100%;
+    padding: 10px 20px;
+    color: #cbd5e1 !important; /* Màu chữ xám trắng nhẹ */
+    font-size: 0.9rem;
+    text-decoration: none;
+    transition: 0.2s;
+    background: none;
+    border: none;
+    text-align: left;
+}
+
+    .dropdown-item:hover {
+        background: rgba(255,255,255,0.05);
         color: white !important;
+        padding-left: 25px; /* Hiệu ứng dịch chuyển nhẹ khi hover */
     }
 
-        .dropdown-menu li a:hover {
-            background: #002641;
-        }
+/* Header & Divider trong Dropdown */
+.dropdown-header {
+    padding: 5px 20px;
+    font-size: 0.75rem;
+    text-transform: uppercase;
+    color: var(--accent);
+    font-weight: 700;
+}
 
-/* hover show */
+.dropdown-divider {
+    height: 1px;
+    background: rgba(255,255,255,0.1);
+    margin: 8px 0;
+    border: none;
+}
+
+/* Ẩn mũi tên mặc định của Bootstrap dropdown */
+.dropdown-toggle::after {
+    display: none !important;
+}
+
+/* Hiệu ứng Show Dropdown */
+/* Nếu bạn dùng JS của Bootstrap thì bỏ đoạn hover này đi, 
+   nếu muốn di chuột vào là hiện luôn thì giữ lại */
 .dropdown:hover .dropdown-menu {
     display: block;
+    animation: fadeIn 0.2s ease-in-out;
+}
+
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(10px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
 }
 
 /* =========================
@@ -159,17 +198,19 @@ form {
 ========================= */
 @media (max-width: 768px) {
     .navbar {
+        padding: 15px 5%;
         flex-direction: column;
-        gap: 10px;
-    }
-
-    .nav-left {
-        flex-wrap: wrap;
-        justify-content: center;
+        gap: 15px;
     }
 
     .nav-right {
-        flex-wrap: wrap;
+        width: 100%;
         justify-content: center;
+    }
+
+    .dropdown-menu-end {
+        left: 50% !important;
+        right: auto !important;
+        transform: translateX(-50%);
     }
 }

@@ -1,31 +1,323 @@
-﻿
-{
-    width: 35px;
-    height: 35px;
+﻿/* =========================
+    USER MANAGEMENT PAGE CSS
+    Màu chủ đạo: #002641 (Navy) + #ED005A (Hồng)
+========================= */
+
+@import url('https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:wght@400;500;600;700&display=swap');
+
+:root {
+    --navy: #002641;
+    --navy-light: #013a58;
+    --navy-soft: #e8f0f6;
+    --pink: #ED005A;
+    --pink-hover: #c4004b;
+    --pink-soft: #fff0f5;
+    --white: #ffffff;
+    --gray-100: #f8fafc;
+    --gray-200: #e9eef4;
+    --gray-500: #8492a6;
+    --gray-700: #4a5568;
+    --text: #1a2b3b;
+    --radius-sm: 6px;
+    --radius-md: 10px;
+    --radius-lg: 14px;
+    --shadow-sm: 0 2px 8px rgba(0, 38, 65, 0.08);
+    --shadow-md: 0 4px 16px rgba(0, 38, 65, 0.12);
+    --transition: 0.22s ease;
+}
+
+/* ========= BASE ========= */
+body {
+    font-family: 'Be Vietnam Pro', 'Segoe UI', sans-serif;
+    background: var(--gray-100);
+    color: var(--text);
+}
+
+/* ========= CARD ========= */
+.card {
+    background: var(--white);
+    border: 1px solid var(--gray-200);
+    border-radius: var(--radius-lg);
+    box-shadow: var(--shadow-sm);
+    transition: box-shadow var(--transition);
+}
+
+    .card:hover {
+        box-shadow: var(--shadow-md);
+    }
+
+    /* ========= HEADER CARD ========= */
+    .card .card-body h3.text-primary {
+        color: var(--navy) !important;
+        font-weight: 700;
+        font-size: 1.35rem;
+        letter-spacing: -0.3px;
+    }
+
+    .card .card-body .text-muted {
+        color: var(--gray-500) !important;
+        font-size: 0.88rem;
+    }
+
+/* ========= BUTTONS ========= */
+.btn-primary {
+    background: var(--pink) !important;
+    border-color: var(--pink) !important;
+    color: var(--white) !important;
+    font-weight: 600;
+    border-radius: var(--radius-md);
+    padding: 9px 20px;
+    font-size: 0.9rem;
+    box-shadow: 0 3px 10px rgba(237, 0, 90, 0.25);
+    transition: background var(--transition), transform var(--transition), box-shadow var(--transition);
+}
+
+    .btn-primary:hover,
+    .btn-primary:focus {
+        background: var(--pink-hover) !important;
+        border-color: var(--pink-hover) !important;
+        transform: translateY(-1px);
+        box-shadow: 0 5px 16px rgba(237, 0, 90, 0.35);
+    }
+
+.btn-outline-primary {
+    color: var(--navy) !important;
+    border-color: var(--navy) !important;
+    font-weight: 600;
+    border-radius: var(--radius-md);
+    font-size: 0.85rem;
+    transition: background var(--transition), color var(--transition);
+}
+
+    .btn-outline-primary:hover {
+        background: var(--navy) !important;
+        color: var(--white) !important;
+    }
+
+.btn-outline-success {
+    color: #1a7f4e !important;
+    border-color: #1a7f4e !important;
+    border-radius: var(--radius-md);
+    font-size: 0.85rem;
+    transition: background var(--transition), color var(--transition);
+}
+
+    .btn-outline-success:hover {
+        background: #1a7f4e !important;
+        color: var(--white) !important;
+    }
+
+.btn-outline-warning {
+    color: #b45309 !important;
+    border-color: #b45309 !important;
+    border-radius: var(--radius-md);
+    font-size: 0.85rem;
+    transition: background var(--transition), color var(--transition);
+}
+
+    .btn-outline-warning:hover {
+        background: #b45309 !important;
+        color: var(--white) !important;
+    }
+
+.btn-outline-danger {
+    color: #c0392b !important;
+    border-color: #c0392b !important;
+    border-radius: var(--radius-md);
+    font-size: 0.85rem;
+    transition: background var(--transition), color var(--transition);
+}
+
+    .btn-outline-danger:hover {
+        background: #c0392b !important;
+        color: var(--white) !important;
+    }
+
+/* ========= FORM / INPUT ========= */
+.form-control,
+.form-select,
+select {
+    background: var(--white);
+    border: 1.5px solid var(--gray-200);
+    border-radius: var(--radius-md);
+    padding: 10px 14px;
+    font-size: 0.9rem;
+    color: var(--text);
+    font-family: 'Be Vietnam Pro', sans-serif;
+    transition: border-color var(--transition), box-shadow var(--transition);
+}
+
+    .form-control:focus,
+    .form-select:focus {
+        outline: none;
+        border-color: var(--navy);
+        box-shadow: 0 0 0 3px rgba(0, 38, 65, 0.1);
+    }
+
+.input-group-text {
+    background: var(--white);
+    border: 1.5px solid var(--gray-200);
+    border-right: none;
+    border-radius: var(--radius-md) 0 0 var(--radius-md);
+    color: var(--gray-500);
+}
+
+.input-group .form-control {
+    border-left: none;
+    border-radius: 0 var(--radius-md) var(--radius-md) 0;
+}
+
+/* ========= TABLE ========= */
+.table {
+    font-size: 0.9rem;
+    color: var(--text);
+}
+
+    .table thead th {
+        background: var(--navy);
+        color: var(--white);
+        font-weight: 600;
+        font-size: 0.82rem;
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+        padding: 13px 12px;
+        border: none;
+    }
+
+        .table thead th:first-child {
+            border-radius: var(--radius-sm) 0 0 0;
+        }
+
+        .table thead th:last-child {
+            border-radius: 0 var(--radius-sm) 0 0;
+        }
+
+    .table tbody tr {
+        border-bottom: 1px solid var(--gray-200);
+        transition: background var(--transition);
+    }
+
+.table-hover tbody tr:hover {
+    background: var(--navy-soft);
+}
+
+.table tbody td {
+    padding: 12px 12px;
+    vertical-align: middle;
+}
+
+/* ========= AVATAR CIRCLE ========= */
+.avatar-circle {
+    width: 34px;
+    height: 34px;
     border-radius: 50%;
+    background: var(--navy) !important;
+    color: var(--white);
     display: flex;
     align-items: center;
     justify-content: center;
-    color: white;
-    font-weight: bold;
-    font-size: 14px;
+    font-weight: 700;
+    font-size: 0.85rem;
+    flex-shrink: 0;
+    box-shadow: 0 2px 6px rgba(0, 38, 65, 0.3);
 }
 
-.table > tbody > tr:hover {
-    background-color: rgba(0, 123, 255, 0.05);
-    transition: all 0.3s ease;
+/* ========= BADGES ========= */
+.badge.bg-info {
+    background: var(--navy-soft) !important;
+    color: var(--navy) !important;
+    font-weight: 600;
+    font-size: 0.75rem;
+    border-radius: 20px;
+    padding: 4px 10px;
+    border: 1px solid rgba(0, 38, 65, 0.15);
 }
 
+.badge.bg-secondary {
+    background: var(--gray-200) !important;
+    color: var(--gray-700) !important;
+    font-weight: 600;
+    font-size: 0.75rem;
+    border-radius: 20px;
+    padding: 4px 10px;
+}
+/* Tổng bài — Hồng đặc trưng */
+.badge.bg-primary {
+    background: var(--pink) !important;
+    color: var(--white) !important;
+    font-weight: 600;
+    font-size: 0.75rem;
+    border-radius: 20px;
+    padding: 4px 10px;
+}
+/* Tổng đơn & Trạng thái hoạt động — Xanh nhạt */
+.badge.bg-success {
+    background: #e6f9ef !important;
+    color: #1a7f4e !important;
+    font-weight: 600;
+    font-size: 0.75rem;
+    border-radius: 20px;
+    padding: 4px 10px;
+    border: 1px solid rgba(26, 127, 78, 0.2);
+}
+/* Trạng thái khóa — Hồng soft */
+.badge.bg-danger {
+    background: var(--pink-soft) !important;
+    color: var(--pink) !important;
+    font-weight: 600;
+    font-size: 0.75rem;
+    border-radius: 20px;
+    padding: 4px 10px;
+    border: 1px solid rgba(237, 0, 90, 0.2);
+}
+
+/* ========= ALERTS ========= */
+.alert-success {
+    background: #e6f9ef;
+    border: 1px solid rgba(26, 127, 78, 0.25);
+    color: #1a7f4e;
+    border-radius: var(--radius-md);
+    font-size: 0.9rem;
+}
+
+.alert-danger {
+    background: var(--pink-soft);
+    border: 1px solid rgba(237, 0, 90, 0.25);
+    color: var(--pink);
+    border-radius: var(--radius-md);
+    font-size: 0.9rem;
+}
+
+/* ========= EMPTY STATE ========= */
+.text-center.py-5 .text-muted {
+    color: var(--gray-500) !important;
+    font-size: 0.95rem;
+}
+
+.text-center.py-5 .fa-users {
+    color: var(--gray-200) !important;
+}
+
+/* ========= BTN GROUP ========= */
 .btn-group .btn {
+    border-radius: var(--radius-sm) !important;
     margin: 0 2px;
 }
 
-.badge {
-    padding: 6px 10px;
-    font-weight: 500;
+/* ========= SCROLLBAR ========= */
+.table-responsive::-webkit-scrollbar {
+    height: 6px;
 }
 
-.card {
-    border-radius: 10px;
+.table-responsive::-webkit-scrollbar-track {
+    background: var(--gray-100);
 }
 
+.table-responsive::-webkit-scrollbar-thumb {
+    background: var(--gray-200);
+    border-radius: 3px;
+}
+
+    .table-responsive::-webkit-scrollbar-thumb:hover {
+        background: var(--navy);
+    }

@@ -21,38 +21,56 @@
     </div>
 
     <div class="nav-right">
-
-        <!-- 🔍 Search -->
         <a asp-controller="Search" asp-action="Search" class="btn btn-primary">
             🔍 Tìm Kiếm
         </a>
 
         @if (User.Identity.IsAuthenticated)
         {
-            if (User.IsInRole("Admin"))
+            @if (User.IsInRole("Admin"))
             {
                 <a asp-controller="Tro" asp-action="Create" class="btn btn-register">
                     + Đăng tin
                 </a>
-                <a asp-controller="Khachthue" asp-action="Bookings" class="nav-link">
+                <a asp-controller="Khachthue" asp-action="Bookings" class="nav-link d-inline-block">
                     Booking của tôi
                 </a>
             }
             else
             {
-                <a asp-controller="Booking" asp-action="Index" class="nav-link">
+                <a asp-controller="Booking" asp-action="Index" class="nav-link d-inline-block">
                     Đặt phòng
                 </a>
             }
 
-                <a asp-controller="Account" asp-action="Profile" class="btn btn-login">
+            <div class="dropdown d-inline-block">
+                <a class="btn btn-login dropdown-toggle" href="#" role="button" id="userDropdown" data-bs-toggle="dropdown" aria-expanded="false">
                     👤
                 </a>
-            <form asp-controller="Account" asp-action="Logout" method="post">
-                <button type="submit" class="btn btn-logout">
-                    Đăng xuất
-                </button>
-            </form>
+
+                <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="userDropdown">
+                    <li><h6 class="dropdown-header">Xin chào, @User.Identity.Name</h6></li>
+                    <li><hr class="dropdown-divider"></li>
+
+                    @if (User.IsInRole("Admin"))
+                    {
+                        <li><a class="dropdown-item" asp-controller="Admin" asp-action="Dashboard">Quản trị hệ thống</a></li>
+                        <li><a class="dropdown-item" asp-controller="Tro" asp-action="Manage">Quản lý bài đăng</a></li>
+                    }
+                    else
+                    {
+                        <li><a class="dropdown-item" asp-controller="Account" asp-action="Profile">Thông tin cá nhân</a></li>
+                        <li><a class="dropdown-item" asp-controller="Booking" asp-action="History">Lịch sử đặt phòng</a></li>
+                    }
+
+                    <li><hr class="dropdown-divider"></li>
+                    <li>
+                        <form asp-controller="Account" asp-action="Logout" method="post" class="d-inline">
+                            <button type="submit" class="dropdown-item text-danger">Đăng xuất</button>
+                        </form>
+                    </li>
+                </ul>
+            </div>
         }
         else
         {
@@ -63,8 +81,6 @@
             <a asp-controller="Account" asp-action="Register" class="btn btn-register">
                 Đăng ký
             </a>
-            
         }
-
     </div>
 </nav>

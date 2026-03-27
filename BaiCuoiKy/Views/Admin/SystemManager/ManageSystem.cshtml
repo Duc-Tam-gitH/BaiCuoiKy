@@ -1,0 +1,81 @@
+﻿@{
+    Layout = null;
+    // Lấy dữ liệu từ ViewBag
+    var userInitials = ViewBag.UserInitials ?? "AD";
+    var userName = ViewBag.UserName ?? "Administrator";
+    var userRole = ViewBag.UserRole ?? "Admin";
+    var activeSection = ViewBag.ActiveSection ?? "overview";
+}
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+    <title>Quản lý hệ thống | @ViewBag.Title</title>
+    <!-- Font Awesome 6 -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,300;14..32,400;14..32,500;14..32,600;14..32,700&display=swap" rel="stylesheet">
+    <!-- Custom CSS -->
+    <link rel="stylesheet" href="~/css/User.css" />
+</head>
+<body>
+    <div class="app-container">
+        <!-- Sidebar -->
+        <aside class="sidebar">
+            <div>
+                <div class="logo-area">
+                    <div class="logo">QL<span>HệThống</span></div>
+                </div>
+                <div class="nav-menu">
+                    <a href="@Url.Action("Dashboard", "Admin", new { section = "overview" })" class="nav-item @(ViewBag.ActiveSection == "overview" ? "active" : "")" data-section="overview">
+                        <i class="fas fa-chart-line"></i>
+                        <span>Tổng quan</span>
+                    </a>
+                    <a href="@Url.Action("Dashboard", "Admin", new { section = "rooms" })" class="nav-item @(ViewBag.ActiveSection == "rooms" ? "active" : "")" data-section="rooms">
+                        <i class="fas fa-building"></i>
+                        <span>Phòng trọ</span>
+                    </a>
+                    <a href="@Url.Action("Dashboard", "Admin", new { section = "users" })" class="nav-item @(ViewBag.ActiveSection == "users" ? "active" : "")" data-section="users">
+                        <i class="fas fa-users"></i>
+                        <span>Người dùng</span>
+                    </a>
+                    <a href="@Url.Action("Dashboard", "Admin", new { section = "posts" })" class="nav-item @(ViewBag.ActiveSection == "posts" ? "active" : "")" data-section="posts">
+                        <i class="fas fa-newspaper"></i>
+                        <span>Bài đăng</span>
+                    </a>
+                    <div class="section-divider"></div>
+                    <a href="@Url.Action("Dashboard", "Admin", new { section = "settings" })" class="nav-item @(ViewBag.ActiveSection == "settings" ? "active" : "")" data-section="settings">
+                        <i class="fas fa-sliders-h"></i>
+                        <span>Cài đặt</span>
+                    </a>
+                </div>
+            </div>
+
+            <!-- User Footer -->
+            <div class="user-footer">
+                <div class="user-info">
+                    <div class="avatar-circle" id="avatarInitials">@userInitials</div>
+                    <div class="user-details">
+                        <div class="user-name">@userName</div>
+                        <div class="user-role">@userRole</div>
+                    </div>
+                </div>
+                <div class="logout-icon" id="logoutButton">
+                    <i class="fas fa-sign-out-alt"></i>
+                </div>
+            </div>
+        </aside>
+
+        <!-- Main Content -->
+        <main class="main-content">
+            @RenderBody()
+        </main>
+    </div>
+
+    <!-- Scripts -->
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="@Url.Content("~/Scripts/admin.js")"></script>
+    @RenderSection("scripts", required: false)
+</body>
+</html>

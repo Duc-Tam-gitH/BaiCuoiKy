@@ -1,0 +1,61 @@
+﻿@using BaiCuoiKy.Models.ViewModel
+@model DashboardViewModel
+
+<div class="dashboard-cards">
+    <div class="stat-card">
+        <div class="stat-title">Tổng phòng</div>
+        <div class="stat-number">@Model.Statistics.TotalRooms</div>
+    </div>
+    <div class="stat-card">
+        <div class="stat-title">Còn trống</div>
+        <div class="stat-number">@Model.Statistics.AvailableRooms</div>
+    </div>
+    <div class="stat-card">
+        <div class="stat-title">Đã thuê</div>
+        <div class="stat-number">@Model.Statistics.RentedRooms</div>
+    </div>
+    <div class="stat-card">
+        <div class="stat-title">Bảo trì</div>
+        <div class="stat-number">@Model.Statistics.MaintenanceRooms</div>
+    </div>
+</div>
+
+<div class="content-panel">
+    <div class="table-responsive">
+        <table class="data-table">
+            <thead>
+                <tr>
+                    <th>Tiêu đề</th>
+                    <th>Giá</th>
+                    <th>Diện tích</th>
+                    <th>Địa chỉ</th>
+                    <th>Chủ nhà</th>
+                    <th>Trạng thái</th>
+                    <th>Ngày đăng</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var room in Model.RecentRooms)
+                {
+                    <tr>
+                        <td>@room.Title</td>
+                        <td>@room.Price.ToString("N0")đ</td>
+                        <td>@room.Area</td>
+                        <td>@room.Address</td>
+                        <td>@room.LandlordName</td>
+                        <td>
+                            <span class="status-badge status-@room.Status.ToLower()">
+                                @(room.Status == "Available" ? "Còn trống" :
+                                                            room.Status == "Rented" ? "Đã thuê" : "Bảo trì")
+                        </span>
+                    </td>
+                    <td>@room.CreatedAt.ToString("dd/MM/yyyy")</td>
+                </tr>
+                                }
+            </tbody>
+        </table>
+    </div>
+    <div style="margin-top: 16px; text-align: right;">
+        <a asp-action="Index" asp-controller="Tro" class="btn-primary">Xem tất cả phòng trọ</a>
+    </div>
+</div>

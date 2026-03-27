@@ -1,0 +1,37 @@
+﻿@model BaiCuoiKy.Models.ViewModel.DashboardViewModel
+
+<div class="dashboard-cards">
+    <div class="stat-card">
+        <div class="stat-title">Tổng bài đăng</div>
+        <div class="stat-number">@Model.Statistics.TotalPosts</div>
+    </div>
+    <div class="stat-card">
+        <div class="stat-title">Đã xuất bản</div>
+        <div class="stat-number">@Model.Statistics.PublishedPosts</div>
+    </div>
+    <div class="stat-card">
+        <div class="stat-title">Chờ duyệt</div>
+        <div class="stat-number">@Model.Statistics.PendingPosts</div>
+    </div>
+    <div class="stat-card">
+        <div class="stat-title">Hết hạn</div>
+        <div class="stat-number">@Model.Statistics.ExpiredPosts</div>
+    </div>
+</div>
+
+<div class="content-panel">
+    <h3 style="margin-bottom: 12px;">📢 Bài đăng mới nhất</h3>
+    <div class="placeholder-list">
+        @foreach (var post in Model.RecentPosts)
+        {
+            <div class="list-item">
+                <div>
+                    <strong>@post.Title</strong> - @post.Price.ToString("N0")đ/tháng
+                </div>
+                <span class="badge @(post.Status == "Đã duyệt" ? "badge-success" : (post.Status == "Chờ duyệt" ? "badge-warning" : "badge-danger"))">
+                    @post.Status
+                </span>
+            </div>
+        }
+    </div>
+</div>

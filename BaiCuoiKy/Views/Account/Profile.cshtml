@@ -1,0 +1,83 @@
+﻿@model BaiCuoiKy.Models.ViewModel.UserProfileViewModel
+
+<div class="container py-5">
+    <div class="row">
+        <div class="col-lg-4 mb-4">
+            <div class="card border-0 shadow-sm rounded-4 text-center p-4">
+                <div class="mb-3">
+                    <div class="rounded-circle bg-primary d-inline-flex align-items-center justify-content-center text-white" style="width: 100px; height: 100px; font-size: 40px;">
+                        @Model.FullName.Substring(0, 1).ToUpper()
+                    </div>
+                </div>
+                <h4 class="fw-bold">@Model.FullName</h4>
+                <p class="badge bg-info text-dark">Vai trò: @Model.RoleName</p>
+                <hr>
+                <div class="text-start small text-muted">
+                    <p><i class="fa-solid fa-envelope me-2"></i> @Model.Email</p>
+                    <p><i class="fa-solid fa-phone me-2"></i> @(Model.PhoneNumber ?? "Chưa cập nhật")</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-lg-8">
+            <div class="card border-0 shadow-sm rounded-4 p-4">
+                <h3 class="fw-bold mb-4" style="color: #001f3f;">Chỉnh sửa thông tin cá nhân</h3>
+
+                @if (TempData["Message"] != null)
+                {
+                    <div class="alert alert-success border-0 rounded-3">@TempData["Message"]</div>
+                }
+
+                <form asp-action="UpdateProfile" method="post">
+                    <input type="hidden" asp-for="Id" />
+
+                    <div class="row g-3">
+                        <div class="col-md-6">
+                            <label class="form-label fw-semibold">Họ và tên</label>
+                            <input asp-for="FullName" class="form-control" required />
+                        </div>
+                        <div class="col-md-6">
+                            <label class="form-label fw-semibold">Email (Không thể sửa)</label>
+                            <input asp-for="Email" class="form-control bg-light" readonly />
+                        </div>
+                        <div class="col-md-6">
+                            <label class="form-label fw-semibold">Số điện thoại</label>
+                            <input asp-for="PhoneNumber" class="form-control" />
+                        </div>
+                        <div class="col-md-6">
+                            <label class="form-label fw-semibold">Địa chỉ</label>
+                            <input asp-for="Address" class="form-control" />
+                        </div>
+                    </div>
+
+                    <div class="mt-4 d-flex gap-2">
+                        <button type="submit" class="btn btn-primary px-4 rounded-pill shadow-sm" style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); border: none;">
+                            Lưu thay đổi
+                        </button>
+
+                        @if (User.IsInRole("Admin"))
+                        {
+                            <a asp-controller="Admin" asp-action="Dashboard" class="btn btn-outline-dark px-4 rounded-pill">
+                                <i class="fa-solid fa-gears me-2"></i>Quản trị hệ thống
+                            </a>
+                        }
+                    </div>
+                </form>
+            </div>
+
+            <div class="mt-4 card border-danger border-opacity-25 rounded-4 p-3 bg-danger bg-opacity-10">
+                <h6 class="text-danger fw-bold"><i class="fa-solid fa-triangle-exclamation me-2"></i>Vùng nguy hiểm</h6>
+                <p class="small text-muted mb-2">Hành động này không thể hoàn tác.</p>
+                <button class="btn btn-sm btn-danger px-3 rounded-pill" onclick="confirmDelete()">Vô hiệu hóa tài khoản</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    function confirmDelete() {
+        if (confirm("Bạn có chắc chắn muốn vô hiệu hóa tài khoản này không?")) {
+            // Gọi Action xóa tài khoản ở đây
+        }
+    }
+</script>

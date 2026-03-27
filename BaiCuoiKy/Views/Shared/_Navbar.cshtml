@@ -55,6 +55,7 @@
                     @if (User.IsInRole("Admin"))
                     {
                         <li><a class="dropdown-item" asp-controller="Admin" asp-action="ManageSystem">Quản trị hệ thống</a></li>
+                        <li><a class="dropdown-item" asp-controller="Account" asp-action="Profile">Thông tin cá nhân</a></li>
 
                     }
                     else
@@ -62,6 +63,7 @@
                         <li><a class="dropdown-item" asp-controller="Account" asp-action="Profile">Thông tin cá nhân</a></li>
                         <li><a class="dropdown-item" asp-controller="Booking" asp-action="History">Lịch sử đặt phòng</a></li>
                         <li><a class="dropdown-item" asp-controller="Khachthue" asp-action="Favorites">Phòng yêu thích</a></li>
+                        
                     }
 
                     <li><hr class="dropdown-divider"></li>

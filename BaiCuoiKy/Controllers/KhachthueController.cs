@@ -4,6 +4,9 @@ using Microsoft.EntityFrameworkCore;
 using System.Security.Claims;
 using BaiCuoiKy.Models;
 
+//minh@gmail.com
+//Minh@123
+
 namespace BaiCuoiKy.Controllers
 {
     [Authorize(Roles = "Khachthue")]

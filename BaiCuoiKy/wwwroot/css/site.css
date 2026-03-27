@@ -1,9 +1,13 @@
-﻿:root {
-    --primary: #001f3f;
-    --accent: #e91e63;
-    --bg-light: #f8f9fa;
+﻿/* =========================================
+   MÀU SẮC CHỦ ĐẠO HOUSE88
+   ========================================= */
+:root {
+    --primary: #002641 !important; /* Navy đậm */
+    --accent: #ED005A !important; /* Hồng đặc trưng */
+    --bg-body: #f8fafc;
 }
 
+/* Cấu hình Flexbox cho toàn trang để đẩy Footer xuống đáy */
 html, body {
     height: 100%;
     margin: 0;
@@ -14,7 +18,7 @@ body {
     flex-direction: column;
     min-height: 100vh;
     font-family: 'Inter', sans-serif;
-    background-color: var(--bg-light);
+    background-color: var(--bg-body);
 }
 
 main {
@@ -30,68 +34,70 @@ footer {
 }
 
 /* =========================================
-   STYLE CHO BỘ LỌC TÌM KIẾM (SEARCH FILTER)
+   STYLE CHO TRANG PROFILE (THÔNG TIN CÁ NHÂN)
    ========================================= */
-
-
-/* Vùng bao quanh màu Navy đậm */
-.search-hero {
-    background-color: #001f3f;
-    padding: 60px 0;
-    text-align: center;
-}
-
-    .search-hero h1 {
-        color: #ffffff;
-        font-weight: 800;
-        margin-bottom: 30px;
-    }
-
-/* Khung chứa các ô lọc */
-.search-filter-box {
-    background: #ffffff;
-    padding: 20px;
-    border-radius: 15px;
-    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
-    max-width: 1100px;
-    margin: 0 auto;
-}
-
-    /* ÉP CÁC PHẦN TỬ TRONG FORM NẰM TRÊN 1 HÀNG */
-    .search-filter-box form {
-        display: flex;
-        align-items: center;
-        gap: 10px; /* Khoảng cách giữa các ô */
-        flex-wrap: nowrap; /* Không cho phép nhảy dòng */
-    }
-
-    .search-filter-box .form-select,
-    .search-filter-box .form-control {
-        flex: 1; /* Các ô tự chia đều độ rộng */
-        border: 1px solid #e2e8f0;
-        border-radius: 10px;
-        height: 48px;
-    }
-
-/* Nút Tìm Kiếm Tím Gradient */
-.btn-search {
-    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%) !important;
+.profile-sidebar {
+    background: var(--primary) !important;
     color: white !important;
-    border: none !important;
-    border-radius: 10px !important; /* Bo góc nhẹ cho đồng bộ với ô input */
-    padding: 0 25px;
-    height: 48px;
-    font-weight: 600;
-    white-space: nowrap; /* Không cho chữ bị xuống dòng */
+    border-radius: 20px;
+    padding: 40px 20px;
+    text-align: center;
+    box-shadow: 0 10px 25px rgba(0, 38, 65, 0.15);
+}
+
+.avatar-circle {
+    width: 110px;
+    height: 110px;
+    background: white;
+    color: var(--primary);
+    border-radius: 50%;
+    font-size: 45px;
+    font-weight: 800;
     display: flex;
     align-items: center;
     justify-content: center;
-    gap: 8px;
-    transition: 0.3s;
-    cursor: pointer;
+    margin: 0 auto 20px;
+    border: 4px solid rgba(255, 255, 255, 0.2);
 }
 
-    .btn-search:hover {
+.role-badge {
+    background: var(--accent) !important;
+    color: white !important;
+    padding: 8px 25px;
+    border-radius: 50px;
+    font-size: 13px;
+    font-weight: 700;
+    text-transform: uppercase;
+    display: inline-block;
+}
+
+.profile-card {
+    background: white;
+    border-radius: 20px;
+    padding: 35px;
+    border: none;
+    box-shadow: 0 5px 20px rgba(0,0,0,0.05);
+}
+
+/* Nút bấm Lưu thay đổi màu Hồng Gradient */
+.btn-save-profile {
+    background: linear-gradient(135deg, #ED005A 0%, #c4004b 100%) !important;
+    color: white !important;
+    border: none !important;
+    border-radius: 50px !important;
+    padding: 12px 35px;
+    font-weight: 600;
+    transition: 0.3s;
+    box-shadow: 0 4px 15px rgba(237, 0, 90, 0.3);
+}
+
+    .btn-save-profile:hover {
         transform: translateY(-2px);
-        box-shadow: 0 5px 15px rgba(118, 75, 162, 0.4);
+        box-shadow: 0 6px 20px rgba(237, 0, 90, 0.4);
     }
+
+/* Tùy chỉnh ô nhập liệu */
+.form-control:focus {
+    border-color: var(--accent);
+    box-shadow: 0 0 0 3px rgba(237, 0, 90, 0.1);
+}

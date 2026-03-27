@@ -56,12 +56,12 @@ namespace BaiCuoiKy.Controllers
                                          u.FullName.Contains(searchString));
             }
 
-            var userList = new System.Collections.Generic.List<UserWithRolesViewModel>();
+            var userList = new System.Collections.Generic.List<ManagerUsersViewModel>();
 
             foreach (var user in users)
             {
                 var roles = await _userManager.GetRolesAsync(user);
-                userList.Add(new UserWithRolesViewModel
+                userList.Add(new ManagerUsersViewModel
                 {
                     User = user,
                     Roles = roles.ToList(),
@@ -179,17 +179,30 @@ namespace BaiCuoiKy.Controllers
                         await _userManager.SetLockoutEndDateAsync(user, null);
                     }
 
+                    
                     // Cập nhật roles
                     var currentRoles = await _userManager.GetRolesAsync(user);
-                    var rolesToAdd = model.SelectedRoles.Except(currentRoles).ToList();
-                    var rolesToRemove = currentRoles.Except(model.SelectedRoles).ToList();
+                    var rolesToAdd = new List<string>();
+                    var rolesToRemove = new List<string>();
+
+                    if (model.SelectedRoles != null)
+                    {
+                        rolesToAdd = model.SelectedRoles.Except(currentRoles).ToList();
+                        rolesToRemove = currentRoles.Except(model.SelectedRoles).ToList();
+                    }
+                    else
+                    {
+                        rolesToRemove = currentRoles.ToList();
+                    }
 
                     await _userManager.AddToRolesAsync(user, rolesToAdd);
                     await _userManager.RemoveFromRolesAsync(user, rolesToRemove);
 
                     TempData["Success"] = "Cập nhật tài khoản thành công!";
-                    return RedirectToAction(nameof(Index));
+                    return RedirectToAction("Dashboard", new { section = "users" });
+
                 }
+
 
                 foreach (var error in updateResult.Errors)
                 {
@@ -200,6 +213,17 @@ namespace BaiCuoiKy.Controllers
             // Load lại roles nếu có lỗi
             var allRoles = _roleManager.Roles.Select(r => r.Name).ToList();
             model.Roles = allRoles;
+
+            // Load lại user roles hiện tại
+            if (!string.IsNullOrEmpty(model.Id))
+            {
+                var user = await _userManager.FindByIdAsync(model.Id);
+                if (user != null)
+                {
+                    var currentRoles = await _userManager.GetRolesAsync(user);
+                    model.UserRoles = currentRoles.ToList();
+                }
+            }
 
             return View(model);
         }
@@ -213,7 +237,7 @@ namespace BaiCuoiKy.Controllers
                 await _userManager.SetLockoutEndDateAsync(user, System.DateTimeOffset.MaxValue);
                 TempData["Success"] = "Đã khóa tài khoản thành công!";
             }
-            return RedirectToAction(nameof(Index));
+            return RedirectToAction("Dashboard", new { section = "users" });
         }
 
         [HttpPost]
@@ -225,7 +249,7 @@ namespace BaiCuoiKy.Controllers
                 await _userManager.SetLockoutEndDateAsync(user, null);
                 TempData["Success"] = "Đã mở khóa tài khoản thành công!";
             }
-            return RedirectToAction(nameof(Index));
+            return RedirectToAction("Dashboard", new { section = "users" });
         }
 
         [HttpPost]
@@ -244,7 +268,7 @@ namespace BaiCuoiKy.Controllers
                     TempData["Error"] = "Không thể xóa tài khoản này!";
                 }
             }
-            return RedirectToAction(nameof(Index));
+            return RedirectToAction("Dashboard", new { section = "users" });
         }
 
         public async Task<IActionResult> ManageSystem()
@@ -293,12 +317,12 @@ namespace BaiCuoiKy.Controllers
 
                 case "users":
                     var users = await _userManager.Users.ToListAsync();
-                    var userList = new List<UserWithRolesViewModel>();
+                    var userList = new List<ManagerUsersViewModel>();
                     foreach (var u in users)
                     {
                         var roles = await _userManager.GetRolesAsync(u);
                         var isLocked = await _userManager.IsLockedOutAsync(u);
-                        userList.Add(new UserWithRolesViewModel
+                        userList.Add(new ManagerUsersViewModel
                         {
                             User = u,
                             Roles = roles.ToList(),
@@ -327,6 +351,8 @@ namespace BaiCuoiKy.Controllers
                     return RedirectToAction("ManageSystem");
             }
         }
+        //Chỉnh sửa thông tin tài khoản người dùng
+
     }
 
 }

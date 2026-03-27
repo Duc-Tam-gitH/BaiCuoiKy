@@ -74,7 +74,7 @@
                                 }
                             </td>
                             <td class="admin-action-buttons">
-                                <a href="@Url.Action("Edit", "Admin", new { id = userViewModel.User.Id })"
+                                <a href="@Url.Action("EditUser", "Admin", new { id = userViewModel.User.Id })"
                                    class="admin-btn admin-btn-primary"
                                    title="Chỉnh sửa">
                                     <i class="fas fa-edit"></i>
@@ -129,5 +129,5 @@
 </div>
 
 @section Styles {
-    <link rel="stylesheet" href="~/css/admin-users.css" asp-append-version="true" />
+    <link rel="stylesheet" href="~/css/Admin-Users.css" asp-append-version="true" />
 }

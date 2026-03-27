@@ -76,7 +76,20 @@ namespace BaiCuoiKy.Controllers
             // 6. Nếu có lỗi (mật khẩu yếu, trùng email...), hiển thị ra màn hình
             foreach (var error in result.Errors)
             {
-                ModelState.AddModelError("", error.Description);
+                if (error.Code == "DuplicateEmail")
+                {
+                    ModelState.AddModelError("", "Email đã tồn tại!!");
+                }
+                else if (error.Code == "DuplicateUserName")
+                {
+                    ModelState.AddModelError("", "Tên đăng nhập đã tồn tại!!");
+                }
+                else
+                {
+                    // Các lỗi khác (mật khẩu yếu, v.v.) giữ nguyên mô tả hệ thống 
+                    // hoặc bạn có thể tự dịch thêm tại đây
+                    ModelState.AddModelError("", error.Description);
+                }
             }
 
             return View(model);

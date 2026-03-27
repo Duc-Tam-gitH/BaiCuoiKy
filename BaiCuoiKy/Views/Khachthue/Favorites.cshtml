@@ -1,5 +1,76 @@
-﻿@*
-    For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
-*@
+﻿@model IEnumerable<BaiCuoiKy.Models.Tro>
+
 @{
+    ViewData["Title"] = "Phòng trọ đã lưu";
 }
+
+<div class="container py-5">
+    <div class="d-flex align-items-center justify-content-between mb-4 border-bottom pb-3">
+        <h2 class="fw-bold" style="color: #764ba2;">
+            <i class="fa-solid fa-heart me-2"></i>Phòng trọ yêu thích
+        </h2>
+        <span class="badge rounded-pill bg-purple px-3 py-2" style="background-color: #764ba2;">@Model.Count() Tin lưu</span>
+    </div>
+
+    <div class="row">
+        @if (Model != null && Model.Any())
+        {
+            @foreach (var item in Model)
+            {
+                <div class="col-lg-4 col-md-6 mb-4">
+                    <div class="card border-0 shadow-sm h-100 rounded-4 overflow-hidden shadow-hover">
+                        <div class="position-relative" style="height: 200px;">
+                            <img src="@(item.AnhPhongs?.FirstOrDefault()?.Url ?? "/images/no-image.jpg")"
+                                 class="w-100 h-100 object-fit-cover" alt="@item.TieuDe">
+                            <div class="position-absolute bottom-0 start-0 m-2 badge bg-dark bg-opacity-75 p-2">
+                                @item.Gia.ToString("N0") VNĐ/tháng
+                            </div>
+                        </div>
+
+                        <div class="card-body">
+                            <h5 class="card-title text-truncate fw-bold">@item.TieuDe</h5>
+                            <p class="small text-muted mb-3">
+                                <i class="fa-solid fa-location-dot me-1"></i> @item.DiaChi
+                            </p>
+
+                            <div class="d-flex justify-content-between align-items-center">
+                                <a asp-controller="Home" asp-action="Detail" asp-route-id="@item.Id"
+                                   class="btn btn-sm px-4 rounded-pill" style="background-color: #764ba2; color: white;">
+                                    Xem chi tiết
+                                </a>
+
+                                <form asp-controller="Favorite" asp-action="ToggleFavorite" asp-route-troId="@item.Id" method="post">
+                                    <button type="submit" class="btn btn-link text-danger text-decoration-none p-0 small">
+                                        <i class="fa-solid fa-trash-can"></i> Xóa lưu
+                                    </button>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            }
+        }
+        else
+        {
+            <div class="col-12 text-center py-5">
+                <i class="fa-solid fa-heart-crack fa-5x text-light-emphasis mb-4"></i>
+                <h3 class="text-secondary">Danh sách yêu thích đang trống</h3>
+                <p class="text-muted">Hãy tìm kiếm và lưu lại những căn phòng ưng ý nhất tại House88!</p>
+                <a asp-controller="Home" asp-action="Search"
+                   class="btn btn-lg mt-3 px-5 rounded-pill shadow"
+                   style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; border: none;">
+                    Khám phá ngay
+                </a>
+            </div>
+        }
+    </div>
+</div>
+
+<style>
+    .shadow-hover:hover {
+        transform: translateY(-8px);
+        transition: 0.3s ease;
+        box-shadow: 0 15px 30px rgba(0,0,0,0.1) !important;
+    }
+    .object-fit-cover { object-fit: cover; }
+</style>

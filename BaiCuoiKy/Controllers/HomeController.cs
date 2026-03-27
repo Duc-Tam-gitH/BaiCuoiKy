@@ -59,5 +59,10 @@ namespace BaiCuoiKy.Controllers
         {
             return View(new ErrorViewModel { RequestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier });
         }
+        public IActionResult Search()
+        {
+            // Trả về view tìm kiếm (Search.cshtml)
+            return View();
+        }
     }
 }

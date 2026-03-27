@@ -29,6 +29,14 @@ namespace BaiCuoiKy.Controllers
             _roleManager = roleManager;
             _context = context;
         }
+        private string GetInitials(string name)
+        {
+            if (string.IsNullOrEmpty(name)) return "A";
+            var parts = name.Trim().Split(' ');
+            if (parts.Length >= 2)
+                return parts[0][0].ToString().ToUpper() + parts[1][0].ToString().ToUpper();
+            return name[0].ToString().ToUpper();
+        }
 
         public async Task<IActionResult> Index(string sortOrder, string searchString, string roleFilter)
         {
@@ -236,7 +244,70 @@ namespace BaiCuoiKy.Controllers
             }
             return RedirectToAction(nameof(Index));
         }
+        
+        public async Task<IActionResult> ManageSystem()
+        {
+            var user = await _userManager.GetUserAsync(User);
+            if (user == null)
+            {
+                return NotFound();
+            }
+
+            ViewBag.UserInitials = GetInitials(user.FullName ?? user.UserName);
+            ViewBag.UserName = user.FullName ?? user.UserName;
+            ViewBag.UserRole = "Admin";
+            ViewBag.ActiveSection = "overview";
+
+            // Lấy dữ liệu thống kê
+            ViewBag.TotalUsers = await _userManager.Users.CountAsync();
+            ViewBag.TotalTros = await _context.Tros.CountAsync();
+            ViewBag.TotalBookings = await _context.Bookings.CountAsync();
+            ViewBag.TotalPosts = await _context.Tros.CountAsync(); // Hoặc bài đăng riêng nếu có
+
+            return View();
+        }
+        
+        public async Task<IActionResult> Dashboard(string section = "overview")
+        {
+            var user = await _userManager.GetUserAsync(User);
+            if (user == null)
+            {
+                return NotFound();
+            }
+
+            ViewBag.UserInitials = GetInitials(user.FullName ?? user.UserName);
+            ViewBag.UserName = user.FullName ?? user.UserName;
+            ViewBag.UserRole = "Admin";
+            ViewBag.ActiveSection = section;
+
+            switch (section)
+            {
+                case "overview":
+                    ViewBag.TotalUsers = await _userManager.Users.CountAsync();
+                    ViewBag.TotalTros = await _context.Tros.CountAsync();
+                    ViewBag.TotalBookings = await _context.Bookings.CountAsync();
+                    ViewBag.TotalPosts = await _context.Tros.CountAsync();
+                    return View("Overview");
+
+                case "users":
+                    return RedirectToAction("Index");
+
+                case "rooms":
+                    return RedirectToAction("Index", "Tro");
+
+                case "posts":
+                    // Nếu có controller quản lý bài đăng thì redirect
+                    return RedirectToAction("Index", "Post");
+
+                case "settings":
+                    return View("Settings");
+
+                default:
+                    return RedirectToAction("ManageSystem");
+            }
+        }
     }
+
 }
 
 

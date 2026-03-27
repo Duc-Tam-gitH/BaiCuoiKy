@@ -1,0 +1,81 @@
+﻿@using BaiCuoiKy.Models.ViewModel
+@model DashboardViewModel
+@{
+    ViewBag.Title = "Dashboard";
+    Layout = "~/Views/Shared/_AdminLayout.cshtml";
+    ViewBag.ActiveSection = Model.ActiveSection;
+}
+
+<div class="page-header">
+    <h1 class="page-title">
+        @switch (Model.ActiveSection)
+        {
+            case "overview":
+                @:Tổng quan
+                break;
+            case "rooms":
+                @:Quản lý phòng trọ
+                break;
+            case "posts":
+                @:Quản lý bài đăng
+                break;
+            case "settings":
+                @:Cài đặt hệ thống
+                break;
+            default:
+                @:Tổng quan
+                break;
+        }
+    </h1>
+    <p class="page-desc">
+        @switch (Model.ActiveSection)
+        {
+            case "overview":
+                @:Thống kê toàn cảnh và hoạt động gần đây của hệ thống.
+                break;
+            case "rooms":
+                @:Danh sách, tình trạng và thông tin phòng trọ.
+                break;
+            case "posts":
+                @:Duyệt, chỉnh sửa và kiểm soát bài đăng.
+                break;
+            case "settings":
+                @:Cấu hình chung, bảo mật và tùy chỉnh nền tảng.
+                break;
+        }
+    </p>
+</div>
+
+<div id="contentRenderer">
+    @if (Model.ActiveSection == "overview")
+    {
+        await Html.RenderPartialAsync("_Overview", Model);
+    }
+    else if (Model.ActiveSection == "rooms")
+    {
+        await Html.RenderPartialAsync("_Rooms", Model);
+    }
+    else if (Model.ActiveSection == "posts")
+    {
+        await Html.RenderPartialAsync("_Posts", Model);
+    }
+    else if (Model.ActiveSection == "settings")
+    {
+        await Html.RenderPartialAsync("_Settings");
+    }
+</div>
+
+@section Scripts {
+    <script>
+        $(document).ready(function() {
+            // Xử lý khi chuyển section bằng AJAX nếu cần
+            $('.nav-item').click(function(e) {
+                var section = $(this).data('section');
+                if (section && window.location.pathname.includes('Dashboard')) {
+                    e.preventDefault();
+                    // Có thể load nội dung bằng AJAX ở đây
+                }
+            });
+        });
+    </script>
+}

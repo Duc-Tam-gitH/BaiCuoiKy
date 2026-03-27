@@ -1,17 +1,16 @@
 ﻿/* =========================
-    NAVBAR
+    NAVBAR (FIXED)
 ========================= */
 .navbar {
     background: var(--primary);
     display: flex;
     justify-content: space-between;
     align-items: center;
-    padding: 0.8rem 10%;
-    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.2);
+    padding: 10px 8%;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.2);
     position: sticky;
     top: 0;
     z-index: 1000;
-    transition: all 0.3s ease;
 }
 
 /* =========================
@@ -20,16 +19,15 @@
 .nav-left {
     display: flex;
     align-items: center;
-    gap: 30px;
+    gap: 25px;
 }
 
     .nav-left a {
-        font-weight: 600;
-        font-size: 0.95rem;
-        letter-spacing: 0.5px;
-        position: relative;
+        font-size: 0.9rem;
         color: white;
         text-decoration: none;
+        position: relative;
+        font-weight: 500;
     }
 
         .nav-left a::after {
@@ -39,7 +37,7 @@
             height: 2px;
             bottom: -5px;
             left: 0;
-            background-color: var(--accent);
+            background: var(--accent);
             transition: 0.3s;
         }
 
@@ -53,112 +51,125 @@
 .nav-right {
     display: flex;
     align-items: center;
-    gap: 15px;
+    gap: 10px;
 }
 
 /* =========================
     BUTTON BASE
 ========================= */
 .btn {
-    padding: 8px 18px;
-    border-radius: 50px;
-    font-size: 0.9rem;
-    font-weight: 600;
+    padding: 6px 14px;
+    border-radius: 20px;
+    font-size: 0.85rem;
     border: none;
     cursor: pointer;
-    transition: 0.3s;
     text-decoration: none;
     display: inline-block;
 }
 
 /* =========================
-    SEARCH BUTTON
+    SEARCH
 ========================= */
 .btn-primary {
     background: var(--accent);
     color: white;
-    font-weight: 700;
-    box-shadow: 0 4px 10px rgba(237, 0, 90, 0.2);
 }
 
     .btn-primary:hover {
         background: var(--accent-hover);
-        transform: translateY(-2px);
-        box-shadow: 0 6px 15px rgba(237, 0, 90, 0.4);
-    }
-
-    .btn-primary:active {
-        transform: scale(0.95);
     }
 
 /* =========================
-    REGISTER (NỔI BẬT)
+    REGISTER
 ========================= */
 .btn-register {
     background: var(--accent);
     color: white;
-    font-weight: 700;
-    box-shadow: 0 4px 10px rgba(237, 0, 90, 0.3);
 }
 
-    .btn-register:hover {
-        background: var(--accent-hover);
-        transform: translateY(-2px);
-        box-shadow: 0 6px 15px rgba(237, 0, 90, 0.5);
-    }
-
 /* =========================
-    LOGIN (NHẸ)
+    LOGIN
 ========================= */
 .btn-login {
+    border: 1px solid white;
     background: transparent;
-    border: 2px solid rgba(255,255,255,0.6);
     color: white;
 }
 
     .btn-login:hover {
         background: rgba(255,255,255,0.1);
-        border-color: white;
-        transform: translateY(-2px);
     }
 
 /* =========================
-    LOGOUT
+    LOGOUT (FIX FORM BUG)
 ========================= */
+form {
+    margin: 0;
+}
+
 .btn-logout {
-    border: 2px solid var(--accent);
+    border: 1px solid var(--accent);
     background: transparent;
     color: var(--accent);
+    padding: 6px 12px;
 }
 
     .btn-logout:hover {
         background: var(--accent);
+        color: white;
+    }
+
+/* =========================
+    DROPDOWN (FIX LỖI ẨN)
+========================= */
+.dropdown {
+    position: relative;
+}
+
+.dropdown-menu {
+    display: none;
+    position: absolute;
+    top: 110%;
+    left: 0;
+    background: #1e293b;
+    min-width: 180px;
+    border-radius: 6px;
+    padding: 5px 0;
+    list-style: none;
+    z-index: 1000;
+}
+
+    .dropdown-menu li a {
+        display: block;
+        padding: 8px 15px;
         color: white !important;
     }
+
+        .dropdown-menu li a:hover {
+            background: #002641;
+        }
+
+/* hover show */
+.dropdown:hover .dropdown-menu {
+    display: block;
+}
 
 /* =========================
     RESPONSIVE
 ========================= */
-@media (max-width: 992px) {
+@media (max-width: 768px) {
     .navbar {
-        padding: 15px 20px;
+        flex-direction: column;
+        gap: 10px;
     }
 
     .nav-left {
-        gap: 15px;
-    }
-}
-
-@media (max-width: 576px) {
-    .navbar {
-        flex-direction: column;
-        gap: 15px;
-        padding: 20px;
+        flex-wrap: wrap;
+        justify-content: center;
     }
 
     .nav-right {
-        width: 100%;
-        justify-content: center;
         flex-wrap: wrap;
+        justify-content: center;
     }
 }

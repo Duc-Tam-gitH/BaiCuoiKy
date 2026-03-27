@@ -5,9 +5,17 @@
 }
 <nav class="navbar">
     <div class="nav-left">
-
         <a asp-controller="Home" asp-action="Index">Trang chủ</a>
-        <a asp-controller="Tro" asp-action="Index">Danh mục</a>
+
+        <div class="dropdown">
+            <a href="#" class="dropdown-toggle">Danh mục </a>
+            <ul class="dropdown-menu">
+                <li><a asp-controller="Tro" asp-action="Index" asp-route-type="TruyenThong">Trọ truyền thống</a></li>
+                <li><a asp-controller="Tro" asp-action="Index" asp-route-type="Ghep">Trọ ghép</a></li>
+                <li><a asp-controller="Tro" asp-action="Index" asp-route-type="ChungCuMini">Chung cư mini</a></li>
+            </ul>
+        </div>
+
         <a asp-controller="Home" asp-action="Index">Chính sách bảo mật</a>
         <a asp-controller="Tro" asp-action="Index">Hỗ trợ</a>
     </div>

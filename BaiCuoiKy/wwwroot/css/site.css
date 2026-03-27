@@ -1,6 +1,7 @@
 ﻿/* =========================
     ROOT + GLOBAL
 ========================= */
+@import url('site.css');
 :root {
     --primary: #002641;      /* Navy đậm */
     --secondary: #013a58;    /* Navy nhẹ hơn */
@@ -124,6 +125,7 @@ footer {
     display: flex;
     align-items: center;
     justify-content: center;
+    margin-top: auto;
 }
 /* Container ảnh để ép kích thước bằng nhau */
 .room-img-container {
@@ -159,4 +161,17 @@ footer {
     overflow: hidden;
     text-overflow: ellipsis;
     white-space: nowrap;
+}
+/* Thêm vào site.css */
+.room-card .price {
+    color: var(--primary); /* Dùng màu Navy đậm cho giá tiền */
+    font-weight: bold;
+    font-size: 1.1rem;
+}
+
+.room-card .btn-detail {
+    background: var(--primary);
+    color: white;
+    border-radius: 8px;
+    padding: 5px 15px;
 }

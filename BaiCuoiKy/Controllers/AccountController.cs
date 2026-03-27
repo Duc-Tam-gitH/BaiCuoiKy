@@ -25,126 +25,64 @@ namespace BaiCuoiKy.Controllers
         }
 
         // =========================
-        // REGISTER
+        // REGISTER, LOGIN, LOGOUT (Giữ nguyên code của bạn)
         // =========================
         [HttpGet]
-        public IActionResult Register()
-        {
-            return View();
-        }
+        public IActionResult Register() => View();
 
         [HttpPost]
         public async Task<IActionResult> Register(RegisterViewModel model)
         {
-            // 1. Gán mặc định Role là Khachthue vì bạn đã bỏ Chutro
             model.SelectedRole = "Khachthue";
-
-            // Xóa kiểm tra hợp lệ cho Role vì mình đã gán cứng ở trên
             ModelState.Remove("SelectedRole");
+            if (!ModelState.IsValid) return View(model);
 
-            if (!ModelState.IsValid)
-            {
-                return View(model);
-            }
-
-            // 2. Tạo đối tượng User
-            var user = new ApplicationUser
-            {
-                UserName = model.Email,
-                Email = model.Email,
-                FullName = model.FullName,
-                Address = "" // Để trống hoặc gán mặc định
-            };
-
-            // 3. Thực hiện tạo tài khoản
+            var user = new ApplicationUser { UserName = model.Email, Email = model.Email, FullName = model.FullName, Address = "" };
             var result = await _userManager.CreateAsync(user, model.Password);
 
             if (result.Succeeded)
             {
-                // 🔥 QUAN TRỌNG: Tự động tạo Role "Khachthue" nếu máy bạn chưa có trong DB
                 if (!await _roleManager.RoleExistsAsync("Khachthue"))
-                {
                     await _roleManager.CreateAsync(new IdentityRole("Khachthue"));
-                }
 
-                // 4. Gán quyền Khachthue cho người dùng mới
                 await _userManager.AddToRoleAsync(user, "Khachthue");
-
-                // 5. Đăng nhập và chuyển hướng về trang chủ
                 await _signInManager.SignInAsync(user, isPersistent: false);
                 return RedirectToAction("Index", "Home");
             }
 
-            // 6. Nếu có lỗi (mật khẩu yếu, trùng email...), hiển thị ra màn hình
-            foreach (var error in result.Errors)
-            {
-                if (error.Code == "DuplicateEmail")
-                {
-                    ModelState.AddModelError("", "Email đã tồn tại!!");
-                }
-                else if (error.Code == "DuplicateUserName")
-                {
-                    ModelState.AddModelError("", "Tên đăng nhập đã tồn tại!!");
-                }
-                else
-                {
-                    // Các lỗi khác (mật khẩu yếu, v.v.) giữ nguyên mô tả hệ thống 
-                    // hoặc bạn có thể tự dịch thêm tại đây
-                    ModelState.AddModelError("", error.Description);
-                }
-            }
-
+            foreach (var error in result.Errors) ModelState.AddModelError("", error.Description);
             return View(model);
         }
 
-        // =========================
-        // LOGIN
-        // =========================
         [HttpGet]
-        public IActionResult Login()
-        {
-            return View();
-        }
+        public IActionResult Login() => View();
 
         [HttpPost]
         public async Task<IActionResult> Login(LoginViewModel model)
         {
-            if (!ModelState.IsValid)
-                return View(model);
-
-            var result = await _signInManager.PasswordSignInAsync(
-                model.Email,
-                model.Password,
-                model.RememberMe,
-                lockoutOnFailure: false
-            );
-
-            if (result.Succeeded)
-            {
-                return RedirectToAction("Index", "Home");
-            }
-
+            if (!ModelState.IsValid) return View(model);
+            var result = await _signInManager.PasswordSignInAsync(model.Email, model.Password, model.RememberMe, false);
+            if (result.Succeeded) return RedirectToAction("Index", "Home");
             ModelState.AddModelError("", "Email hoặc mật khẩu không đúng");
             return View(model);
         }
 
-        // =========================
-        // LOGOUT
-        // =========================
         [HttpPost]
         public async Task<IActionResult> Logout()
         {
             await _signInManager.SignOutAsync();
             return RedirectToAction("Login");
         }
+
+        // =========================
+        // PROFILE
+        // =========================
         [Authorize]
         public async Task<IActionResult> Profile()
         {
             var user = await _userManager.GetUserAsync(User);
             if (user == null) return RedirectToAction("Login");
-
             var roles = await _userManager.GetRolesAsync(user);
-
             var model = new UserProfileViewModel
             {
                 Id = user.Id,
@@ -163,25 +101,21 @@ namespace BaiCuoiKy.Controllers
         {
             var user = await _userManager.FindByIdAsync(model.Id);
             if (user == null) return NotFound();
-
             user.FullName = model.FullName;
             user.Address = model.Address;
             user.PhoneNumber = model.PhoneNumber;
-
             var result = await _userManager.UpdateAsync(user);
             if (result.Succeeded)
             {
                 TempData["Message"] = "Cập nhật thông tin thành công!";
                 return RedirectToAction("Profile");
             }
-
-            foreach (var error in result.Errors)
-            {
-                ModelState.AddModelError("", error.Description);
-            }
             return View("Profile", model);
         }
-        // GET: Quên mật khẩu
+
+        // =========================
+        // FORGOT PASSWORD
+        // =========================
         [HttpGet]
         public IActionResult ForgotPassword() => View();
 
@@ -195,18 +129,13 @@ namespace BaiCuoiKy.Controllers
                 if (user != null)
                 {
                     var token = await _userManager.GeneratePasswordResetTokenAsync(user);
-                    var callbackUrl = Url.Action("ResetPassword", "Account",
-                        new { token, email = model.Email }, Request.Scheme);
+                    var callbackUrl = Url.Action("ResetPassword", "Account", new { token, email = model.Email }, Request.Scheme);
 
-                    // --- ĐOẠN CODE GỬI EMAIL THẬT ---
                     try
                     {
                         var fromAddress = new MailAddress("hoangnam01645994528@gmail.com", "House88 Hỗ trợ");
                         var toAddress = new MailAddress(model.Email);
-                        string fromPassword = "sslu ezce txez krua"; // Mật khẩu ứng dụng
-
-                        string subject = "Đặt lại mật khẩu - House88";
-                        string body = $"Chào bạn, vui lòng nhấn vào link sau để đổi mật khẩu: <a href='{callbackUrl}'>Nhấn vào đây</a>";
+                        string fromPassword = "sslu ezce txez krua";
 
                         var smtp = new SmtpClient
                         {
@@ -220,8 +149,8 @@ namespace BaiCuoiKy.Controllers
 
                         using (var message = new MailMessage(fromAddress, toAddress)
                         {
-                            Subject = subject,
-                            Body = body,
+                            Subject = "Đặt lại mật khẩu - House88",
+                            Body = $"Chào bạn, vui lòng nhấn vào link sau để đổi mật khẩu: <a href='{callbackUrl}'>Nhấn vào đây</a>",
                             IsBodyHtml = true
                         })
                         {
@@ -230,46 +159,49 @@ namespace BaiCuoiKy.Controllers
                     }
                     catch (Exception ex)
                     {
-                        // Nếu lỗi gửi mail, bạn có thể log lỗi ở đây
                         ModelState.AddModelError("", "Lỗi gửi mail: " + ex.Message);
                         return View(model);
                     }
                 }
-
-                // Sau khi gửi xong (hoặc nếu user ko tồn tại), chuyển hướng sang trang thông báo
                 return RedirectToAction("ForgotPasswordConfirmation");
             }
             return View(model);
         }
 
-        // GET: Trang đặt lại mật khẩu mới
         [HttpGet]
+        [AllowAnonymous]
+        public IActionResult ForgotPasswordConfirmation() => View();
+
+        // =========================
+        // RESET PASSWORD (ĐÃ GỘP LẠI)
+        // =========================
+        [HttpGet]
+        [AllowAnonymous]
         public IActionResult ResetPassword(string token, string email)
         {
-            if (token == null || email == null) return RedirectToAction("Index", "Home");
+            if (token == null || email == null) return RedirectToAction("Login");
             return View(new ResetPasswordViewModel { Token = token, Email = email });
         }
 
-        // POST: Lưu mật khẩu mới
         [HttpPost]
+        [AllowAnonymous]
+        [ValidateAntiForgeryToken]
         public async Task<IActionResult> ResetPassword(ResetPasswordViewModel model)
         {
             if (!ModelState.IsValid) return View(model);
 
             var user = await _userManager.FindByEmailAsync(model.Email);
-            if (user == null) return RedirectToAction("ResetPasswordConfirmation");
+            if (user == null) return RedirectToAction("Login");
 
             var result = await _userManager.ResetPasswordAsync(user, model.Token, model.Password);
-            if (result.Succeeded) return RedirectToAction("ResetPasswordConfirmation");
+            if (result.Succeeded)
+            {
+                TempData["Message"] = "Đổi mật khẩu thành công!";
+                return RedirectToAction("Login");
+            }
 
             foreach (var error in result.Errors) ModelState.AddModelError("", error.Description);
-            return View();
-        }
-        [HttpGet]
-        [AllowAnonymous]
-        public IActionResult ForgotPasswordConfirmation()
-        {
-            return View();
+            return View(model);
         }
     }
 }

@@ -1,0 +1,61 @@
+﻿@{
+    Layout = "_AdminLayout";
+    ViewBag.Title = "Dashboard";
+    ViewBag.ActiveSection = "overview";
+}
+
+<div class="admin-dashboard-container">
+    <div class="admin-page-header">
+        <h1 class="admin-page-title">Tổng quan hệ thống</h1>
+        <p class="admin-page-subtitle">Chào mừng bạn quay trở lại, @ViewBag.UserName</p>
+    </div>
+
+    <div class="admin-stats-grid">
+        <div class="admin-stat-card">
+            <div class="admin-stat-icon">
+                <i class="fas fa-users"></i>
+            </div>
+            <div class="admin-stat-info">
+                <h3>@ViewBag.TotalUsers</h3>
+                <p>Người dùng</p>
+            </div>
+        </div>
+
+        <div class="admin-stat-card">
+            <div class="admin-stat-icon">
+                <i class="fas fa-building"></i>
+            </div>
+            <div class="admin-stat-info">
+                <h3>@ViewBag.TotalTros</h3>
+                <p>Phòng trọ</p>
+            </div>
+        </div>
+
+        <div class="admin-stat-card">
+            <div class="admin-stat-icon">
+                <i class="fas fa-calendar-check"></i>
+            </div>
+            <div class="admin-stat-info">
+                <h3>@ViewBag.TotalBookings</h3>
+                <p>Đặt phòng</p>
+            </div>
+        </div>
+
+        <div class="admin-stat-card">
+            <div class="admin-stat-icon">
+                <i class="fas fa-newspaper"></i>
+            </div>
+            <div class="admin-stat-info">
+                <h3>@ViewBag.TotalPosts</h3>
+                <p>Bài đăng</p>
+            </div>
+        </div>
+    </div>
+
+    <div class="admin-recent-activities">
+        <h2>Hoạt động gần đây</h2>
+        <div class="admin-activity-list">
+            <p class="admin-text-muted">Đang cập nhật...</p>
+        </div>
+    </div>
+</div>

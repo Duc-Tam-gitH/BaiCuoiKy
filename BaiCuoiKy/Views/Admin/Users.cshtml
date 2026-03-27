@@ -1,0 +1,115 @@
+﻿@{
+    Layout = "_AdminLayout";
+    ViewBag.Title = "Quản lý người dùng";
+    ViewBag.ActiveSection = "users";
+}
+
+<div class="admin-dashboard-container">
+    <div class="admin-page-header">
+        <h1 class="admin-page-title">Quản lý người dùng</h1>
+        <p class="admin-page-subtitle">Quản lý tài khoản người dùng hệ thống</p>
+    </div>
+
+    @if (TempData["Success"] != null)
+    {
+        <div class="admin-alert admin-alert-success">
+            @TempData["Success"]
+        </div>
+    }
+
+    @if (TempData["Error"] != null)
+    {
+        <div class="admin-alert admin-alert-danger">
+            @TempData["Error"]
+        </div>
+    }
+
+    <div class="admin-table-container">
+        <table class="admin-table">
+            <thead>
+                <tr>
+                    <th>Tên đăng nhập</th>
+                    <th>Họ tên</th>
+                    <th>Email</th>
+                    <th>Số điện thoại</th>
+                    <th>Vai trò</th>
+                    <th>Trạng thái</th>
+                    <th>Thao tác</th>
+                </tr>
+            </thead>
+            <tbody>
+                @if (ViewBag.Users != null)
+                {
+                    foreach (var user in ViewBag.Users)
+                    {
+                        <tr>
+                            <td>@user.UserName</td>
+                            <td>@user.FullName</td>
+                            <td>@user.Email</td>
+                            <td>@user.PhoneNumber</td>
+                            <td>
+                                @foreach (var role in user.Roles)
+                                {
+                                    <span class="admin-badge">@role</span>
+                                }
+                            </td>
+                            <td>
+                                @if (user.IsLocked)
+                                {
+                                    <span class="admin-badge admin-badge-danger">Đã khóa</span>
+                                }
+                                else
+                                {
+                                    <span class="admin-badge admin-badge-success">Hoạt động</span>
+                                }
+                            </td>
+                            <td>
+                                <a href="@Url.Action("Edit", "Admin", new { id = user.Id })" class="admin-btn admin-btn-primary">Sửa</a>
+                                @if (user.IsLocked)
+                                {
+                                    <form asp-action="UnlockUser" asp-controller="Admin" method="post" style="display:inline">
+                                        <input type="hidden" name="id" value="@user.Id" />
+                                        <button type="submit" class="admin-btn admin-btn-success">Mở khóa</button>
+                                    </form>
+                                }
+                                else
+                                {
+                                    <form asp-action="LockUser" asp-controller="Admin" method="post" style="display:inline">
+                                        <input type="hidden" name="id" value="@user.Id" />
+                                        <button type="submit" class="admin-btn admin-btn-warning">Khóa</button>
+                                    </form>
+                                }
+                                <form asp-action="Delete" asp-controller="Admin" method="post" style="display:inline" onsubmit="return confirm('Bạn có chắc chắn muốn xóa người dùng này?')">
+                                    <input type="hidden" name="id" value="@user.Id" />
+                                    <button type="submit" class="admin-btn admin-btn-danger">Xóa</button>
+                                </form>
+                            </td>
+                        </tr>
+                    }
+                }
+            </tbody>
+        </table>
+    </div>
+</div>
+
+@section Styles {
+    <style>
+        .admin-badge {
+            display: inline-block;
+            padding: 0.25rem 0.5rem;
+            border-radius: 0.25rem;
+            font-size: 0.75rem;
+            font-weight: 500;
+        }
+
+        .admin-badge-success {
+            background: #d1fae5;
+            color: #065f46;
+        }
+
+        .admin-badge-danger {
+            background: #fee2e2;
+            color: #991b1b;
+        }
+    </style>
+}

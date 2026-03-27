@@ -29,6 +29,8 @@ namespace BaiCuoiKy.Controllers
             _roleManager = roleManager;
             _context = context;
         }
+
+        
         private string GetInitials(string name)
         {
             if (string.IsNullOrEmpty(name)) return "A";
@@ -244,7 +246,7 @@ namespace BaiCuoiKy.Controllers
             }
             return RedirectToAction(nameof(Index));
         }
-        
+
         public async Task<IActionResult> ManageSystem()
         {
             var user = await _userManager.GetUserAsync(User);
@@ -262,11 +264,11 @@ namespace BaiCuoiKy.Controllers
             ViewBag.TotalUsers = await _userManager.Users.CountAsync();
             ViewBag.TotalTros = await _context.Tros.CountAsync();
             ViewBag.TotalBookings = await _context.Bookings.CountAsync();
-            ViewBag.TotalPosts = await _context.Tros.CountAsync(); // Hoặc bài đăng riêng nếu có
+            ViewBag.TotalPosts = await _context.Tros.CountAsync();
 
             return View();
         }
-        
+
         public async Task<IActionResult> Dashboard(string section = "overview")
         {
             var user = await _userManager.GetUserAsync(User);
@@ -287,19 +289,38 @@ namespace BaiCuoiKy.Controllers
                     ViewBag.TotalTros = await _context.Tros.CountAsync();
                     ViewBag.TotalBookings = await _context.Bookings.CountAsync();
                     ViewBag.TotalPosts = await _context.Tros.CountAsync();
-                    return View("Overview");
+                    return View("ManageSystem");
 
                 case "users":
-                    return RedirectToAction("Index");
+                    var users = await _userManager.Users.ToListAsync();
+                    var userList = new List<UserWithRolesViewModel>();
+                    foreach (var u in users)
+                    {
+                        var roles = await _userManager.GetRolesAsync(u);
+                        var isLocked = await _userManager.IsLockedOutAsync(u);
+                        userList.Add(new UserWithRolesViewModel
+                        {
+                            User = u,
+                            Roles = roles.ToList(),
+                            TotalTros = await _context.Tros.CountAsync(t => t.UserId == u.Id),
+                            TotalBookings = await _context.Bookings.CountAsync(b => b.UserId == u.Id),
+                            IsLocked = isLocked
+                        });
+                    }
+                    ViewBag.Users = userList;
+                    return View("Users");
 
                 case "rooms":
                     return RedirectToAction("Index", "Tro");
 
                 case "posts":
-                    // Nếu có controller quản lý bài đăng thì redirect
-                    return RedirectToAction("Index", "Post");
+                    // Tạo view Posts.cshtml sau
+                    ViewBag.Message = "Tính năng đang phát triển";
+                    return View("Posts");
 
                 case "settings":
+                    // Tạo view Settings.cshtml sau
+                    ViewBag.Message = "Tính năng đang phát triển";
                     return View("Settings");
 
                 default:

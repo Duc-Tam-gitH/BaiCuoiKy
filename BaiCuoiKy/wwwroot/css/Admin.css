@@ -1,0 +1,673 @@
+﻿/* admin.css - Style cho Admin Dashboard */
+/* Màu chính: #002641 (xanh đậm) và #ED005A (hồng) */
+
+/* Reset & Base */
+.admin-app-container {
+    display: flex;
+    min-height: 100vh;
+    background: #f8fafc;
+    font-family: 'Inter', sans-serif;
+}
+
+/* Sidebar Styles */
+.admin-sidebar {
+    width: 280px;
+    background: #002641;
+    border-right: 1px solid rgba(255,255,255,0.1);
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    position: fixed;
+    height: 100vh;
+    overflow-y: auto;
+    z-index: 100;
+}
+
+.admin-logo-area {
+    padding: 1.5rem;
+    border-bottom: 1px solid rgba(255,255,255,0.1);
+    margin-bottom: 1rem;
+}
+
+.admin-logo {
+    font-size: 1.5rem;
+    font-weight: 700;
+    color: white;
+}
+
+    .admin-logo span {
+        color: #ED005A;
+    }
+
+.admin-nav-menu {
+    padding: 0 1rem;
+}
+
+.admin-nav-item {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    padding: 0.75rem 1rem;
+    color: rgba(255,255,255,0.7);
+    text-decoration: none;
+    border-radius: 0.5rem;
+    margin-bottom: 0.25rem;
+    transition: all 0.2s;
+}
+
+    .admin-nav-item:hover {
+        background: rgba(237, 0, 90, 0.1);
+        color: white;
+        text-decoration: none;
+    }
+
+    .admin-nav-item.active {
+        background: #ED005A;
+        color: white;
+    }
+
+    .admin-nav-item i {
+        width: 20px;
+        font-size: 1.1rem;
+    }
+
+.admin-section-divider {
+    height: 1px;
+    background: rgba(255,255,255,0.1);
+    margin: 1rem 0;
+}
+
+/* User Footer */
+.admin-user-footer {
+    padding: 1rem;
+    border-top: 1px solid rgba(255,255,255,0.1);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
+.admin-user-info {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+}
+
+.admin-avatar-circle {
+    width: 40px;
+    height: 40px;
+    background: #ED005A;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: white;
+    font-weight: 600;
+    font-size: 1rem;
+}
+
+.admin-user-details {
+    display: flex;
+    flex-direction: column;
+}
+
+.admin-user-name {
+    font-weight: 600;
+    color: white;
+    font-size: 0.9rem;
+}
+
+.admin-user-role {
+    font-size: 0.75rem;
+    color: rgba(255,255,255,0.6);
+}
+
+.admin-logout-icon {
+    cursor: pointer;
+    color: rgba(255,255,255,0.7);
+    font-size: 1.2rem;
+    transition: color 0.2s;
+}
+
+    .admin-logout-icon:hover {
+        color: #ED005A;
+    }
+
+/* Main Content */
+.admin-main-content {
+    flex: 1;
+    margin-left: 280px;
+    padding: 2rem;
+    min-height: 100vh;
+    background: #f8fafc;
+}
+
+/* Dashboard Container */
+.admin-dashboard-container {
+    max-width: 1400px;
+    margin: 0 auto;
+}
+
+.admin-page-header {
+    margin-bottom: 2rem;
+}
+
+.admin-page-title {
+    font-size: 1.8rem;
+    font-weight: 600;
+    color: #002641;
+    margin-bottom: 0.5rem;
+}
+
+.admin-page-subtitle {
+    color: #64748b;
+    font-size: 0.95rem;
+}
+
+/* Stats Grid */
+.admin-stats-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    gap: 1.5rem;
+    margin-bottom: 2rem;
+}
+
+.admin-stat-card {
+    background: white;
+    border-radius: 1rem;
+    padding: 1.5rem;
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+    transition: transform 0.2s, box-shadow 0.2s;
+    border-left: 4px solid #ED005A;
+}
+
+    .admin-stat-card:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+    }
+
+.admin-stat-icon {
+    width: 60px;
+    height: 60px;
+    background: linear-gradient(135deg, #002641 0%, #ED005A 100%);
+    border-radius: 1rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+    .admin-stat-icon i {
+        font-size: 1.8rem;
+        color: white;
+    }
+
+.admin-stat-info h3 {
+    font-size: 1.8rem;
+    font-weight: 700;
+    color: #002641;
+    margin: 0;
+}
+
+.admin-stat-info p {
+    color: #64748b;
+    margin: 0;
+    font-size: 0.9rem;
+}
+
+/* Recent Activities */
+.admin-recent-activities {
+    background: white;
+    border-radius: 1rem;
+    padding: 1.5rem;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+}
+
+    .admin-recent-activities h2 {
+        font-size: 1.2rem;
+        font-weight: 600;
+        color: #002641;
+        margin-bottom: 1rem;
+        border-left: 3px solid #ED005A;
+        padding-left: 0.75rem;
+    }
+
+.admin-text-muted {
+    color: #94a3b8;
+}
+
+/* Table Styles for Users/Rooms Management */
+.admin-table-container {
+    background: white;
+    border-radius: 1rem;
+    padding: 1.5rem;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+    overflow-x: auto;
+}
+
+.admin-table {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+    .admin-table th,
+    .admin-table td {
+        padding: 0.75rem;
+        text-align: left;
+        border-bottom: 1px solid #e2e8f0;
+    }
+
+    .admin-table th {
+        font-weight: 600;
+        color: #002641;
+        background: #f8fafc;
+    }
+
+    .admin-table tr:hover {
+        background: #f8fafc;
+    }
+
+/* Button Styles */
+.admin-btn {
+    padding: 0.5rem 1rem;
+    border-radius: 0.5rem;
+    border: none;
+    cursor: pointer;
+    font-size: 0.875rem;
+    transition: all 0.2s;
+    text-decoration: none;
+    display: inline-block;
+}
+
+.admin-btn-primary {
+    background: #002641;
+    color: white;
+}
+
+    .admin-btn-primary:hover {
+        background: #ED005A;
+        color: white;
+        text-decoration: none;
+    }
+
+.admin-btn-danger {
+    background: #dc2626;
+    color: white;
+}
+
+    .admin-btn-danger:hover {
+        background: #b91c1c;
+        color: white;
+        text-decoration: none;
+    }
+
+.admin-btn-warning {
+    background: #f59e0b;
+    color: white;
+}
+
+    .admin-btn-warning:hover {
+        background: #d97706;
+        color: white;
+        text-decoration: none;
+    }
+
+.admin-btn-success {
+    background: #10b981;
+    color: white;
+}
+
+    .admin-btn-success:hover {
+        background: #059669;
+        color: white;
+        text-decoration: none;
+    }
+
+.admin-btn-outline {
+    background: transparent;
+    border: 1px solid #002641;
+    color: #002641;
+}
+
+    .admin-btn-outline:hover {
+        background: #002641;
+        color: white;
+    }
+
+/* Form Styles */
+.admin-form-group {
+    margin-bottom: 1rem;
+}
+
+.admin-form-label {
+    display: block;
+    margin-bottom: 0.5rem;
+    font-weight: 500;
+    color: #002641;
+}
+
+.admin-form-control {
+    width: 100%;
+    padding: 0.5rem 0.75rem;
+    border: 1px solid #cbd5e1;
+    border-radius: 0.5rem;
+    font-size: 0.875rem;
+    transition: border-color 0.2s;
+}
+
+    .admin-form-control:focus {
+        outline: none;
+        border-color: #ED005A;
+        box-shadow: 0 0 0 3px rgba(237, 0, 90, 0.1);
+    }
+
+/* Alert Messages */
+.admin-alert {
+    padding: 1rem;
+    border-radius: 0.5rem;
+    margin-bottom: 1rem;
+}
+
+.admin-alert-success {
+    background: #d1fae5;
+    color: #065f46;
+    border: 1px solid #a7f3d0;
+    border-left: 4px solid #10b981;
+}
+
+.admin-alert-danger {
+    background: #fee2e2;
+    color: #991b1b;
+    border: 1px solid #fecaca;
+    border-left: 4px solid #dc2626;
+}
+
+.admin-alert-warning {
+    background: #fed7aa;
+    color: #92400e;
+    border: 1px solid #fde68a;
+    border-left: 4px solid #f59e0b;
+}
+
+.admin-alert-info {
+    background: #e0f2fe;
+    color: #075985;
+    border: 1px solid #bae6fd;
+    border-left: 4px solid #ED005A;
+}
+
+/* Search and Filter Bar */
+.admin-search-bar {
+    display: flex;
+    gap: 1rem;
+    margin-bottom: 1.5rem;
+    flex-wrap: wrap;
+}
+
+.admin-search-input {
+    flex: 1;
+    min-width: 200px;
+    padding: 0.5rem 0.75rem;
+    border: 1px solid #cbd5e1;
+    border-radius: 0.5rem;
+    font-size: 0.875rem;
+}
+
+    .admin-search-input:focus {
+        outline: none;
+        border-color: #ED005A;
+        box-shadow: 0 0 0 3px rgba(237, 0, 90, 0.1);
+    }
+
+.admin-filter-select {
+    padding: 0.5rem 0.75rem;
+    border: 1px solid #cbd5e1;
+    border-radius: 0.5rem;
+    font-size: 0.875rem;
+    background: white;
+}
+
+    .admin-filter-select:focus {
+        outline: none;
+        border-color: #ED005A;
+    }
+
+/* Pagination */
+.admin-pagination {
+    display: flex;
+    gap: 0.5rem;
+    margin-top: 1rem;
+    justify-content: center;
+}
+
+    .admin-pagination a,
+    .admin-pagination span {
+        padding: 0.5rem 0.75rem;
+        border: 1px solid #e2e8f0;
+        border-radius: 0.5rem;
+        text-decoration: none;
+        color: #002641;
+        transition: all 0.2s;
+    }
+
+        .admin-pagination a:hover {
+            background: #ED005A;
+            color: white;
+            border-color: #ED005A;
+        }
+
+    .admin-pagination .active {
+        background: #002641;
+        color: white;
+        border-color: #002641;
+    }
+
+/* Badge Styles */
+.admin-badge {
+    display: inline-block;
+    padding: 0.25rem 0.5rem;
+    border-radius: 0.25rem;
+    font-size: 0.75rem;
+    font-weight: 500;
+}
+
+.admin-badge-primary {
+    background: #002641;
+    color: white;
+}
+
+.admin-badge-success {
+    background: #d1fae5;
+    color: #065f46;
+}
+
+.admin-badge-danger {
+    background: #fee2e2;
+    color: #991b1b;
+}
+
+.admin-badge-warning {
+    background: #fed7aa;
+    color: #92400e;
+}
+
+.admin-badge-info {
+    background: #e0f2fe;
+    color: #075985;
+}
+
+/* Card Styles */
+.admin-card {
+    background: white;
+    border-radius: 1rem;
+    padding: 1.5rem;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+    margin-bottom: 1.5rem;
+}
+
+.admin-card-header {
+    border-bottom: 1px solid #e2e8f0;
+    padding-bottom: 1rem;
+    margin-bottom: 1rem;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.admin-card-title {
+    font-size: 1.2rem;
+    font-weight: 600;
+    color: #002641;
+    margin: 0;
+}
+
+/* Modal Styles */
+.admin-modal {
+    display: none;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0,0,0,0.5);
+    z-index: 1000;
+    align-items: center;
+    justify-content: center;
+}
+
+.admin-modal-content {
+    background: white;
+    border-radius: 1rem;
+    max-width: 500px;
+    width: 90%;
+    max-height: 90vh;
+    overflow-y: auto;
+}
+
+.admin-modal-header {
+    padding: 1rem 1.5rem;
+    border-bottom: 1px solid #e2e8f0;
+    background: #002641;
+    color: white;
+    border-radius: 1rem 1rem 0 0;
+}
+
+.admin-modal-body {
+    padding: 1.5rem;
+}
+
+.admin-modal-footer {
+    padding: 1rem 1.5rem;
+    border-top: 1px solid #e2e8f0;
+    display: flex;
+    justify-content: flex-end;
+    gap: 0.5rem;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+    .admin-sidebar {
+        transform: translateX(-100%);
+        transition: transform 0.3s;
+    }
+
+        .admin-sidebar.open {
+            transform: translateX(0);
+        }
+
+    .admin-main-content {
+        margin-left: 0;
+    }
+
+    .admin-stats-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .admin-search-bar {
+        flex-direction: column;
+    }
+}
+
+/* Mobile Menu Toggle Button */
+.admin-menu-toggle {
+    display: none;
+    position: fixed;
+    top: 1rem;
+    left: 1rem;
+    z-index: 101;
+    background: #002641;
+    color: white;
+    border: none;
+    border-radius: 0.5rem;
+    padding: 0.5rem 0.75rem;
+    cursor: pointer;
+    transition: all 0.2s;
+}
+
+    .admin-menu-toggle:hover {
+        background: #ED005A;
+    }
+
+@media (max-width: 768px) {
+    .admin-menu-toggle {
+        display: block;
+    }
+}
+
+/* Loading Spinner */
+.admin-spinner {
+    display: inline-block;
+    width: 20px;
+    height: 20px;
+    border: 2px solid rgba(0,0,0,0.1);
+    border-top-color: #ED005A;
+    border-radius: 50%;
+    animation: admin-spin 0.6s linear infinite;
+}
+
+@keyframes admin-spin {
+    to {
+        transform: rotate(360deg);
+    }
+}
+
+/* Scrollbar Styling */
+::-webkit-scrollbar {
+    width: 8px;
+    height: 8px;
+}
+
+::-webkit-scrollbar-track {
+    background: #f1f1f1;
+}
+
+::-webkit-scrollbar-thumb {
+    background: #002641;
+    border-radius: 4px;
+}
+
+    ::-webkit-scrollbar-thumb:hover {
+        background: #ED005A;
+    }
+
+/* Mobile Menu Toggle Button */
+.admin-menu-toggle {
+    display: none;
+    position: fixed;
+    top: 1rem;
+    left: 1rem;
+    z-index: 101;
+    background: #3b82f6;
+    color: white;
+    border: none;
+    border-radius: 0.5rem;
+    padding: 0.5rem 0.75rem;
+    cursor: pointer;
+}
+
+@media (max-width: 768px) {
+    .admin-menu-toggle {
+        display: block;
+    }
+}

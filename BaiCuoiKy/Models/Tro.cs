@@ -20,6 +20,10 @@
         public string UserId { get; set; }
         public required ApplicationUser User { get; set; }
 
+        // 🔥 THÊM DANH MỤC
+        public int? CategoryId { get; set; }
+        public virtual Category? Category { get; set; }
+
         // Quan hệ
         public ICollection<AnhPhong> AnhPhongs { get; set; } = new List<AnhPhong>();
         public ICollection<Booking> Bookings { get; set; } = new List<Booking>();

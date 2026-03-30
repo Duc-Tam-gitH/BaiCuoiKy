@@ -24,6 +24,8 @@ namespace BaiCuoiKy.Models
         public DbSet<Booking> Bookings { get; set; }
         public DbSet<Favorite> Favorites { get; set; }
         public DbSet<Notification> Notifications { get; set; }
+        public DbSet<Category> Categories { get; set; }
+
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
@@ -99,6 +101,14 @@ namespace BaiCuoiKy.Models
                 .WithMany(t => t.Favorites)
                 .HasForeignKey(f => f.TroId)
                 .OnDelete(DeleteBehavior.NoAction); // FIX lỗi Multiple Cascade Path trong SQL Server
+            // ========================
+            // Tro - Category (N - 1)
+            // Thiết lập quan hệ giữa Tro và Category
+            modelBuilder.Entity<Tro>()
+                .HasOne(t => t.Category)
+                .WithMany(c => c.Tros)
+                .HasForeignKey(t => t.CategoryId)
+                .OnDelete(DeleteBehavior.SetNull);
         }
     }
 }

@@ -24,7 +24,7 @@
                         </div>
                     }
 
-                    <form asp-action="Create" method="post" enctype="multipart/form-data">
+                    <form id="createForm" asp-action="Create" method="post" enctype="multipart/form-data">
                         <div asp-validation-summary="ModelOnly" class="text-danger mb-3"></div>
 
                         <div class="mb-3">
@@ -79,18 +79,49 @@
                             </div>
                             <div id="imagePreview" class="row mt-3"></div>
                         </div>
+                        <div class="mb-3">
+                            <label asp-for="CategoryId" class="form-label fw-bold">
+                                <i class="fas fa-tags me-1 text-primary"></i> Danh mục
+                            </label>
+                            <select asp-for="CategoryId" class="form-select">
+                                <option value="">-- Chọn danh mục --</option>
+                                @if (Model.Categories != null && Model.Categories.Any())
+                                {
+                                    foreach (var category in Model.Categories)
+                                    {
+                                        <option value="@category.Id">@category.TenDanhMuc</option>
+                                    }
+                                }
+                            </select>
+                            <span asp-validation-for="CategoryId" class="text-danger"></span>
+                            <div class="form-text">
+                                <i class="fas fa-info-circle"></i> Chọn danh mục phù hợp cho phòng trọ
+                            </div>
+                        </div>
 
-                        <div class="alert alert-info">
-                            <i class="fas fa-info-circle me-2"></i>
-                            <strong>Lưu ý:</strong> Bài đăng của bạn sẽ được kiểm duyệt trước khi hiển thị công khai.
+                        <div class="mb-3">
+                            <div class="form-check">
+                                <input asp-for="TrangThai" class="form-check-input" type="checkbox" id="TrangThai" value="true" checked />
+                                <label class="form-check-label fw-bold" for="TrangThai">
+                                    <i class="fas fa-check-circle me-1 text-success"></i> Hiển thị ngay
+                                </label>
+                                <div class="form-text">
+                                    <i class="fas fa-info-circle"></i> Bỏ chọn nếu muốn lưu nháp và hiển thị sau
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="alert alert-success">
+                            <i class="fas fa-crown me-2"></i>
+                            <strong>Quản trị viên:</strong> Phòng trọ sẽ được hiển thị công khai ngay sau khi thêm.
                         </div>
 
                         <div class="d-flex justify-content-between">
-                            <a href="@Url.Action("Index", "Tro")" class="btn btn-secondary">
+                            <button type="button" id="btnBack" class="btn btn-secondary">
                                 <i class="fas fa-arrow-left me-1"></i> Quay lại
-                            </a>
-                            <button type="submit" class="btn btn-primary">
-                                <i class="fas fa-save me-1"></i> Đăng tin
+                            </button>
+                            <button type="button" id="btnSubmit" class="btn btn-primary">
+                                <i class="fas fa-save me-1"></i> Thêm phòng trọ
                             </button>
                         </div>
                     </form>
@@ -104,61 +135,9 @@
     @{
         await Html.RenderPartialAsync("_ValidationScriptsPartial");
     }
-
-    <script>
-        // Preview ảnh trước khi upload
-        $(document).ready(function() {
-            $('input[name="Images"]').on('change', function() {
-                var preview = $('#imagePreview');
-                preview.empty();
-
-                var files = $(this)[0].files;
-                for (var i = 0; i < files.length; i++) {
-                    var file = files[i];
-                    var reader = new FileReader();
-
-                    reader.onload = function(e) {
-                        var col = $('<div class="col-md-3 mb-2"></div>');
-                        var img = $('<img>').attr('src', e.target.result)
-                                            .addClass('img-thumbnail')
-                                            .css('height', '150px')
-                                            .css('object-fit', 'cover');
-                        col.append(img);
-                        preview.append(col);
-                    }
-
-                    reader.readAsDataURL(file);
-                }
-            });
-        });
-    </script>
+    <script src="~/js/CreateRoom.js"></script>
 }
 
 @section Styles {
-    <style>
-        .form-control:focus {
-            border-color: #0d6efd;
-            box-shadow: 0 0 0 0.2rem rgba(13, 110, 253, 0.25);
-        }
-
-        .card {
-            border: none;
-            border-radius: 15px;
-        }
-
-        .card-header {
-            border-radius: 15px 15px 0 0;
-            background: linear-gradient(135deg, #0d6efd, #0a58ca);
-        }
-
-        .btn-primary {
-            background: linear-gradient(135deg, #0d6efd, #0a58ca);
-            border: none;
-            padding: 10px 25px;
-        }
-
-            .btn-primary:hover {
-                background: linear-gradient(135deg, #0a58ca, #0a58ca);
-            }
-    </style>
+    <link rel="stylesheet" href="~/css/CreateRoom.css" asp-append-version="true" />
 }

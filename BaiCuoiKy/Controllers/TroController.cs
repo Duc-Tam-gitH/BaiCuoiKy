@@ -5,25 +5,45 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using System.Security.Claims;
 using Microsoft.AspNetCore.Identity;
-using System.IO;  // Thêm using này cho Path, Directory, FileStream
+using System.IO;
 
 namespace BaiCuoiKy.Controllers
 {
     public class TroController : Controller
     {
-        private readonly AppDbContext _context;  // Thêm dòng này - cần inject context
+        private readonly AppDbContext _context;
+        private readonly UserManager<ApplicationUser> _userManager;
 
-        // Constructor - thêm vào
-        public TroController(AppDbContext context)
+        // Constructor
+        public TroController(AppDbContext context, UserManager<ApplicationUser> userManager)
         {
             _context = context;
+            _userManager = userManager;
         }
+
+        // ==================== CREATE ====================
 
         // GET: Hiển thị form thêm phòng trọ
         [Authorize]
-        public IActionResult Create()
+        public async Task<IActionResult> Create()
         {
-            return View();
+            var model = new CreateTroViewModel
+            {
+                TieuDe = string.Empty,
+                DiaChi = string.Empty,
+                MoTa = string.Empty,
+                Gia = 0,
+                DienTich = 0,
+                TrangThai = true,
+                CategoryId = null,
+                Images = new List<IFormFile>(),
+                Categories = await _context.Categories
+                    .Where(c => c.TrangThai == true)
+                    .OrderBy(c => c.ThuTu)
+                    .ToListAsync()
+            };
+
+            return View("CreateRoom", model);
         }
 
         // POST: Xử lý thêm phòng trọ
@@ -36,7 +56,15 @@ namespace BaiCuoiKy.Controllers
             {
                 var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
 
-                var tro = new Tro  
+                // Kiểm tra user tồn tại
+                var user = await _userManager.FindByIdAsync(userId);
+                if (user == null)
+                {
+                    TempData["Error"] = "Không tìm thấy thông tin người dùng. Vui lòng đăng nhập lại!";
+                    return RedirectToAction("Index", "Home");
+                }
+
+                var tro = new Tro
                 {
                     TieuDe = model.TieuDe,
                     DiaChi = model.DiaChi,
@@ -44,7 +72,9 @@ namespace BaiCuoiKy.Controllers
                     MoTa = model.MoTa,
                     DienTich = model.DienTich,
                     UserId = userId,
-                    TrangThai = false, // Mặc định chờ duyệt
+                    User = user,
+                    TrangThai = model.TrangThai,
+                    CategoryId = model.CategoryId,
                     NgayDang = DateTime.Now,
                     AnhPhongs = new List<AnhPhong>()
                 };
@@ -55,7 +85,6 @@ namespace BaiCuoiKy.Controllers
                 // Xử lý upload ảnh
                 if (model.Images != null && model.Images.Any())
                 {
-                    
                     var uploadPath = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot", "images", "rooms");
                     if (!Directory.Exists(uploadPath))
                     {
@@ -66,7 +95,6 @@ namespace BaiCuoiKy.Controllers
                     {
                         if (image.Length > 0)
                         {
-                            
                             var fileName = $"{tro.Id}_{Guid.NewGuid()}_{Path.GetFileName(image.FileName)}";
                             var filePath = Path.Combine(uploadPath, fileName);
 
@@ -92,18 +120,237 @@ namespace BaiCuoiKy.Controllers
                 return RedirectToAction("Index");
             }
 
-            return View(model);
+            // Load lại categories nếu có lỗi
+            model.Categories = await _context.Categories
+                .Where(c => c.TrangThai == true)
+                .OrderBy(c => c.ThuTu)
+                .ToListAsync();
+
+            return View("CreateRoom", model);
         }
 
-        // Thêm action Index để hiển thị danh sách
+        // ==================== READ ====================
+
+        // Action Index để hiển thị danh sách phòng trọ
         public async Task<IActionResult> Index()
         {
-            var tros = await _context.Tros
+            try
+            {
+                var tros = await _context.Tros
+                    .Include(t => t.User)
+                    .Include(t => t.AnhPhongs)
+                    .Include(t => t.Category)
+                    .OrderByDescending(t => t.NgayDang)
+                    .ToListAsync();
+
+                return View("~/Views/Home/Index.cshtml", tros);
+            }
+            catch (Exception ex)
+            {
+                
+                return View("~/Views/Home/Index.cshtml", new List<Tro>());
+            }
+        }
+
+        // Action Details - Xem chi tiết phòng trọ
+        public async Task<IActionResult> Details(int id)
+        {
+            var tro = await _context.Tros
                 .Include(t => t.User)
                 .Include(t => t.AnhPhongs)
-                .OrderByDescending(t => t.NgayDang)
+                .Include(t => t.Category)
+                .FirstOrDefaultAsync(t => t.Id == id);
+
+            if (tro == null)
+            {
+                return NotFound();
+            }
+
+            return View(tro);
+        }
+
+        // ==================== UPDATE ====================
+
+        // Action Edit - Hiển thị form chỉnh sửa
+        [Authorize]
+        public async Task<IActionResult> Edit(int id)
+        {
+            var tro = await _context.Tros
+                .Include(t => t.AnhPhongs)
+                .FirstOrDefaultAsync(t => t.Id == id);
+
+            if (tro == null)
+            {
+                return NotFound();
+            }
+
+            var model = new EditTroViewModel
+            {
+                Id = tro.Id,
+                TieuDe = tro.TieuDe,
+                DiaChi = tro.DiaChi,
+                Gia = tro.Gia,
+                MoTa = tro.MoTa,
+                DienTich = tro.DienTich,
+                TrangThai = tro.TrangThai,
+                CategoryId = tro.CategoryId,
+                ExistingImages = tro.AnhPhongs?.Select(a => a.Url).ToList() ?? new List<string>(),
+                Categories = await _context.Categories
+                    .Where(c => c.TrangThai == true)
+                    .OrderBy(c => c.ThuTu)
+                    .ToListAsync()
+            };
+
+            return View("EditRoom", model);
+        }
+
+        // POST: Xử lý chỉnh sửa phòng trọ
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        [Authorize]
+        public async Task<IActionResult> Edit(EditTroViewModel model)
+        {
+            if (ModelState.IsValid)
+            {
+                var tro = await _context.Tros
+                    .Include(t => t.AnhPhongs)
+                    .FirstOrDefaultAsync(t => t.Id == model.Id);
+
+                if (tro == null)
+                {
+                    return NotFound();
+                }
+
+                // Cập nhật thông tin cơ bản
+                tro.TieuDe = model.TieuDe;
+                tro.DiaChi = model.DiaChi;
+                tro.Gia = model.Gia;
+                tro.MoTa = model.MoTa;
+                tro.DienTich = model.DienTich;
+                tro.TrangThai = model.TrangThai;
+                tro.CategoryId = model.CategoryId;
+
+                // Xử lý xóa ảnh cũ
+                if (model.DeletedImages != null && model.DeletedImages.Any())
+                {
+                    var imagesToDelete = tro.AnhPhongs
+                        .Where(a => model.DeletedImages.Contains(a.Url))
+                        .ToList();
+
+                    foreach (var img in imagesToDelete)
+                    {
+                        // Xóa file vật lý
+                        var physicalPath = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot", img.Url.TrimStart('/'));
+                        if (System.IO.File.Exists(physicalPath))
+                        {
+                            System.IO.File.Delete(physicalPath);
+                        }
+                        _context.AnhPhongs.Remove(img);
+                    }
+                }
+
+                // Xử lý upload ảnh mới
+                if (model.NewImages != null && model.NewImages.Any())
+                {
+                    var uploadPath = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot", "images", "rooms");
+                    if (!Directory.Exists(uploadPath))
+                    {
+                        Directory.CreateDirectory(uploadPath);
+                    }
+
+                    foreach (var image in model.NewImages)
+                    {
+                        if (image.Length > 0)
+                        {
+                            var fileName = $"{tro.Id}_{Guid.NewGuid()}_{Path.GetFileName(image.FileName)}";
+                            var filePath = Path.Combine(uploadPath, fileName);
+
+                            using (var stream = new FileStream(filePath, FileMode.Create))
+                            {
+                                await image.CopyToAsync(stream);
+                            }
+
+                            var anhPhong = new AnhPhong
+                            {
+                                TroId = tro.Id,
+                                Url = $"/images/rooms/{fileName}"
+                            };
+
+                            _context.AnhPhongs.Add(anhPhong);
+                        }
+                    }
+                }
+
+                await _context.SaveChangesAsync();
+
+                TempData["Success"] = "Cập nhật phòng trọ thành công!";
+                return RedirectToAction("Index");
+            }
+
+            // Load lại categories nếu có lỗi
+            model.Categories = await _context.Categories
+                .Where(c => c.TrangThai == true)
+                .OrderBy(c => c.ThuTu)
                 .ToListAsync();
-            return View(tros);
+
+            return View("EditRoom", model);
+        }
+
+        // ==================== DELETE ====================
+
+        // Action Delete - Hiển thị trang xác nhận xóa
+        [Authorize]
+        public async Task<IActionResult> Delete(int id)
+        {
+            var tro = await _context.Tros
+                .Include(t => t.AnhPhongs)
+                .Include(t => t.Bookings)
+                .Include(t => t.Reviews)
+                .Include(t => t.Favorites)
+                .Include(t => t.Category)
+                .FirstOrDefaultAsync(t => t.Id == id);
+
+            if (tro == null)
+            {
+                return NotFound();
+            }
+
+            return View(tro);
+        }
+
+        // POST: Xử lý xóa phòng trọ
+        [HttpPost, ActionName("Delete")]
+        [ValidateAntiForgeryToken]
+        [Authorize]
+        public async Task<IActionResult> DeleteConfirmed(int id)
+        {
+            var tro = await _context.Tros
+                .Include(t => t.AnhPhongs)
+                .FirstOrDefaultAsync(t => t.Id == id);
+
+            if (tro == null)
+            {
+                return NotFound();
+            }
+
+            // Xóa các file ảnh vật lý
+            if (tro.AnhPhongs != null && tro.AnhPhongs.Any())
+            {
+                foreach (var anhPhong in tro.AnhPhongs)
+                {
+                    var physicalPath = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot", anhPhong.Url.TrimStart('/'));
+                    if (System.IO.File.Exists(physicalPath))
+                    {
+                        System.IO.File.Delete(physicalPath);
+                    }
+                }
+            }
+
+            _context.Tros.Remove(tro);
+            await _context.SaveChangesAsync();
+
+            TempData["Success"] = "Xóa phòng trọ thành công!";
+            return RedirectToAction("Index");
         }
     }
 }

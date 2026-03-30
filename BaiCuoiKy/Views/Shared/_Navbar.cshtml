@@ -1,23 +1,23 @@
-﻿@using BaiCuoiKy.Models
+﻿﻿@using BaiCuoiKy.Models
 <nav class="navbar">
     <div class="nav-left">
         <a asp-controller="Home" asp-action="Index">Trang chủ</a>
 
         <div class="dropdown">
-            <a href="#" class="dropdown-toggle">Danh mục </a>
+            <a href="#" class="dropdown-toggle">Danh mục ▼</a>
             <ul class="dropdown-menu">
-                <li><a asp-controller="Tro" asp-action="Index" asp-route-type="TruyenThong">Trọ truyền thống</a></li>
-                <li><a asp-controller="Tro" asp-action="Index" asp-route-type="Ghep">Trọ ghép</a></li>
-                <li><a asp-controller="Tro" asp-action="Index" asp-route-type="ChungCuMini">Chung cư mini</a></li>
+                <li><a asp-controller="Home" asp-action="Index" asp-route-category="TruyenThong">Trọ truyền thống</a></li>
+                <li><a asp-controller="Home" asp-action="Index" asp-route-category="Ghep">Trọ ghép</a></li>
+                <li><a asp-controller="Home" asp-action="Index" asp-route-category="ChungCuMini">Chung cư mini</a></li>
             </ul>
         </div>
 
-        <a asp-controller="Home" asp-action="Index">Chính sách bảo mật</a>
-        <a asp-controller="Tro" asp-action="Index">Hỗ trợ</a>
+        <a asp-controller="Home" asp-action="Privacy">Chính sách bảo mật</a>
+        <a asp-controller="Home" asp-action="Support">Hỗ trợ</a>
     </div>
 
     <div class="nav-right d-flex align-items-center">
-        <a asp-controller="Search" asp-action="Search" class="btn btn-primary me-2">
+        <a asp-controller="Home" asp-action="Search" class="btn btn-primary me-2">
             🔍 Tìm Kiếm
         </a>
 
@@ -27,6 +27,9 @@
             {
                 <a asp-controller="Tro" asp-action="Create" class="btn btn-register me-2">
                     + Đăng tin
+                </a>
+                <a asp-controller="Tro" asp-action="Manage" class="btn btn-outline-light me-2">
+                    📋 Quản lý phòng trọ
                 </a>
                 <a asp-controller="Khachthue" asp-action="Bookings" class="nav-link d-inline-block me-2 text-white">
                     Booking của tôi
@@ -39,6 +42,7 @@
                 </a>
             }
 
+            <!-- Notification Dropdown (giữ nguyên) -->
             <div class="dropdown d-inline-block me-3 notification-bell-item">
                 <a class="nav-link position-relative d-flex align-items-center" href="#" id="notiDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
                     <img src="~/images/thongbao.png" alt="Notification" class="bell-icon-img" />
@@ -62,19 +66,19 @@
                             {
                             <li>
                                 <a class="dropdown-item p-3 border-bottom small @(noti.IsRead ? "text-muted" : "fw-bold")" href="#">
-                                        @noti.Message
+                                    @noti.Message
                                     <br />
                                     <small class="text-muted" style="font-size: 0.7rem;">@noti.CreatedAt.ToString("dd/MM HH:mm")</small>
                                 </a>
                             </li>
-                            }
                         }
-                        else
-                        {
+                    }
+                    else
+                    {
                         <div class="p-4 text-center text-muted small">
                             <p class="mb-0">Bạn chưa có thông báo nào</p>
                         </div>
-                        }
+                    }
             </div>
             <li class="p-2 text-center border-top">
                 <a asp-controller="Notification" asp-action="Index" class="text-decoration-none small fw-bold" style="color: #ED005A;">Xem tất cả</a>
@@ -82,6 +86,7 @@
             </ul>
         </div>
 
+        <!-- User Dropdown -->
         <div class="dropdown d-inline-block">
             <a class="btn btn-login dropdown-toggle" href="#" role="button" id="userDropdown" data-bs-toggle="dropdown" aria-expanded="false">
                 👤
@@ -89,16 +94,16 @@
             <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="userDropdown">
                 <li><h6 class="dropdown-header">Xin chào, @User.Identity.Name</h6></li>
                 <li><hr class="dropdown-divider"></li>
-                    @if (User.IsInRole("Admin"))
-                    {
+                @if (User.IsInRole("Admin"))
+                {
                     <li><a class="dropdown-item" asp-controller="Admin" asp-action="ManageSystem">Quản trị hệ thống</a></li>
-                    }
+                }
                 <li><a class="dropdown-item" asp-controller="Account" asp-action="Profile">Thông tin cá nhân</a></li>
-                    @if (!User.IsInRole("Admin"))
-                    {
+                @if (!User.IsInRole("Admin"))
+                {
                     <li><a class="dropdown-item" asp-controller="Booking" asp-action="History">Lịch sử đặt phòng</a></li>
                     <li><a class="dropdown-item" asp-controller="Khachthue" asp-action="Favorites">Phòng yêu thích</a></li>
-                    }
+                }
                 <li><hr class="dropdown-divider"></li>
                 <li>
                     <form asp-controller="Account" asp-action="Logout" method="post" class="d-inline">
@@ -107,11 +112,11 @@
                 </li>
             </ul>
         </div>
-        }
-        else
-        {
+    }
+    else
+    {
         <a asp-controller="Account" asp-action="Login" class="btn btn-login me-2">Đăng nhập</a>
         <a asp-controller="Account" asp-action="Register" class="btn btn-register">Đăng ký</a>
-        }
+    }
     </div>
 </nav>

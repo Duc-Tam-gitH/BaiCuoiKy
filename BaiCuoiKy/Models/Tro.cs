@@ -22,12 +22,13 @@
 
         // 🔥 THÊM DANH MỤC
         public int? CategoryId { get; set; }
-        public virtual Category? Category { get; set; }
+        public Category? Category { get; set; }
 
         // Quan hệ
         public ICollection<AnhPhong> AnhPhongs { get; set; } = new List<AnhPhong>();
         public ICollection<Booking> Bookings { get; set; } = new List<Booking>();
         public ICollection<Review> Reviews { get; set; } = new List<Review>();
         public ICollection<Favorite> Favorites { get; set; } = new List<Favorite>();
+
     }
 }

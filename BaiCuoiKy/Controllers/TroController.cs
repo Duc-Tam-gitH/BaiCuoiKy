@@ -14,7 +14,6 @@ namespace BaiCuoiKy.Controllers
         private readonly AppDbContext _context;
         private readonly UserManager<ApplicationUser> _userManager;
 
-        // Constructor
         public TroController(AppDbContext context, UserManager<ApplicationUser> userManager)
         {
             _context = context;
@@ -23,7 +22,6 @@ namespace BaiCuoiKy.Controllers
 
         // ==================== CREATE ====================
 
-        // GET: Hiển thị form thêm phòng trọ
         [Authorize]
         public async Task<IActionResult> Create()
         {
@@ -46,7 +44,6 @@ namespace BaiCuoiKy.Controllers
             return View("CreateRoom", model);
         }
 
-        // POST: Xử lý thêm phòng trọ
         [HttpPost]
         [ValidateAntiForgeryToken]
         [Authorize]
@@ -55,12 +52,11 @@ namespace BaiCuoiKy.Controllers
             if (ModelState.IsValid)
             {
                 var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
-
-                // Kiểm tra user tồn tại
                 var user = await _userManager.FindByIdAsync(userId);
+
                 if (user == null)
                 {
-                    TempData["Error"] = "Không tìm thấy thông tin người dùng. Vui lòng đăng nhập lại!";
+                    TempData["Error"] = "Không tìm thấy thông tin người dùng!";
                     return RedirectToAction("Index", "Home");
                 }
 
@@ -103,13 +99,11 @@ namespace BaiCuoiKy.Controllers
                                 await image.CopyToAsync(stream);
                             }
 
-                            var anhPhong = new AnhPhong
+                            _context.AnhPhongs.Add(new AnhPhong
                             {
                                 TroId = tro.Id,
                                 Url = $"/images/rooms/{fileName}"
-                            };
-
-                            _context.AnhPhongs.Add(anhPhong);
+                            });
                         }
                     }
 
@@ -117,10 +111,9 @@ namespace BaiCuoiKy.Controllers
                 }
 
                 TempData["Success"] = "Thêm phòng trọ thành công!";
-                return RedirectToAction("Index");
+                return RedirectToAction("Manage");  // ✅ Sửa
             }
 
-            // Load lại categories nếu có lỗi
             model.Categories = await _context.Categories
                 .Where(c => c.TrangThai == true)
                 .OrderBy(c => c.ThuTu)
@@ -129,30 +122,23 @@ namespace BaiCuoiKy.Controllers
             return View("CreateRoom", model);
         }
 
-        // ==================== READ ====================
+        // ==================== READ (QUẢN LÝ) ====================
 
-        // Action Index để hiển thị danh sách phòng trọ
-        public async Task<IActionResult> Index()
+        [Authorize]
+        public async Task<IActionResult> Manage()
         {
-            try
-            {
-                var tros = await _context.Tros
-                    .Include(t => t.User)
-                    .Include(t => t.AnhPhongs)
-                    .Include(t => t.Category)
-                    .OrderByDescending(t => t.NgayDang)
-                    .ToListAsync();
+            var Admin = await _context.Tros
+                .Include(t => t.User)
+                .Include(t => t.AnhPhongs)
+                .Include(t => t.Category)
+                .OrderByDescending(t => t.NgayDang)
+                .ToListAsync();
 
-                return View("~/Views/Home/Index.cshtml", tros);
-            }
-            catch (Exception ex)
-            {
-                
-                return View("~/Views/Home/Index.cshtml", new List<Tro>());
-            }
+            return View("ManageSystem", Admin);  // ✅ Dùng view Index.cshtml
         }
 
-        // Action Details - Xem chi tiết phòng trọ
+        // ==================== READ (CHI TIẾT) ====================
+
         public async Task<IActionResult> Details(int id)
         {
             var tro = await _context.Tros
@@ -171,7 +157,6 @@ namespace BaiCuoiKy.Controllers
 
         // ==================== UPDATE ====================
 
-        // Action Edit - Hiển thị form chỉnh sửa
         [Authorize]
         public async Task<IActionResult> Edit(int id)
         {
@@ -204,7 +189,6 @@ namespace BaiCuoiKy.Controllers
             return View("EditRoom", model);
         }
 
-        // POST: Xử lý chỉnh sửa phòng trọ
         [HttpPost]
         [ValidateAntiForgeryToken]
         [Authorize]
@@ -221,7 +205,6 @@ namespace BaiCuoiKy.Controllers
                     return NotFound();
                 }
 
-                // Cập nhật thông tin cơ bản
                 tro.TieuDe = model.TieuDe;
                 tro.DiaChi = model.DiaChi;
                 tro.Gia = model.Gia;
@@ -230,7 +213,7 @@ namespace BaiCuoiKy.Controllers
                 tro.TrangThai = model.TrangThai;
                 tro.CategoryId = model.CategoryId;
 
-                // Xử lý xóa ảnh cũ
+                // Xử lý xóa ảnh
                 if (model.DeletedImages != null && model.DeletedImages.Any())
                 {
                     var imagesToDelete = tro.AnhPhongs
@@ -239,7 +222,6 @@ namespace BaiCuoiKy.Controllers
 
                     foreach (var img in imagesToDelete)
                     {
-                        // Xóa file vật lý
                         var physicalPath = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot", img.Url.TrimStart('/'));
                         if (System.IO.File.Exists(physicalPath))
                         {
@@ -270,13 +252,11 @@ namespace BaiCuoiKy.Controllers
                                 await image.CopyToAsync(stream);
                             }
 
-                            var anhPhong = new AnhPhong
+                            _context.AnhPhongs.Add(new AnhPhong
                             {
                                 TroId = tro.Id,
                                 Url = $"/images/rooms/{fileName}"
-                            };
-
-                            _context.AnhPhongs.Add(anhPhong);
+                            });
                         }
                     }
                 }
@@ -284,10 +264,9 @@ namespace BaiCuoiKy.Controllers
                 await _context.SaveChangesAsync();
 
                 TempData["Success"] = "Cập nhật phòng trọ thành công!";
-                return RedirectToAction("Index");
+                return RedirectToAction("Manage");  // ✅ Sửa
             }
 
-            // Load lại categories nếu có lỗi
             model.Categories = await _context.Categories
                 .Where(c => c.TrangThai == true)
                 .OrderBy(c => c.ThuTu)
@@ -298,7 +277,6 @@ namespace BaiCuoiKy.Controllers
 
         // ==================== DELETE ====================
 
-        // Action Delete - Hiển thị trang xác nhận xóa
         [Authorize]
         public async Task<IActionResult> Delete(int id)
         {
@@ -318,7 +296,6 @@ namespace BaiCuoiKy.Controllers
             return View(tro);
         }
 
-        // POST: Xử lý xóa phòng trọ
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
         [Authorize]
@@ -333,7 +310,6 @@ namespace BaiCuoiKy.Controllers
                 return NotFound();
             }
 
-            // Xóa các file ảnh vật lý
             if (tro.AnhPhongs != null && tro.AnhPhongs.Any())
             {
                 foreach (var anhPhong in tro.AnhPhongs)
@@ -350,7 +326,7 @@ namespace BaiCuoiKy.Controllers
             await _context.SaveChangesAsync();
 
             TempData["Success"] = "Xóa phòng trọ thành công!";
-            return RedirectToAction("Index");
+            return RedirectToAction("Manage");  // ✅ Sửa
         }
     }
 }

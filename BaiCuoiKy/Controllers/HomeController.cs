@@ -18,49 +18,115 @@ namespace BaiCuoiKy.Controllers
             _context = context;
         }
 
-        // Shows latest approved rooms with images (limit to 20)
+        // ==================== TRANG CHỦ ====================
+
+        // Action Index duy nhất - hiển thị trang chủ
         public async Task<IActionResult> Index()
         {
             var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+
+            // Lấy thông báo nếu đã đăng nhập
             if (userId != null)
             {
-                // Lấy 5 thông báo mới nhất
                 ViewBag.Notifications = await _context.Notifications
                     .Where(n => n.UserId == userId)
                     .OrderByDescending(n => n.CreatedAt)
-                    .Take(5).ToListAsync();
+                    .Take(5)
+                    .ToListAsync();
 
-                // Đếm số thông báo chưa đọc để hiện lên Badge đỏ
                 ViewBag.NotiCount = await _context.Notifications
                     .CountAsync(n => n.UserId == userId && !n.IsRead);
             }
+
             try
             {
+                // Lấy danh sách phòng trọ đã duyệt
                 var danhSachTro = await _context.Tros
-                    .Include(t => t.AnhPhongs)
-                    .Where(t => t.TrangThai) // only approved listings
-                    .OrderByDescending(t => t.NgayDang != default ? t.NgayDang : DateTime.MinValue)
-                    .ThenByDescending(t => t.Id)
-                    .Take(20)
-                    .ToListAsync();
+                .Include(t => t.AnhPhongs)
+                // .Include(t => t.Category)  // Comment
+                .Where(t => t.TrangThai == true)
+                .OrderByDescending(t => t.NgayDang)
+                .Take(8)
+                .ToListAsync();
 
                 return View(danhSachTro);
             }
             catch (Exception ex)
             {
                 _logger.LogError(ex, "Failed to load home index data");
-                // Optionally return an empty list so the view can render gracefully
-                return View(new List<TroController>());
+                // ✅ Trả về danh sách rỗng đúng kiểu
+                return View(new List<Tro>());
             }
         }
 
-        // Use conventional "Details" name to match common routing / views
+        // ==================== TÌM KIẾM ====================
+
+        [HttpGet]
+        public async Task<IActionResult> Search(string keyword, string khuvuc, string loai, string gia)
+        {
+            var query = _context.Tros
+                .Include(t => t.AnhPhongs)
+                // .Include(t => t.Category)  // Comment
+                .Where(t => t.TrangThai == true);
+
+            // Lọc theo từ khóa
+            if (!string.IsNullOrEmpty(keyword))
+            {
+                query = query.Where(t => t.TieuDe.Contains(keyword) || t.MoTa.Contains(keyword));
+            }
+
+            // Lọc theo khu vực
+            if (!string.IsNullOrEmpty(khuvuc))
+            {
+                query = query.Where(t => t.DiaChi.Contains(khuvuc));
+            }
+
+            // Lọc theo loại hình
+            if (!string.IsNullOrEmpty(loai))
+            {
+                query = query.Where(t => t.Category != null && t.Category.TenDanhMuc.Contains(loai));
+            }
+
+            // Lọc theo giá
+            if (!string.IsNullOrEmpty(gia))
+            {
+                switch (gia)
+                {
+                    case "1": // Dưới 2 triệu
+                        query = query.Where(t => t.Gia < 2000000);
+                        break;
+                    case "2": // 2 - 5 triệu
+                        query = query.Where(t => t.Gia >= 2000000 && t.Gia <= 5000000);
+                        break;
+                    case "3": // Trên 5 triệu
+                        query = query.Where(t => t.Gia > 5000000);
+                        break;
+                }
+            }
+
+            var results = await query
+                .OrderByDescending(t => t.NgayDang)
+                .ToListAsync();
+
+            ViewBag.Keyword = keyword;
+            ViewBag.KhuVuc = khuvuc;
+            ViewBag.Loai = loai;
+            ViewBag.Gia = gia;
+
+            return View(results);
+        }
+
+        // ==================== CHI TIẾT PHÒNG TRỌ ====================
+
+        // Action Details - xem chi tiết phòng trọ từ trang chủ
         public async Task<IActionResult> Details(int? id)
         {
             if (id == null) return NotFound();
 
             var tro = await _context.Tros
+                .Include(t => t.User)
                 .Include(t => t.AnhPhongs)
+                //.Include(t => t.Category)
                 .FirstOrDefaultAsync(m => m.Id == id.Value);
 
             if (tro == null) return NotFound();
@@ -68,15 +134,12 @@ namespace BaiCuoiKy.Controllers
             return View(tro);
         }
 
+        // ==================== ERROR ====================
+
         [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
         public IActionResult Error()
         {
             return View(new ErrorViewModel { RequestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier });
-        }
-        public IActionResult Search()
-        {
-            // Trả về view tìm kiếm (Search.cshtml)
-            return View();
         }
     }
 }

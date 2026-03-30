@@ -319,7 +319,7 @@ namespace BaiCuoiKy.Controllers
             ViewBag.TotalBookings = await _context.Bookings.CountAsync();
             ViewBag.TotalPosts = await _context.Tros.CountAsync();
 
-            return View();
+            return View("ManageSystem");
         }
 
         public async Task<IActionResult> Dashboard(string section = "overview")

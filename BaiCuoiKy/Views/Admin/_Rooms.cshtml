@@ -1,61 +1,139 @@
-﻿@using BaiCuoiKy.Models.ViewModel
-@model DashboardViewModel
+﻿@{
+    Layout = "_AdminLayout";
+    ViewBag.Title = "Quản lý phòng trọ";
+    ViewBag.ActiveSection = "rooms";
+}
 
-<div class="dashboard-cards">
-    <div class="stat-card">
-        <div class="stat-title">Tổng phòng</div>
-        <div class="stat-number">@Model.Statistics.TotalRooms</div>
-    </div>
-    <div class="stat-card">
-        <div class="stat-title">Còn trống</div>
-        <div class="stat-number">@Model.Statistics.AvailableRooms</div>
-    </div>
-    <div class="stat-card">
-        <div class="stat-title">Đã thuê</div>
-        <div class="stat-number">@Model.Statistics.RentedRooms</div>
-    </div>
-    <div class="stat-card">
-        <div class="stat-title">Bảo trì</div>
-        <div class="stat-number">@Model.Statistics.MaintenanceRooms</div>
-    </div>
-</div>
+@model List<Tro>
+@functions {
+    // Helper method format giá tiền
+    public string FormatPrice(decimal? price)
+    {
+        return price.HasValue ? price.Value.ToString("N0") : "0";
+    }
 
-<div class="content-panel">
-    <div class="table-responsive">
-        <table class="data-table">
+    // Helper method format ngày tháng
+    public string FormatDate(DateTime? date)
+    {
+        return date.HasValue ? date.Value.ToString("dd/MM/yyyy") : "Chưa cập nhật";
+    }
+}
+
+
+<div class="admin-rooms-container">
+    <div class="admin-page-header">
+        <div>
+            <h1 class="admin-page-title">Quản lý phòng trọ</h1>
+            <p class="admin-page-subtitle">Danh sách tất cả phòng trọ trên hệ thống</p>
+        </div>
+        <div>
+            <a href="@Url.Action("Create", "Tro")" class="admin-btn admin-btn-primary">
+                <i class="fas fa-plus"></i>
+                <span>Thêm phòng trọ</span>
+            </a>
+        </div>
+    </div>
+
+    <div class="admin-rooms-table-wrapper">
+        <table class="admin-table">
             <thead>
                 <tr>
-                    <th>Tiêu đề</th>
-                    <th>Giá</th>
-                    <th>Diện tích</th>
+                    <th>ID</th>
+                    <th>Tên phòng / Tiêu đề</th>
                     <th>Địa chỉ</th>
-                    <th>Chủ nhà</th>
+                    <th>Giá</th>
+                    <th>Chủ trọ</th>
                     <th>Trạng thái</th>
                     <th>Ngày đăng</th>
+                    <th>Thao tác</th>
                 </tr>
             </thead>
             <tbody>
-                @foreach (var room in Model.RecentRooms)
+                @if (Model != null && Model.Any())
+                {
+                    foreach (var tro in Model)
+                    {
+                        <tr>
+                            <td>@tro.Id</td>
+                            <td>
+                                <div class="admin-room-title">
+                                    @if (tro.AnhPhongs != null && tro.AnhPhongs.Any())
+                                    {
+                                        <img src="@tro.AnhPhongs.First().Url" alt="@tro.TieuDe" class="admin-room-thumbnail" />
+                                    }
+                                    else
+                                    {
+                                        <div class="admin-room-thumbnail-placeholder">
+                                            <i class="fas fa-image"></i>
+                                        </div>
+                                    }
+                                    <span class="admin-room-name">@tro.TieuDe</span>
+                                </div>
+                            </td>
+                            <td>@tro.DiaChi</td>
+
+                            <!-- Sửa dòng này - gọi FormatPrice -->
+                            <td class="admin-price">@FormatPrice(tro.Gia) VNĐ</td>
+
+                            <td>
+                                <div class="admin-owner-info">
+                                    <i class="fas fa-user-circle"></i>
+                                    <span>@(tro.User?.FullName ?? tro.User?.UserName ?? "Không xác định")</span>
+                                </div>
+                            </td>
+                            <td>
+                                @if (tro.TrangThai)
+                                {
+                                    <span class="admin-badge admin-badge-success">Đã duyệt</span>
+                                }
+                                else
+                                {
+                                    <span class="admin-badge admin-badge-warning">Chờ duyệt</span>
+                                }
+                            </td>
+
+                            <!-- Sửa dòng này - gọi FormatDate -->
+                            <td>@FormatDate(tro.NgayDang)</td>
+
+                            <td class="admin-actions">
+                                <a href="@Url.Action("Details", "Tro", new { id = tro.Id })" class="admin-action-btn admin-action-view" title="Xem chi tiết">
+                                    <i class="fas fa-eye"></i>
+                                </a>
+                                <a href="@Url.Action("Edit", "Tro", new { id = tro.Id })" class="admin-action-btn admin-action-edit" title="Sửa">
+                                    <i class="fas fa-edit"></i>
+                                </a>
+                                <button type="button" class="admin-action-btn admin-action-delete" onclick="confirmDelete(@tro.Id, '@tro.TieuDe')" title="Xóa">
+                                    <i class="fas fa-trash-alt"></i>
+                                </button>
+                            </td>
+                        </tr>
+                    }
+                }
+                else
                 {
                     <tr>
-                        <td>@room.Title</td>
-                        <td>@room.Price.ToString("N0")đ</td>
-                        <td>@room.Area</td>
-                        <td>@room.Address</td>
-                        <td>@room.LandlordName</td>
-                        <td>
-                            <span class="status-badge status-@room.Status.ToLower()">
-                                @(room.Status == "Available" ? "Còn trống" :
-                                                            room.Status == "Rented" ? "Đã thuê" : "Bảo trì")
-                        </span>
-                    </td>
-                    <td>@room.CreatedAt.ToString("dd/MM/yyyy")</td>
-                </tr>
-                                }
+                        <td colspan="8" class="admin-empty-state">
+                            <i class="fas fa-building"></i>
+                            <p>Chưa có phòng trọ nào</p>
+                            <a href="@Url.Action("Create", "Tro")" class="admin-btn admin-btn-outline">Thêm phòng trọ đầu tiên</a>
+                        </td>
+                    </tr>
+                }
             </tbody>
         </table>
     </div>
-    <div style="margin-top: 16px; text-align: right;">
-        <a asp-action="Index" asp-controller="Tro" class="btn-primary">Xem tất cả phòng trọ</a>
-    </div>
 </div>
+
+<!-- Form xóa ẩn -->
+<form id="deleteForm" method="post" action="@Url.Action("Delete", "Tro")" style="display: none;">
+    <input type="hidden" name="id" id="deleteRoomId" />
+    @Html.AntiForgeryToken()
+</form>
+
+@section Scripts {
+    <script src="~/js/Admin-Rooms.js"></script>
+}
+
+@section Styles {
+    <link rel="stylesheet" href="~/css/Admin-Rooms.css" asp-append-version="true" />
+}

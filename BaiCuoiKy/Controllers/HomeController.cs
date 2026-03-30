@@ -50,7 +50,7 @@ namespace BaiCuoiKy.Controllers
             {
                 _logger.LogError(ex, "Failed to load home index data");
                 // Optionally return an empty list so the view can render gracefully
-                return View(new List<Tro>());
+                return View(new List<TroController>());
             }
         }
 

@@ -44,7 +44,7 @@ namespace BaiCuoiKy.Controllers
         // ==========================================
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create(Tro tro, List<IFormFile> files)
+        public async Task<IActionResult> Create(TroController tro, List<IFormFile> files)
         {
             // ✅ FIX: Gán trực tiếp string UserId
             var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);

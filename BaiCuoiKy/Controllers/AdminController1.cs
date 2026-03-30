@@ -364,7 +364,15 @@ namespace BaiCuoiKy.Controllers
                     return View("Users");
 
                 case "rooms":
-                    return RedirectToAction("Index", "Tro");
+                    // Lấy danh sách phòng trọ kèm thông tin chủ trọ
+                    var rooms = await _context.Tros
+                        .Include(t => t.User) // Lấy thông tin chủ trọ
+                        .Include(t => t.AnhPhongs)
+                        .OrderByDescending(t => t.NgayDang)
+                        .ToListAsync();
+
+                    ViewBag.Rooms = rooms;
+                    return View("_Rooms");
 
                 case "posts":
                     // Tạo view Posts.cshtml sau

@@ -34,9 +34,13 @@
         <aside class="admin-sidebar" id="adminSidebar">
             <div>
                 <div class="admin-logo-area">
-                    <div class="admin-logo">QL<span>HệThống</span></div>
+                    <div class="admin-logo">Quản Lý<span>HệThống</span></div>
                 </div>
                 <div class="admin-nav-menu">
+                    <a asp-controller="Home" asp-action="Index" class="admin-nav-item">
+                        <i class="fas fa-home"></i>
+                        <span>Trang chủ</span>
+                    </a>
                     <a href="@Url.Action("Dashboard", "Admin", new { section = "overview" })" class="admin-nav-item @(activeSection == "overview" ? "active" : "")">
                         <i class="fas fa-chart-line"></i>
                         <span>Tổng quan</span>

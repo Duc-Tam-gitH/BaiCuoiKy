@@ -4,11 +4,18 @@
         <a asp-controller="Home" asp-action="Index">Trang chủ</a>
 
         <div class="dropdown">
-            <a href="#" class="dropdown-toggle">Danh mục ▼</a>
+            <a href="#" class="dropdown-toggle">Danh mục</a>
             <ul class="dropdown-menu">
-                <li><a asp-controller="Home" asp-action="Index" asp-route-category="TruyenThong">Trọ truyền thống</a></li>
-                <li><a asp-controller="Home" asp-action="Index" asp-route-category="Ghep">Trọ ghép</a></li>
-                <li><a asp-controller="Home" asp-action="Index" asp-route-category="ChungCuMini">Chung cư mini</a></li>
+                @foreach (var item in ViewBag.Categories)
+                {
+                    <li>
+                        <a asp-controller="Home"
+                           asp-action="Search"
+                           asp-route-loai="@item.TenDanhMuc">
+                            @item.TenDanhMuc
+                        </a>
+                    </li>
+                }
             </ul>
         </div>
 
@@ -27,9 +34,6 @@
             {
                 <a asp-controller="Tro" asp-action="Create" class="btn btn-register me-2">
                     + Đăng tin
-                </a>
-                <a asp-controller="Tro" asp-action="Manage" class="btn btn-outline-light me-2">
-                    📋 Quản lý phòng trọ
                 </a>
                 <a asp-controller="Khachthue" asp-action="Bookings" class="nav-link d-inline-block me-2 text-white">
                     Booking của tôi

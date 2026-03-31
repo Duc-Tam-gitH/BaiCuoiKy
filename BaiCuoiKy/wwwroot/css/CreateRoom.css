@@ -1,42 +1,110 @@
-﻿
-.form-control:focus {
-    border-color: #0d6efd;
-    box-shadow: 0 0 0 0.2rem rgba(13, 110, 253, 0.25);
+﻿/* =========================
+    FORM CONTROL FOCUS
+========================= */
+.form-control:focus,
+.form-select:focus {
+    border-color: #ED005A;
+    box-shadow: 0 0 0 3px rgba(237, 0, 90, 0.12);
+    outline: none;
+    transition: border-color 0.2s ease, box-shadow 0.2s ease;
 }
 
+/* =========================
+    CARD
+========================= */
 .card {
     border: none;
-    border-radius: 15px;
+    border-radius: 16px;
+    box-shadow: 0 4px 20px rgba(0, 38, 65, 0.08);
+    overflow: hidden;
 }
 
 .card-header {
-    border-radius: 15px 15px 0 0;
-    background: linear-gradient(135deg, #0d6efd, #0a58ca);
+    border-radius: 16px 16px 0 0;
+    background: linear-gradient(135deg, #002641 0%, #013a58 60%, #ED005A 150%);
+    border-bottom: none;
+    padding: 18px 24px;
+    color: #ffffff;
+    font-weight: 700;
+    letter-spacing: 0.2px;
 }
 
+/* =========================
+    BUTTON PRIMARY
+========================= */
 .btn-primary {
-    background: linear-gradient(135deg, #0d6efd, #0a58ca);
+    background: linear-gradient(135deg, #ED005A 0%, #c4004b 100%);
     border: none;
-    padding: 10px 25px;
+    padding: 10px 26px;
+    font-weight: 600;
+    border-radius: 10px;
+    color: #ffffff;
+    box-shadow: 0 4px 12px rgba(237, 0, 90, 0.25);
+    transition: all 0.25s ease;
+    letter-spacing: 0.2px;
 }
 
-    .btn-primary:hover {
-        background: linear-gradient(135deg, #0a58ca, #0a58ca);
+    .btn-primary:hover,
+    .btn-primary:focus {
+        background: linear-gradient(135deg, #c4004b 0%, #9e003d 100%);
         transform: translateY(-2px);
-        transition: all 0.3s ease;
+        box-shadow: 0 7px 18px rgba(237, 0, 90, 0.35);
+        color: #ffffff;
     }
 
-.btn-secondary:hover {
-    transform: translateY(-2px);
-    transition: all 0.3s ease;
+    .btn-primary:active {
+        transform: translateY(0);
+        box-shadow: 0 3px 8px rgba(237, 0, 90, 0.2);
+    }
+
+/* =========================
+    BUTTON SECONDARY
+========================= */
+.btn-secondary {
+    background: transparent;
+    border: 2px solid #002641;
+    color: #002641;
+    font-weight: 600;
+    border-radius: 10px;
+    padding: 9px 24px;
+    transition: all 0.25s ease;
 }
 
+    .btn-secondary:hover,
+    .btn-secondary:focus {
+        background: #002641;
+        color: #ffffff;
+        transform: translateY(-2px);
+        box-shadow: 0 6px 16px rgba(0, 38, 65, 0.2);
+    }
+
+    .btn-secondary:active {
+        transform: translateY(0);
+    }
+
+/* =========================
+    ALERT SUCCESS
+========================= */
 .alert-success {
-    background-color: #d1e7dd;
-    border-left: 4px solid #198754;
+    background-color: #edfaf4;
+    border: 1px solid #a3e6c5;
+    border-left: 4px solid #002641;
+    color: #02422a;
+    border-radius: 10px;
+    padding: 14px 18px;
+    font-size: 0.9rem;
 }
 
+/* =========================
+    FORM CHECK (Checkbox / Radio)
+========================= */
 .form-check-input:checked {
-    background-color: #198754;
-    border-color: #198754;
+    background-color: #ED005A;
+    border-color: #ED005A;
+    box-shadow: 0 0 0 3px rgba(237, 0, 90, 0.12);
+}
+
+.form-check-input:focus {
+    border-color: #ED005A;
+    box-shadow: 0 0 0 3px rgba(237, 0, 90, 0.12);
 }

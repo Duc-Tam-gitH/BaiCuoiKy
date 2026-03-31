@@ -100,14 +100,20 @@
                         </div>
 
                         <div class="mb-3">
-                            <div class="form-check">
-                                <input asp-for="TrangThai" class="form-check-input" type="checkbox" id="TrangThai" value="true" checked />
-                                <label class="form-check-label fw-bold" for="TrangThai">
-                                    <i class="fas fa-check-circle me-1 text-success"></i> Hiển thị ngay
-                                </label>
-                                <div class="form-text">
-                                    <i class="fas fa-info-circle"></i> Bỏ chọn nếu muốn lưu nháp và hiển thị sau
-                                </div>
+                            <label asp-for="TrangThai" class="form-label fw-bold">
+                                <i class="fas fa-info-circle me-1 text-primary"></i> Trạng thái
+                            </label>
+
+                            <select asp-for="TrangThai" class="form-select">
+                                <option value="0">Đang trống</option>
+                                <option value="1">Đang xử lý</option>
+                                <option value="2">Đã cho thuê</option>
+                            </select>
+
+                            <span asp-validation-for="TrangThai" class="text-danger"></span>
+
+                            <div class="form-text">
+                                Chọn trạng thái hiện tại của phòng
                             </div>
                         </div>
 

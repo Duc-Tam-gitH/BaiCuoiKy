@@ -1,0 +1,315 @@
+﻿@model BaiCuoiKy.Models.Tro
+@{
+    var isAdmin = ViewBag.IsAdmin == true;
+    var isOwner = ViewBag.IsOwner == true;
+    var canEdit = ViewBag.CanEdit == true;
+    var isAuthenticated = User.Identity?.IsAuthenticated == true;
+
+    Layout = isAdmin ? "_AdminLayout" : "_Layout";
+    ViewBag.Title = Model.TieuDe;
+
+    if (isAdmin)
+    {
+        ViewBag.ActiveSection = "rooms";
+    }
+}
+
+<div class="room-detail-container">
+    <!-- Header với breadcrumb -->
+    <div class="container-fluid px-0">
+        <nav aria-label="breadcrumb" class="bg-light py-2 px-3 rounded">
+            <ol class="breadcrumb mb-0">
+                <li class="breadcrumb-item">
+                    <a href="@Url.Action("Index", "Home")">
+                        <i class="fas fa-home"></i> Trang chủ
+                    </a>
+                </li>
+                <li class="breadcrumb-item">
+                    <a href="@Url.Action("Index", "Tro")">Phòng trọ</a>
+                </li>
+                <li class="breadcrumb-item active" aria-current="page">Chi tiết</li>
+            </ol>
+        </nav>
+    </div>
+
+    <div class="row mt-4">
+        <!-- Cột trái: Hình ảnh và thông tin chính -->
+        <div class="col-lg-8">
+            <!-- Gallery ảnh -->
+            <div class="card shadow-sm mb-4">
+                <div class="card-body p-0">
+                    @if (Model.AnhPhongs != null && Model.AnhPhongs.Any())
+                    {
+                        var mainImage = Model.AnhPhongs.First().Url;
+                        var otherImages = Model.AnhPhongs.Skip(1).ToList();
+
+                        <div class="room-gallery">
+                            <div class="main-image">
+                                <img id="mainRoomImage" src="@mainImage" alt="@Model.TieuDe" onclick="showImageModal('@mainImage')" />
+                            </div>
+                            @if (otherImages.Any())
+                            {
+                                <div class="thumbnail-list">
+                                    @foreach (var img in otherImages)
+                                    {
+                                        <div class="thumbnail-item" onclick="changeMainImage('@img.Url')">
+                                            <img src="@img.Url" alt="Thumbnail" />
+                                        </div>
+                                    }
+                                </div>
+                            }
+                        </div>
+                    }
+                    else
+                    {
+                        <div class="no-image-placeholder text-center py-5">
+                            <i class="fas fa-image fa-4x text-muted mb-3"></i>
+                            <p class="text-muted">Chưa có hình ảnh</p>
+                        </div>
+                    }
+                </div>
+            </div>
+
+            <!-- Thông tin chi tiết -->
+            <div class="card shadow-sm mb-4">
+                <div class="card-body">
+                    <h2 class="room-title">@Model.TieuDe</h2>
+
+                    <div class="room-location mb-3">
+                        <i class="fas fa-map-marker-alt text-danger"></i>
+                        <span>@Model.DiaChi</span>
+                    </div>
+
+                    <div class="room-price mb-4">
+                        <span class="price-value">@((Model.Gia).ToString("N0")) VNĐ</span>
+                        <span class="price-unit">/ tháng</span>
+                    </div>
+
+                    <div class="room-info-grid mb-4">
+                        <div class="info-item">
+                            <div class="info-icon">
+                                <i class="fas fa-ruler-combined"></i>
+                            </div>
+                            <div class="info-text">
+                                <span class="info-label">Diện tích</span>
+                                <span class="info-value">@Model.DienTich m²</span>
+                            </div>
+                        </div>
+                        <div class="info-item">
+                            <div class="info-icon">
+                                <i class="fas fa-tag"></i>
+                            </div>
+                            <div class="info-text">
+                                <span class="info-label">Danh mục</span>
+                                <span class="info-value">@(Model.Category?.TenDanhMuc ?? "Chưa phân loại")</span>
+                            </div>
+                        </div>
+                        <div class="info-item">
+                            <div class="info-icon">
+                                <i class="fas fa-calendar-alt"></i>
+                            </div>
+                            <div class="info-text">
+                                <span class="info-label">Ngày đăng</span>
+                                <span class="info-value">@Model.NgayDang.ToString("dd/MM/yyyy")</span>
+                            </div>
+                        </div>
+                        <div class="info-item">
+                            <div class="info-icon">
+                                <i class="fas fa-eye"></i>
+                            </div>
+                            <div class="info-text">
+                                <span class="info-label">Lượt xem</span>
+                                <span class="info-value">@(Model.ViewCount ?? 0)</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="room-description">
+                        <h5><i class="fas fa-align-left me-2"></i> Mô tả chi tiết</h5>
+                        <div class="description-content">
+                            @Html.Raw(Model.MoTa?.Replace("\n", "<br />"))
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Cột phải: Thông tin chủ trọ và hành động -->
+        <div class="col-lg-4">
+            <!-- Card thông tin chủ trọ -->
+            <div class="card shadow-sm mb-4">
+                <div class="card-header bg-primary text-white">
+                    <h5 class="mb-0">
+                        <i class="fas fa-user me-2"></i> Thông tin chủ trọ
+                    </h5>
+                </div>
+                <div class="card-body">
+                    <div class="owner-info text-center">
+                        <div class="owner-avatar-large mb-3">
+                            @{
+                                var initials = GetInitials(Model.User?.FullName ?? Model.User?.UserName);
+                            }
+                            <div class="avatar-circle-large">@initials</div>
+                        </div>
+                        <h5 class="owner-name">@(Model.User?.FullName ?? Model.User?.UserName)</h5>
+                        <p class="owner-email">
+                            <i class="fas fa-envelope me-1"></i> @Model.User?.Email
+                        </p>
+                        <p class="owner-phone">
+                            <i class="fas fa-phone me-1"></i> @(Model.User?.PhoneNumber ?? "Chưa cập nhật")
+                        </p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Card hành động -->
+            <div class="card shadow-sm mb-4">
+                <div class="card-header bg-success text-white">
+                    <h5 class="mb-0">
+                        <i class="fas fa-hand-pointer me-2"></i> Hành động
+                    </h5>
+                </div>
+                <div class="card-body">
+                    @if (Model.TrangThai != TrangThaiPhong.DaChoThue)
+                    {
+                        @if (isAuthenticated)
+                        {
+                            <button type="button" class="btn btn-primary w-100 mb-2" onclick="contactOwner()">
+                                <i class="fas fa-phone-alt me-2"></i> Liên hệ chủ trọ
+                            </button>
+                            <button type="button" class="btn btn-outline-success w-100" onclick="bookRoom(@Model.Id)">
+                                <i class="fas fa-calendar-check me-2"></i> Đặt phòng ngay
+                            </button>
+                        }
+                        else
+                        {
+                            <div class="alert alert-info">
+                                <i class="fas fa-info-circle me-2"></i>
+                                Vui lòng <a href="@Url.Action("Login", "Account")?returnUrl=@Context.Request.Path">đăng nhập</a>
+                            </div>
+                        }
+                    }
+                    else
+                    {
+                        <div class="alert alert-danger text-center">
+                            <i class="fas fa-times-circle me-2"></i>
+                            Phòng đã được thuê
+                        </div>
+                    }
+
+                    @if (canEdit)
+                    {
+                        <hr />
+                        <div class="admin-actions">
+                            <h6 class="text-muted mb-2">
+                                <i class="fas fa-cog me-1"></i> Quản lý bài đăng
+                            </h6>
+
+                            <a href="@Url.Action("Edit", "Tro", new { id = Model.Id })" class="btn btn-warning w-100 mb-2">
+                                <i class="fas fa-edit me-2"></i> Chỉnh sửa
+                            </a>
+
+                            @if (isAdmin)
+                            {
+                                <button type="button" class="btn btn-outline-danger w-100 mb-2"
+                                        onclick="deleteRoom(@Model.Id, '@Model.TieuDe')">
+                                    <i class="fas fa-trash-alt me-2"></i> Xóa
+                                </button>
+
+                                <!-- 🔥 THÊM: đổi trạng thái -->
+                                <select class="form-select" onchange="updateStatus(@Model.Id, this.value)">
+                                    <option value="0" selected="@(Model.TrangThai == TrangThaiPhong.DangTrong)">Đang trống</option>
+                                    <option value="1" selected="@(Model.TrangThai == TrangThaiPhong.DangXuLy)">Đang xử lý</option>
+                                    <option value="2" selected="@(Model.TrangThai == TrangThaiPhong.DaChoThue)">Đã cho thuê</option>
+                                </select>
+                            }
+                        </div>
+                    }
+                </div>
+            </div>
+
+            <!-- Card thông tin thêm (Admin) -->
+            @if (isAdmin)
+            {
+                <div class="card shadow-sm mb-4">
+                    <div class="card-header bg-info text-white">
+                        <h5 class="mb-0">
+                            <i class="fas fa-chart-line me-2"></i> Thống kê & Quản trị
+                        </h5>
+                    </div>
+                    <div class="card-body">
+                        <div class="admin-stats">
+                            <div class="stat-row">
+                                <span><i class="fas fa-calendar-check"></i> Tổng đặt phòng:</span>
+                                <strong>@(Model.Bookings?.Count ?? 0)</strong>
+                            </div>
+                            <div class="stat-row">
+                                <span><i class="fas fa-id-card"></i> Mã phòng:</span>
+                                <strong>#@Model.Id</strong>
+                            </div>
+                            <div class="stat-row">
+                                <span><i class="fas fa-user"></i> Mã chủ trọ:</span>
+                                <strong>@Model.UserId</strong>
+                            </div>
+                        </div>
+                        <hr />
+                        <div class="admin-status-actions">
+                            <label class="fw-bold mb-2">Cập nhật trạng thái:</label>
+                            <div class="admin-status-actions">
+                                <label class="fw-bold mb-2">Cập nhật trạng thái:</label>
+
+                                <select class="form-select" onchange="updateStatus(@Model.Id, this.value)">
+                                    <option value="0" selected="@(Model.TrangThai == TrangThaiPhong.DangTrong)">
+                                        Đang trống
+                                    </option>
+                                    <option value="1" selected="@(Model.TrangThai == TrangThaiPhong.DangXuLy)">
+                                        Đang xử lý
+                                    </option>
+                                    <option value="2" selected="@(Model.TrangThai == TrangThaiPhong.DaChoThue)">
+                                        Đã cho thuê
+                                    </option>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            }
+        </div>
+    </div>
+</div>
+
+<!-- Modal xem ảnh lớn -->
+<div class="modal fade" id="imageModal" tabindex="-1">
+    <div class="modal-dialog modal-lg modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Hình ảnh phòng trọ</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+            </div>
+            <div class="modal-body text-center">
+                <img id="modalImage" src="" alt="Room image" style="max-width: 100%; max-height: 70vh;" />
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+    
+@section Scripts {
+    <script src="~/js/Details.js"></script>
+@functions {
+    string GetInitials(string name)
+    {
+        if (string.IsNullOrEmpty(name)) return "A";
+        var parts = name.Trim().Split(' ');
+        if (parts.Length >= 2)
+            return parts[0][0].ToString().ToUpper() + parts[1][0].ToString().ToUpper();
+        return name[0].ToString().ToUpper();
+    }
+}
+}
+
+@section Styles {
+    <link rel="stylesheet" href="~/css/Details.css" asp-append-version="true" />
+}

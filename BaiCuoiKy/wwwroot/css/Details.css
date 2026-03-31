@@ -1,0 +1,650 @@
+﻿/* =========================
+    ROOM DETAIL PAGE
+    Brand: #002641 (Navy) + #ED005A (Pink-Red)
+========================= */
+
+.hidden-form {
+    display: none;
+}
+/* =========================
+    CONTAINER
+========================= */
+.room-detail-container {
+    max-width: 1400px;
+    margin: 0 auto;
+    padding: 0 24px;
+}
+
+/* =========================
+    GALLERY
+========================= */
+.room-gallery {
+    background: #f0f4f8;
+    border-radius: 16px;
+    overflow: hidden;
+    box-shadow: 0 4px 20px rgba(0, 38, 65, 0.08);
+}
+
+.main-image {
+    width: 100%;
+    height: 420px;
+    cursor: pointer;
+    position: relative;
+    overflow: hidden;
+}
+
+    .main-image img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        transition: transform 0.4s ease;
+    }
+
+    .main-image:hover img {
+        transform: scale(1.03);
+    }
+
+.thumbnail-list {
+    display: flex;
+    gap: 10px;
+    padding: 14px 16px;
+    overflow-x: auto;
+    scrollbar-width: thin;
+    scrollbar-color: #ED005A #f0f4f8;
+}
+
+    .thumbnail-list::-webkit-scrollbar {
+        height: 4px;
+    }
+
+    .thumbnail-list::-webkit-scrollbar-track {
+        background: #f0f4f8;
+    }
+
+    .thumbnail-list::-webkit-scrollbar-thumb {
+        background: #ED005A;
+        border-radius: 4px;
+    }
+
+.thumbnail-item {
+    width: 82px;
+    height: 82px;
+    flex-shrink: 0;
+    cursor: pointer;
+    border-radius: 10px;
+    overflow: hidden;
+    border: 2.5px solid transparent;
+    transition: all 0.22s ease;
+}
+
+    .thumbnail-item:hover,
+    .thumbnail-item.active {
+        border-color: #ED005A;
+        transform: scale(1.06);
+        box-shadow: 0 4px 12px rgba(237, 0, 90, 0.25);
+    }
+
+    .thumbnail-item img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+    }
+
+/* =========================
+    ROOM INFO
+========================= */
+.room-title {
+    font-size: 1.85rem;
+    font-weight: 800;
+    margin-bottom: 12px;
+    color: #002641;
+    line-height: 1.25;
+    letter-spacing: -0.4px;
+}
+
+.room-location {
+    font-size: 0.95rem;
+    color: #6b7f93;
+    display: flex;
+    align-items: center;
+    gap: 5px;
+}
+
+    .room-location i {
+        color: #ED005A;
+    }
+
+/* =========================
+    PRICE BOX
+========================= */
+.room-price {
+    background: linear-gradient(135deg, #002641 0%, #013a58 55%, #ED005A 160%);
+    padding: 18px 22px;
+    border-radius: 14px;
+    color: white;
+    box-shadow: 0 6px 20px rgba(0, 38, 65, 0.2);
+    position: relative;
+    overflow: hidden;
+}
+
+    .room-price::before {
+        content: '';
+        position: absolute;
+        top: -30px;
+        right: -30px;
+        width: 100px;
+        height: 100px;
+        background: rgba(237, 0, 90, 0.15);
+        border-radius: 50%;
+    }
+
+.price-value {
+    font-size: 2rem;
+    font-weight: 800;
+    letter-spacing: -0.5px;
+    position: relative;
+}
+
+.price-unit {
+    font-size: 0.95rem;
+    opacity: 0.85;
+    font-weight: 500;
+    position: relative;
+}
+
+/* =========================
+    INFO GRID
+========================= */
+.room-info-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 12px;
+}
+
+.info-item {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 13px 15px;
+    background: #f4f7fb;
+    border-radius: 12px;
+    border: 1px solid #dce6ef;
+    transition: box-shadow 0.2s ease, transform 0.2s ease;
+}
+
+    .info-item:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 4px 14px rgba(0, 38, 65, 0.08);
+        border-color: rgba(237, 0, 90, 0.2);
+    }
+
+.info-icon {
+    width: 42px;
+    height: 42px;
+    background: white;
+    border-radius: 10px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #ED005A;
+    font-size: 1.15rem;
+    flex-shrink: 0;
+    box-shadow: 0 2px 8px rgba(237, 0, 90, 0.12);
+}
+
+.info-text {
+    flex: 1;
+    min-width: 0;
+}
+
+.info-label {
+    display: block;
+    font-size: 0.72rem;
+    color: #8a9bb0;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    font-weight: 600;
+    margin-bottom: 2px;
+}
+
+.info-value {
+    display: block;
+    font-size: 0.97rem;
+    font-weight: 700;
+    color: #002641;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+/* =========================
+    DESCRIPTION
+========================= */
+.description-content {
+    line-height: 1.85;
+    color: #445566;
+    font-size: 0.93rem;
+}
+
+/* =========================
+    OWNER CARD
+========================= */
+.owner-avatar-large {
+    display: inline-block;
+}
+
+.avatar-circle-large {
+    width: 78px;
+    height: 78px;
+    background: linear-gradient(135deg, #002641 0%, #ED005A 100%);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: white;
+    font-weight: 800;
+    font-size: 1.8rem;
+    margin: 0 auto;
+    box-shadow: 0 6px 18px rgba(237, 0, 90, 0.25);
+    border: 3px solid white;
+    outline: 2px solid rgba(237, 0, 90, 0.2);
+}
+
+.owner-name {
+    margin-bottom: 8px;
+    font-weight: 700;
+    color: #002641;
+    font-size: 1.05rem;
+}
+
+.owner-email,
+.owner-phone {
+    font-size: 0.875rem;
+    color: #6b7f93;
+    margin-bottom: 4px;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+}
+
+    .owner-email i,
+    .owner-phone i {
+        color: #ED005A;
+        font-size: 0.8rem;
+    }
+
+/* =========================
+    ADMIN STATS
+========================= */
+.admin-stats .stat-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 10px 0;
+    border-bottom: 1px solid #edf2f7;
+    font-size: 0.9rem;
+}
+
+    .admin-stats .stat-row:last-child {
+        border-bottom: none;
+    }
+
+    .admin-stats .stat-row span:first-child {
+        color: #6b7f93;
+        font-weight: 500;
+    }
+
+    .admin-stats .stat-row span:last-child {
+        color: #002641;
+        font-weight: 700;
+    }
+
+/* =========================
+    BREADCRUMB
+========================= */
+nav[aria-label="breadcrumb"] {
+    background: #f0f4f8 !important;
+    border-radius: 10px;
+    border: 1px solid #dce6ef;
+    padding: 10px 16px !important;
+}
+
+.breadcrumb {
+    margin: 0;
+    font-size: 0.85rem;
+    align-items: center;
+}
+
+.breadcrumb-item a {
+    color: #002641;
+    font-weight: 500;
+    text-decoration: none;
+    transition: color 0.2s;
+}
+
+    .breadcrumb-item a:hover {
+        color: #ED005A;
+    }
+
+.breadcrumb-item.active {
+    color: #8a9bb0;
+}
+
+.breadcrumb-item + .breadcrumb-item::before {
+    color: #b0bec9;
+}
+
+/* =========================
+    CARD HEADERS (all variants)
+========================= */
+.card-header {
+    border-bottom: none !important;
+    padding: 14px 20px !important;
+    border-radius: 14px 14px 0 0 !important;
+}
+
+    .card-header h5 {
+        font-size: 0.95rem;
+        font-weight: 700;
+        letter-spacing: 0.1px;
+    }
+
+    /* Chủ trọ — Navy */
+    .card-header.bg-primary {
+        background: linear-gradient(135deg, #002641 0%, #013a58 100%) !important;
+        color: #ffffff !important;
+    }
+
+    /* Hành động — Accent hồng */
+    .card-header.bg-success {
+        background: linear-gradient(135deg, #ED005A 0%, #c4004b 100%) !important;
+        color: #ffffff !important;
+    }
+
+    /* Thống kê Admin — Navy nhạt */
+    .card-header.bg-info {
+        background: linear-gradient(135deg, #013a58 0%, #025475 100%) !important;
+        color: #ffffff !important;
+    }
+
+/* Modal từ chối — đổi sang navy thay vàng */
+.modal-header.bg-warning {
+    background: linear-gradient(135deg, #002641 0%, #013a58 100%) !important;
+    color: #ffffff !important;
+}
+
+    .modal-header.bg-warning .modal-title,
+    .modal-header.bg-warning .btn-close-white {
+        color: #ffffff !important;
+        opacity: 1;
+    }
+
+/* =========================
+    BUTTON: ĐẶT PHÒNG (btn-outline-success)
+========================= */
+.btn-outline-success {
+    color: #002641 !important;
+    border: 2px solid #002641 !important;
+    background: transparent !important;
+    font-weight: 600;
+    border-radius: 10px;
+    transition: all 0.25s ease;
+}
+
+    .btn-outline-success:hover,
+    .btn-outline-success:focus {
+        background: #002641 !important;
+        color: #ffffff !important;
+        transform: translateY(-2px);
+        box-shadow: 0 6px 16px rgba(0, 38, 65, 0.2);
+    }
+
+/* =========================
+    BUTTON: CHỈNH SỬA (btn-warning)
+========================= */
+.btn-warning {
+    background: linear-gradient(135deg, #002641 0%, #024068 100%) !important;
+    border: none !important;
+    color: #ffffff !important;
+    font-weight: 600;
+    border-radius: 10px;
+    box-shadow: 0 4px 12px rgba(0, 38, 65, 0.2);
+    transition: all 0.25s ease;
+}
+
+    .btn-warning:hover,
+    .btn-warning:focus {
+        background: linear-gradient(135deg, #013357 0%, #025475 100%) !important;
+        color: #ffffff !important;
+        transform: translateY(-2px);
+        box-shadow: 0 7px 18px rgba(0, 38, 65, 0.28);
+    }
+
+/* =========================
+    BUTTON: XÓA (btn-outline-danger)
+========================= */
+.btn-outline-danger {
+    color: #ED005A !important;
+    border: 2px solid #ED005A !important;
+    background: transparent !important;
+    font-weight: 600;
+    border-radius: 10px;
+    transition: all 0.25s ease;
+}
+
+    .btn-outline-danger:hover,
+    .btn-outline-danger:focus {
+        background: #ED005A !important;
+        color: #ffffff !important;
+        transform: translateY(-2px);
+        box-shadow: 0 6px 16px rgba(237, 0, 90, 0.3);
+    }
+
+/* =========================
+    BUTTON: DUYỆT — Admin (btn-success sm)
+========================= */
+.btn-success {
+    background: linear-gradient(135deg, #002641 0%, #013a58 100%) !important;
+    border: none !important;
+    color: #ffffff !important;
+    font-weight: 600;
+    border-radius: 8px;
+    box-shadow: 0 3px 10px rgba(0, 38, 65, 0.2);
+    transition: all 0.25s ease;
+}
+
+    .btn-success:hover,
+    .btn-success:focus {
+        background: linear-gradient(135deg, #013357 0%, #025475 100%) !important;
+        color: #ffffff !important;
+        transform: translateY(-1px);
+        box-shadow: 0 5px 14px rgba(0, 38, 65, 0.28);
+    }
+
+/* =========================
+    BUTTON: TỪ CHỐI — Admin (btn-danger)
+========================= */
+.btn-danger {
+    background: linear-gradient(135deg, #ED005A 0%, #c4004b 100%) !important;
+    border: none !important;
+    color: #ffffff !important;
+    font-weight: 600;
+    border-radius: 8px;
+    box-shadow: 0 3px 10px rgba(237, 0, 90, 0.22);
+    transition: all 0.25s ease;
+}
+
+    .btn-danger:hover,
+    .btn-danger:focus {
+        background: linear-gradient(135deg, #c4004b 0%, #9e003d 100%) !important;
+        color: #ffffff !important;
+        transform: translateY(-1px);
+        box-shadow: 0 5px 14px rgba(237, 0, 90, 0.32);
+    }
+
+/* =========================
+    BUTTON: HỦY — Modal (btn-secondary)
+========================= */
+.btn-secondary {
+    background: transparent !important;
+    border: 2px solid #b0bec9 !important;
+    color: #445566 !important;
+    font-weight: 600;
+    border-radius: 8px;
+    transition: all 0.22s ease;
+}
+
+    .btn-secondary:hover,
+    .btn-secondary:focus {
+        background: #8a9bb0 !important;
+        border-color: #8a9bb0 !important;
+        color: #ffffff !important;
+        transform: translateY(-1px);
+    }
+
+/* =========================
+    ALERTS
+========================= */
+/* Alert info — yêu cầu đăng nhập */
+.alert-info {
+    background: #e8f0f7;
+    border: 1px solid rgba(0, 38, 65, 0.12);
+    border-left: 4px solid #002641;
+    color: #002641;
+    border-radius: 10px;
+    font-size: 0.88rem;
+    padding: 13px 16px;
+}
+
+    .alert-info a {
+        color: #ED005A;
+        font-weight: 600;
+        text-decoration: underline;
+        text-underline-offset: 2px;
+    }
+
+        .alert-info a:hover {
+            color: #c4004b;
+        }
+
+/* Alert warning — chờ duyệt */
+.alert-warning {
+    background: #fff8e8;
+    border: 1px solid rgba(237, 160, 0, 0.2);
+    border-left: 4px solid #ED005A;
+    color: #7a4500;
+    border-radius: 10px;
+    font-size: 0.88rem;
+    padding: 13px 16px;
+}
+
+/* =========================
+    MODAL
+========================= */
+.modal-content {
+    border: none;
+    border-radius: 16px;
+    overflow: hidden;
+    box-shadow: 0 20px 60px rgba(0, 38, 65, 0.18);
+}
+
+.modal-header {
+    padding: 16px 22px;
+    border-bottom: 1px solid #edf2f7;
+}
+
+    .modal-header .modal-title {
+        font-size: 1rem;
+        font-weight: 700;
+        color: #002641;
+    }
+
+.modal-body {
+    padding: 20px 22px;
+    color: #445566;
+    font-size: 0.92rem;
+}
+
+.modal-footer {
+    padding: 14px 22px;
+    border-top: 1px solid #edf2f7;
+    gap: 8px;
+}
+
+/* =========================
+    ROOM DESCRIPTION HEADING
+========================= */
+.room-description h5 {
+    color: #002641;
+    font-weight: 700;
+    font-size: 1rem;
+    margin-bottom: 12px;
+    padding-bottom: 10px;
+    border-bottom: 2px solid #f0f4f8;
+}
+
+    .room-description h5 i {
+        color: #ED005A;
+    }
+
+/* =========================
+    ADMIN ACTIONS SECTION
+========================= */
+.admin-actions h6.text-muted {
+    color: #8a9bb0 !important;
+    font-size: 0.75rem;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    font-weight: 700;
+}
+
+.admin-status-actions label.fw-bold {
+    color: #002641;
+    font-size: 0.85rem;
+}
+
+/* =========================
+    NO IMAGE PLACEHOLDER
+========================= */
+.no-image-placeholder {
+    background: #f0f4f8;
+    border-radius: 14px;
+    min-height: 220px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    color: #b0bec9;
+}
+
+/* =========================
+    RESPONSIVE
+========================= */
+@media (max-width: 768px) {
+    .room-title {
+        font-size: 1.35rem;
+    }
+
+    .price-value {
+        font-size: 1.55rem;
+    }
+
+    .main-image {
+        height: 260px;
+    }
+
+    .room-info-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .avatar-circle-large {
+        width: 62px;
+        height: 62px;
+        font-size: 1.4rem;
+    }
+
+    .thumbnail-item {
+        width: 66px;
+        height: 66px;
+    }
+}

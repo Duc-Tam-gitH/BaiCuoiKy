@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Http;
+using BaiCuoiKy.Models;
 
 namespace BaiCuoiKy.Models.ViewModel
 {
@@ -16,20 +17,21 @@ namespace BaiCuoiKy.Models.ViewModel
 
         public double DienTich { get; set; }
 
-        public bool TrangThai { get; set; }
+        
+        public TrangThaiPhong TrangThai { get; set; }
 
         public int? CategoryId { get; set; }
 
-        // Danh sách ảnh hiện có
+        // Ảnh hiện có
         public List<string> ExistingImages { get; set; } = new List<string>();
 
-        // Danh sách ảnh cần xóa
+        // Ảnh cần xóa
         public List<string> DeletedImages { get; set; } = new List<string>();
 
-        // Ảnh mới upload
+        // Ảnh mới
         public List<IFormFile> NewImages { get; set; } = new List<IFormFile>();
 
-        // Danh sách danh mục để hiển thị dropdown
+        // Danh mục
         public List<Category> Categories { get; set; } = new List<Category>();
     }
 }

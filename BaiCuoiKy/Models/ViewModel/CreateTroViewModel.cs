@@ -1,21 +1,30 @@
 ﻿using Microsoft.AspNetCore.Http;
 using System.ComponentModel.DataAnnotations;
+using BaiCuoiKy.Models;
 
 namespace BaiCuoiKy.Models.ViewModel
 {
     public class CreateTroViewModel
     {
-        public required string TieuDe { get; set; } = string.Empty; 
+        public required string TieuDe { get; set; } = string.Empty;
+
         public required string DiaChi { get; set; } = string.Empty;
+
         public decimal Gia { get; set; }
+
         public required string MoTa { get; set; } = string.Empty;
+
         public double DienTich { get; set; }
-        public bool TrangThai { get; set; }
+
+       
+        [Display(Name = "Trạng thái")]
+        public TrangThaiPhong TrangThai { get; set; } = TrangThaiPhong.DangTrong;
 
         [Display(Name = "Danh mục")]
         public int? CategoryId { get; set; }
 
         public List<IFormFile> Images { get; set; } = new List<IFormFile>();
+
         public List<Category> Categories { get; set; } = new List<Category>();
     }
 }

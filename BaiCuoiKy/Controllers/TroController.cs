@@ -5,7 +5,6 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using System.Security.Claims;
 using Microsoft.AspNetCore.Identity;
-using System.IO;
 
 namespace BaiCuoiKy.Controllers
 {
@@ -20,21 +19,24 @@ namespace BaiCuoiKy.Controllers
             _userManager = userManager;
         }
 
-        // ==================== CREATE ====================
+        // =========================================================
+        // 🟢 1. TẠO PHÒNG TRỌ
+        // =========================================================
 
         [Authorize]
         public async Task<IActionResult> Create()
         {
             var model = new CreateTroViewModel
             {
-                TieuDe = string.Empty,
-                DiaChi = string.Empty,
-                MoTa = string.Empty,
+                TieuDe = "",
+                DiaChi = "",
+                MoTa = "",
                 Gia = 0,
                 DienTich = 0,
-                TrangThai = true,
-                CategoryId = null,
-                Images = new List<IFormFile>(),
+
+                // ✅ FIX: dùng enum
+                TrangThai = TrangThaiPhong.DangTrong,
+
                 Categories = await _context.Categories
                     .Where(c => c.TrangThai == true)
                     .OrderBy(c => c.ThuTu)
@@ -56,7 +58,7 @@ namespace BaiCuoiKy.Controllers
 
                 if (user == null)
                 {
-                    TempData["Error"] = "Không tìm thấy thông tin người dùng!";
+                    TempData["Error"] = "Không tìm thấy user!";
                     return RedirectToAction("Index", "Home");
                 }
 
@@ -67,107 +69,81 @@ namespace BaiCuoiKy.Controllers
                     Gia = model.Gia,
                     MoTa = model.MoTa,
                     DienTich = model.DienTich,
+
+                    // ✅ FIX: enum
+                    TrangThai = model.TrangThai,
+
+                    CategoryId = model.CategoryId,
                     UserId = userId,
                     User = user,
-                    TrangThai = model.TrangThai,
-                    CategoryId = model.CategoryId,
-                    NgayDang = DateTime.Now,
-                    AnhPhongs = new List<AnhPhong>()
+                    NgayDang = DateTime.Now
                 };
 
                 _context.Tros.Add(tro);
                 await _context.SaveChangesAsync();
 
-                // Xử lý upload ảnh
-                if (model.Images != null && model.Images.Any())
-                {
-                    var uploadPath = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot", "images", "rooms");
-                    if (!Directory.Exists(uploadPath))
-                    {
-                        Directory.CreateDirectory(uploadPath);
-                    }
-
-                    foreach (var image in model.Images)
-                    {
-                        if (image.Length > 0)
-                        {
-                            var fileName = $"{tro.Id}_{Guid.NewGuid()}_{Path.GetFileName(image.FileName)}";
-                            var filePath = Path.Combine(uploadPath, fileName);
-
-                            using (var stream = new FileStream(filePath, FileMode.Create))
-                            {
-                                await image.CopyToAsync(stream);
-                            }
-
-                            _context.AnhPhongs.Add(new AnhPhong
-                            {
-                                TroId = tro.Id,
-                                Url = $"/images/rooms/{fileName}"
-                            });
-                        }
-                    }
-
-                    await _context.SaveChangesAsync();
-                }
-
-                TempData["Success"] = "Thêm phòng trọ thành công!";
-                return RedirectToAction("Manage");  // ✅ Sửa
+                TempData["Success"] = "Tạo phòng thành công!";
+                return RedirectToAction("ManageSystem", "Admin");
             }
 
             model.Categories = await _context.Categories
                 .Where(c => c.TrangThai == true)
-                .OrderBy(c => c.ThuTu)
                 .ToListAsync();
 
             return View("CreateRoom", model);
         }
 
-        // ==================== READ (QUẢN LÝ) ====================
+        // =========================================================
+        // 🟡 2. DANH SÁCH QUẢN LÝ
+        // =========================================================
 
         [Authorize]
         public async Task<IActionResult> Manage()
         {
-            var Admin = await _context.Tros
+            var data = await _context.Tros
                 .Include(t => t.User)
                 .Include(t => t.AnhPhongs)
                 .Include(t => t.Category)
                 .OrderByDescending(t => t.NgayDang)
                 .ToListAsync();
 
-            return View("ManageSystem", Admin);  // ✅ Dùng view Index.cshtml
+            return View("ManageSystem", data);
         }
 
-        // ==================== READ (CHI TIẾT) ====================
+        // =========================================================
+        // 🔵 3. CHI TIẾT PHÒNG
+        // =========================================================
 
+        [AllowAnonymous]
         public async Task<IActionResult> Details(int id)
         {
-            var tro = await _context.Tros
+            var room = await _context.Tros
                 .Include(t => t.User)
-                .Include(t => t.AnhPhongs)
                 .Include(t => t.Category)
+                .Include(t => t.AnhPhongs)
+                .Include(t => t.Reviews)
+                    .ThenInclude(r => r.User)
                 .FirstOrDefaultAsync(t => t.Id == id);
 
-            if (tro == null)
-            {
-                return NotFound();
-            }
+            if (room == null)
+                return RedirectToAction("Index", "Home");
 
-            return View(tro);
+            ViewBag.IsAdmin = User.IsInRole("Admin");
+            ViewBag.IsOwner = User.FindFirstValue(ClaimTypes.NameIdentifier) == room.UserId;
+            ViewBag.CanEdit = ViewBag.IsAdmin || ViewBag.IsOwner;
+
+            return View(room);
         }
 
-        // ==================== UPDATE ====================
+        // =========================================================
+        // 🟠 4. SỬA PHÒNG
+        // =========================================================
 
         [Authorize]
         public async Task<IActionResult> Edit(int id)
         {
-            var tro = await _context.Tros
-                .Include(t => t.AnhPhongs)
-                .FirstOrDefaultAsync(t => t.Id == id);
-
-            if (tro == null)
-            {
-                return NotFound();
-            }
+            var tro = await _context.Tros.FindAsync(id);
+            if (tro == null) return NotFound();
 
             var model = new EditTroViewModel
             {
@@ -177,156 +153,71 @@ namespace BaiCuoiKy.Controllers
                 Gia = tro.Gia,
                 MoTa = tro.MoTa,
                 DienTich = tro.DienTich,
+
+                // ✅ FIX
                 TrangThai = tro.TrangThai,
+
                 CategoryId = tro.CategoryId,
-                ExistingImages = tro.AnhPhongs?.Select(a => a.Url).ToList() ?? new List<string>(),
-                Categories = await _context.Categories
-                    .Where(c => c.TrangThai == true)
-                    .OrderBy(c => c.ThuTu)
-                    .ToListAsync()
+                Categories = await _context.Categories.ToListAsync()
             };
 
             return View("EditRoom", model);
         }
 
         [HttpPost]
-        [ValidateAntiForgeryToken]
         [Authorize]
         public async Task<IActionResult> Edit(EditTroViewModel model)
         {
-            if (ModelState.IsValid)
-            {
-                var tro = await _context.Tros
-                    .Include(t => t.AnhPhongs)
-                    .FirstOrDefaultAsync(t => t.Id == model.Id);
+            if (!ModelState.IsValid) return View(model);
 
-                if (tro == null)
-                {
-                    return NotFound();
-                }
+            var tro = await _context.Tros.FindAsync(model.Id);
+            if (tro == null) return NotFound();
 
-                tro.TieuDe = model.TieuDe;
-                tro.DiaChi = model.DiaChi;
-                tro.Gia = model.Gia;
-                tro.MoTa = model.MoTa;
-                tro.DienTich = model.DienTich;
-                tro.TrangThai = model.TrangThai;
-                tro.CategoryId = model.CategoryId;
+            tro.TieuDe = model.TieuDe;
+            tro.DiaChi = model.DiaChi;
+            tro.Gia = model.Gia;
+            tro.MoTa = model.MoTa;
+            tro.DienTich = model.DienTich;
 
-                // Xử lý xóa ảnh
-                if (model.DeletedImages != null && model.DeletedImages.Any())
-                {
-                    var imagesToDelete = tro.AnhPhongs
-                        .Where(a => model.DeletedImages.Contains(a.Url))
-                        .ToList();
+            // ✅ FIX
+            tro.TrangThai = model.TrangThai;
 
-                    foreach (var img in imagesToDelete)
-                    {
-                        var physicalPath = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot", img.Url.TrimStart('/'));
-                        if (System.IO.File.Exists(physicalPath))
-                        {
-                            System.IO.File.Delete(physicalPath);
-                        }
-                        _context.AnhPhongs.Remove(img);
-                    }
-                }
+            tro.CategoryId = model.CategoryId;
 
-                // Xử lý upload ảnh mới
-                if (model.NewImages != null && model.NewImages.Any())
-                {
-                    var uploadPath = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot", "images", "rooms");
-                    if (!Directory.Exists(uploadPath))
-                    {
-                        Directory.CreateDirectory(uploadPath);
-                    }
+            await _context.SaveChangesAsync();
 
-                    foreach (var image in model.NewImages)
-                    {
-                        if (image.Length > 0)
-                        {
-                            var fileName = $"{tro.Id}_{Guid.NewGuid()}_{Path.GetFileName(image.FileName)}";
-                            var filePath = Path.Combine(uploadPath, fileName);
-
-                            using (var stream = new FileStream(filePath, FileMode.Create))
-                            {
-                                await image.CopyToAsync(stream);
-                            }
-
-                            _context.AnhPhongs.Add(new AnhPhong
-                            {
-                                TroId = tro.Id,
-                                Url = $"/images/rooms/{fileName}"
-                            });
-                        }
-                    }
-                }
-
-                await _context.SaveChangesAsync();
-
-                TempData["Success"] = "Cập nhật phòng trọ thành công!";
-                return RedirectToAction("Manage");  // ✅ Sửa
-            }
-
-            model.Categories = await _context.Categories
-                .Where(c => c.TrangThai == true)
-                .OrderBy(c => c.ThuTu)
-                .ToListAsync();
-
-            return View("EditRoom", model);
+            TempData["Success"] = "Cập nhật thành công!";
+            return RedirectToAction("Manage");
         }
 
-        // ==================== DELETE ====================
+        // =========================================================
+        // 🔴 5. XÓA PHÒNG
+        // =========================================================
 
         [Authorize]
         public async Task<IActionResult> Delete(int id)
         {
             var tro = await _context.Tros
                 .Include(t => t.AnhPhongs)
-                .Include(t => t.Bookings)
-                .Include(t => t.Reviews)
-                .Include(t => t.Favorites)
-                .Include(t => t.Category)
                 .FirstOrDefaultAsync(t => t.Id == id);
 
-            if (tro == null)
-            {
-                return NotFound();
-            }
+            if (tro == null) return NotFound();
 
             return View(tro);
         }
 
         [HttpPost, ActionName("Delete")]
-        [ValidateAntiForgeryToken]
         [Authorize]
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
-            var tro = await _context.Tros
-                .Include(t => t.AnhPhongs)
-                .FirstOrDefaultAsync(t => t.Id == id);
-
-            if (tro == null)
-            {
-                return NotFound();
-            }
-
-            if (tro.AnhPhongs != null && tro.AnhPhongs.Any())
-            {
-                foreach (var anhPhong in tro.AnhPhongs)
-                {
-                    var physicalPath = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot", anhPhong.Url.TrimStart('/'));
-                    if (System.IO.File.Exists(physicalPath))
-                    {
-                        System.IO.File.Delete(physicalPath);
-                    }
-                }
-            }
+            var tro = await _context.Tros.FindAsync(id);
+            if (tro == null) return NotFound();
 
             _context.Tros.Remove(tro);
             await _context.SaveChangesAsync();
 
-            TempData["Success"] = "Xóa phòng trọ thành công!";
-            return RedirectToAction("Manage");  // ✅ Sửa
+            TempData["Success"] = "Đã xóa!";
+            return RedirectToAction("Manage");
         }
     }
 }

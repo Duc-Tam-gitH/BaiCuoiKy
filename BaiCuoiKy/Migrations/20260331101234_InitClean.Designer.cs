@@ -12,8 +12,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace BaiCuoiKy.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    [Migration("20260327074342_InitialCreate")]
-    partial class InitialCreate
+    [Migration("20260331101234_InitClean")]
+    partial class InitClean
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -152,6 +152,32 @@ namespace BaiCuoiKy.Migrations
                     b.ToTable("Bookings");
                 });
 
+            modelBuilder.Entity("BaiCuoiKy.Models.Category", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<string>("MoTa")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("TenDanhMuc")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<int>("ThuTu")
+                        .HasColumnType("int");
+
+                    b.Property<bool>("TrangThai")
+                        .HasColumnType("bit");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("Categories");
+                });
+
             modelBuilder.Entity("BaiCuoiKy.Models.Favorite", b =>
                 {
                     b.Property<string>("UserId")
@@ -170,6 +196,33 @@ namespace BaiCuoiKy.Migrations
                     b.ToTable("Favorites");
                 });
 
+            modelBuilder.Entity("BaiCuoiKy.Models.Notification", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<DateTime>("CreatedAt")
+                        .HasColumnType("datetime2");
+
+                    b.Property<bool>("IsRead")
+                        .HasColumnType("bit");
+
+                    b.Property<string>("Message")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("UserId")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("Notifications");
+                });
+
             modelBuilder.Entity("BaiCuoiKy.Models.Review", b =>
                 {
                     b.Property<int>("Id")
@@ -181,6 +234,9 @@ namespace BaiCuoiKy.Migrations
                     b.Property<string>("Comment")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
+
+                    b.Property<bool>("IsHidden")
+                        .HasColumnType("bit");
 
                     b.Property<DateTime>("NgayDanhGia")
                         .HasColumnType("datetime2");
@@ -212,6 +268,9 @@ namespace BaiCuoiKy.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
+                    b.Property<int?>("CategoryId")
+                        .HasColumnType("int");
+
                     b.Property<string>("DiaChi")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
@@ -222,6 +281,9 @@ namespace BaiCuoiKy.Migrations
                     b.Property<decimal>("Gia")
                         .HasPrecision(18, 2)
                         .HasColumnType("decimal(18,2)");
+
+                    b.Property<bool>("IsDeleted")
+                        .HasColumnType("bit");
 
                     b.Property<string>("MoTa")
                         .IsRequired()
@@ -234,14 +296,19 @@ namespace BaiCuoiKy.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<bool>("TrangThai")
-                        .HasColumnType("bit");
+                    b.Property<int>("TrangThai")
+                        .HasColumnType("int");
 
                     b.Property<string>("UserId")
                         .IsRequired()
                         .HasColumnType("nvarchar(450)");
 
+                    b.Property<int?>("ViewCount")
+                        .HasColumnType("int");
+
                     b.HasKey("Id");
+
+                    b.HasIndex("CategoryId");
 
                     b.HasIndex("UserId");
 
@@ -451,11 +518,18 @@ namespace BaiCuoiKy.Migrations
 
             modelBuilder.Entity("BaiCuoiKy.Models.Tro", b =>
                 {
+                    b.HasOne("BaiCuoiKy.Models.Category", "Category")
+                        .WithMany("Tros")
+                        .HasForeignKey("CategoryId")
+                        .OnDelete(DeleteBehavior.SetNull);
+
                     b.HasOne("BaiCuoiKy.Models.ApplicationUser", "User")
                         .WithMany("Tros")
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
+
+                    b.Navigation("Category");
 
                     b.Navigation("User");
                 });
@@ -519,6 +593,11 @@ namespace BaiCuoiKy.Migrations
 
                     b.Navigation("Reviews");
 
+                    b.Navigation("Tros");
+                });
+
+            modelBuilder.Entity("BaiCuoiKy.Models.Category", b =>
+                {
                     b.Navigation("Tros");
                 });
 

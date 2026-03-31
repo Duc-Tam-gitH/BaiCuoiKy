@@ -1,7 +1,7 @@
 ﻿using System.ComponentModel.DataAnnotations;
 namespace BaiCuoiKy.Models
 {
-    
+
     public class Review
     {
         public int Id { get; set; }
@@ -19,5 +19,7 @@ namespace BaiCuoiKy.Models
 
         public int TroId { get; set; }
         public Tro? Tro { get; set; }
+
+        public bool IsHidden { get; set; } = false; // ⭐ thêm
     }
 }

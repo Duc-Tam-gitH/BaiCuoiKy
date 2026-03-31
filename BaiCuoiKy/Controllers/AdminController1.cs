@@ -4,12 +4,6 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
-using System.Linq;
-using System.Threading.Tasks;
-
-
-//admin @gmail.com
-//Admin@123
 
 namespace BaiCuoiKy.Controllers
 {
@@ -26,40 +20,42 @@ namespace BaiCuoiKy.Controllers
             AppDbContext context)
         {
             _userManager = userManager;
-            _roleManager = roleManager;
+            _roleManager = roleManager; 
             _context = context;
         }
-        // Hàm xử lý Duyệt hoặc Từ chối bài đăng
-        [HttpPost]
-        public async Task<IActionResult> UpdateStatus(int id, bool isApproved, string? reason)
+
+        public IActionResult ManageSystem()
         {
-            var tro = await _context.Tros.FirstOrDefaultAsync(t => t.Id == id);
-            if (tro == null) return NotFound();
-
-            // 1. Cập nhật trạng thái bài đăng (TrangThai: true = Duyệt, false = Từ chối)
-            tro.TrangThai = isApproved;
-
-            // 2. Tạo nội dung thông báo dựa trên hành động
-            string message = isApproved
-                ? $"✅ Tin đăng '{tro.TieuDe}' của bạn đã được phê duyệt và hiển thị trên hệ thống!"
-                : $"❌ Tin đăng '{tro.TieuDe}' bị từ chối. Lý do: {reason ?? "Không đạt tiêu chuẩn"}";
-
-            // 3. Lưu thông báo vào Database cho Chủ trọ
-            var notification = new Notification
-            {
-                UserId = tro.UserId, // Gửi cho chủ bài đăng
-                Message = message,
-                CreatedAt = DateTime.Now,
-                IsRead = false
-            };
-
-            _context.Notifications.Add(notification);
-            await _context.SaveChangesAsync();
-
-            TempData["Message"] = isApproved ? "Đã duyệt bài thành công!" : "Đã từ chối bài đăng.";
-            return RedirectToAction("ManagePosts"); // Hoặc trang quản lý của Admin
+            return RedirectToAction("Dashboard", new { section = "overview" });
+        }
+        // =====================================================
+        // DTO: NHẬN REQUEST CẬP NHẬT TRẠNG THÁI PHÒNG
+        // =====================================================
+        public class UpdateTrangThaiDto
+        {
+            public int Id { get; set; }
+            public int TrangThai { get; set; }
         }
 
+        // =====================================================
+        // API: CẬP NHẬT TRẠNG THÁI PHÒNG (Đang trống / Đang xử lý / Đã cho thuê)
+        // =====================================================
+        [HttpPost]
+        public async Task<IActionResult> UpdateTrangThai([FromBody] UpdateTrangThaiDto model)
+        {
+            var tro = await _context.Tros.FirstOrDefaultAsync(t => t.Id == model.Id);
+            if (tro == null) return Json(new { success = false });
+
+            tro.TrangThai = (TrangThaiPhong)model.TrangThai;
+
+            await _context.SaveChangesAsync();
+
+            return Json(new { success = true });
+        }
+
+        // =====================================================
+        // HELPER: LẤY CHỮ CÁI ĐẦU TÊN USER
+        // =====================================================
         private string GetInitials(string name)
         {
             if (string.IsNullOrEmpty(name)) return "A";
@@ -69,6 +65,9 @@ namespace BaiCuoiKy.Controllers
             return name[0].ToString().ToUpper();
         }
 
+        // =====================================================
+        // DANH SÁCH USER + SEARCH + FILTER + SORT
+        // =====================================================
         public async Task<IActionResult> Index(string sortOrder, string searchString, string roleFilter)
         {
             ViewBag.CurrentSort = sortOrder;
@@ -77,7 +76,7 @@ namespace BaiCuoiKy.Controllers
 
             var users = _userManager.Users.AsQueryable();
 
-            // Tìm kiếm
+            // SEARCH
             if (!string.IsNullOrEmpty(searchString))
             {
                 users = users.Where(u => u.UserName.Contains(searchString) ||
@@ -85,7 +84,7 @@ namespace BaiCuoiKy.Controllers
                                          u.FullName.Contains(searchString));
             }
 
-            var userList = new System.Collections.Generic.List<ManagerUsersViewModel>();
+            var userList = new List<ManagerUsersViewModel>();
 
             foreach (var user in users)
             {
@@ -99,42 +98,23 @@ namespace BaiCuoiKy.Controllers
                 });
             }
 
-            // Lọc theo role
+            // FILTER ROLE
             if (!string.IsNullOrEmpty(roleFilter) && roleFilter != "All")
             {
                 userList = userList.Where(u => u.Roles.Contains(roleFilter)).ToList();
             }
 
-            // Sắp xếp
-            switch (sortOrder)
+            // SORT
+            userList = sortOrder switch
             {
-                case "name_desc":
-                    userList = userList.OrderByDescending(u => u.User.UserName).ToList();
-                    break;
-                case "email":
-                    userList = userList.OrderBy(u => u.User.Email).ToList();
-                    break;
-                case "email_desc":
-                    userList = userList.OrderByDescending(u => u.User.Email).ToList();
-                    break;
-                case "fullname":
-                    userList = userList.OrderBy(u => u.User.FullName).ToList();
-                    break;
-                case "fullname_desc":
-                    userList = userList.OrderByDescending(u => u.User.FullName).ToList();
-                    break;
-                case "date":
-                    userList = userList.OrderBy(u => u.User.LockoutEnd).ToList();
-                    break;
-                case "date_desc":
-                    userList = userList.OrderByDescending(u => u.User.LockoutEnd).ToList();
-                    break;
-                default:
-                    userList = userList.OrderBy(u => u.User.UserName).ToList();
-                    break;
-            }
+                "name_desc" => userList.OrderByDescending(u => u.User.UserName).ToList(),
+                "email" => userList.OrderBy(u => u.User.Email).ToList(),
+                "email_desc" => userList.OrderByDescending(u => u.User.Email).ToList(),
+                "fullname" => userList.OrderBy(u => u.User.FullName).ToList(),
+                "fullname_desc" => userList.OrderByDescending(u => u.User.FullName).ToList(),
+                _ => userList.OrderBy(u => u.User.UserName).ToList()
+            };
 
-            // Lấy danh sách roles để hiển thị filter
             var rolesList = _roleManager.Roles.Select(r => r.Name).ToList();
             rolesList.Insert(0, "All");
             ViewBag.RolesList = rolesList;
@@ -142,24 +122,19 @@ namespace BaiCuoiKy.Controllers
             return View(userList);
         }
 
+        // =====================================================
+        // GET: FORM SỬA USER
+        // =====================================================
         [HttpGet]
         public async Task<IActionResult> Edit(string id)
         {
-            if (id == null)
-            {
-                return NotFound();
-            }
-
             var user = await _userManager.FindByIdAsync(id);
-            if (user == null)
-            {
-                return NotFound();
-            }
+            if (user == null) return NotFound();
 
             var userRoles = await _userManager.GetRolesAsync(user);
             var allRoles = _roleManager.Roles.Select(r => r.Name).ToList();
 
-            var model = new EditUserViewModel
+            return View(new EditUserViewModel
             {
                 Id = user.Id,
                 UserName = user.UserName,
@@ -170,203 +145,100 @@ namespace BaiCuoiKy.Controllers
                 IsLocked = await _userManager.IsLockedOutAsync(user),
                 Roles = allRoles,
                 UserRoles = userRoles.ToList()
-            };
-
-            return View(model);
+            });
         }
 
+        // =====================================================
+        // POST: CẬP NHẬT USER + ROLE + LOCK
+        // =====================================================
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Edit(EditUserViewModel model)
         {
-            if (ModelState.IsValid)
-            {
-                var user = await _userManager.FindByIdAsync(model.Id);
-                if (user == null)
-                {
-                    return NotFound();
-                }
+            if (!ModelState.IsValid) return View(model);
 
-                // Cập nhật thông tin cơ bản
-                user.FullName = model.FullName;
-                user.Address = model.Address;
-                user.PhoneNumber = model.PhoneNumber;
-                user.Email = model.Email;
-                user.UserName = model.UserName;
+            var user = await _userManager.FindByIdAsync(model.Id);
+            if (user == null) return NotFound();
 
-                var updateResult = await _userManager.UpdateAsync(user);
+            // UPDATE INFO
+            user.FullName = model.FullName;
+            user.Address = model.Address;
+            user.PhoneNumber = model.PhoneNumber;
+            user.Email = model.Email;
+            user.UserName = model.UserName;
 
-                if (updateResult.Succeeded)
-                {
-                    // Xử lý khóa/mở khóa tài khoản
-                    if (model.IsLocked && !await _userManager.IsLockedOutAsync(user))
-                    {
-                        await _userManager.SetLockoutEndDateAsync(user, System.DateTimeOffset.MaxValue);
-                    }
-                    else if (!model.IsLocked && await _userManager.IsLockedOutAsync(user))
-                    {
-                        await _userManager.SetLockoutEndDateAsync(user, null);
-                    }
+            var result = await _userManager.UpdateAsync(user);
+            if (!result.Succeeded) return View(model);
 
-                    
-                    // Cập nhật roles
-                    var currentRoles = await _userManager.GetRolesAsync(user);
-                    var rolesToAdd = new List<string>();
-                    var rolesToRemove = new List<string>();
+            // LOCK / UNLOCK
+            if (model.IsLocked)
+                await _userManager.SetLockoutEndDateAsync(user, DateTimeOffset.MaxValue);
+            else
+                await _userManager.SetLockoutEndDateAsync(user, null);
 
-                    if (model.SelectedRoles != null)
-                    {
-                        rolesToAdd = model.SelectedRoles.Except(currentRoles).ToList();
-                        rolesToRemove = currentRoles.Except(model.SelectedRoles).ToList();
-                    }
-                    else
-                    {
-                        rolesToRemove = currentRoles.ToList();
-                    }
+            // UPDATE ROLE
+            var currentRoles = await _userManager.GetRolesAsync(user);
+            var rolesToAdd = model.SelectedRoles?.Except(currentRoles) ?? new List<string>();
+            var rolesToRemove = currentRoles.Except(model.SelectedRoles ?? new List<string>());
 
-                    await _userManager.AddToRolesAsync(user, rolesToAdd);
-                    await _userManager.RemoveFromRolesAsync(user, rolesToRemove);
+            await _userManager.AddToRolesAsync(user, rolesToAdd);
+            await _userManager.RemoveFromRolesAsync(user, rolesToRemove);
 
-                    TempData["Success"] = "Cập nhật tài khoản thành công!";
-                    return RedirectToAction("Dashboard", new { section = "users" });
-
-                }
-
-
-                foreach (var error in updateResult.Errors)
-                {
-                    ModelState.AddModelError("", error.Description);
-                }
-            }
-
-            // Load lại roles nếu có lỗi
-            var allRoles = _roleManager.Roles.Select(r => r.Name).ToList();
-            model.Roles = allRoles;
-
-            // Load lại user roles hiện tại
-            if (!string.IsNullOrEmpty(model.Id))
-            {
-                var user = await _userManager.FindByIdAsync(model.Id);
-                if (user != null)
-                {
-                    var currentRoles = await _userManager.GetRolesAsync(user);
-                    model.UserRoles = currentRoles.ToList();
-                }
-            }
-
-            return View(model);
+            TempData["Success"] = "Cập nhật thành công!";
+            return RedirectToAction("Dashboard", new { section = "users" });
         }
 
+        // =====================================================
+        // KHÓA USER
+        // =====================================================
         [HttpPost]
         public async Task<IActionResult> LockUser(string id)
         {
             var user = await _userManager.FindByIdAsync(id);
             if (user != null)
-            {
-                await _userManager.SetLockoutEndDateAsync(user, System.DateTimeOffset.MaxValue);
-                TempData["Success"] = "Đã khóa tài khoản thành công!";
-            }
+                await _userManager.SetLockoutEndDateAsync(user, DateTimeOffset.MaxValue);
+
             return RedirectToAction("Dashboard", new { section = "users" });
         }
 
+        // =====================================================
+        // MỞ KHÓA USER
+        // =====================================================
         [HttpPost]
         public async Task<IActionResult> UnlockUser(string id)
         {
             var user = await _userManager.FindByIdAsync(id);
             if (user != null)
-            {
                 await _userManager.SetLockoutEndDateAsync(user, null);
-                TempData["Success"] = "Đã mở khóa tài khoản thành công!";
-            }
+
             return RedirectToAction("Dashboard", new { section = "users" });
         }
 
+        // =====================================================
+        // XÓA USER
+        // =====================================================
         [HttpPost]
         public async Task<IActionResult> Delete(string id)
         {
             var user = await _userManager.FindByIdAsync(id);
             if (user != null)
-            {
-                var result = await _userManager.DeleteAsync(user);
-                if (result.Succeeded)
-                {
-                    TempData["Success"] = "Xóa tài khoản thành công!";
-                }
-                else
-                {
-                    TempData["Error"] = "Không thể xóa tài khoản này!";
-                }
-            }
+                await _userManager.DeleteAsync(user);
+
             return RedirectToAction("Dashboard", new { section = "users" });
         }
 
-        public async Task<IActionResult> ManageSystem()
-        {
-            var user = await _userManager.GetUserAsync(User);
-            if (user == null)
-            {
-                return NotFound();
-            }
-
-            ViewBag.UserInitials = GetInitials(user.FullName ?? user.UserName);
-            ViewBag.UserName = user.FullName ?? user.UserName;
-            ViewBag.UserRole = "Admin";
-            ViewBag.ActiveSection = "overview";
-
-            // Lấy dữ liệu thống kê
-            ViewBag.TotalUsers = await _userManager.Users.CountAsync();
-            ViewBag.TotalTros = await _context.Tros.CountAsync();
-            ViewBag.TotalBookings = await _context.Bookings.CountAsync();
-            ViewBag.TotalPosts = await _context.Tros.CountAsync();
-
-            return View("ManageSystem");
-        }
-
+        // =====================================================
+        // DASHBOARD ADMIN (OVERVIEW / USERS / ROOMS)
+        // =====================================================
         public async Task<IActionResult> Dashboard(string section = "overview")
         {
-            var user = await _userManager.GetUserAsync(User);
-            if (user == null)
-            {
-                return NotFound();
-            }
-
-            ViewBag.UserInitials = GetInitials(user.FullName ?? user.UserName);
-            ViewBag.UserName = user.FullName ?? user.UserName;
-            ViewBag.UserRole = "Admin";
             ViewBag.ActiveSection = section;
 
             switch (section)
             {
-                case "overview":
-                    ViewBag.TotalUsers = await _userManager.Users.CountAsync();
-                    ViewBag.TotalTros = await _context.Tros.CountAsync();
-                    ViewBag.TotalBookings = await _context.Bookings.CountAsync();
-                    ViewBag.TotalPosts = await _context.Tros.CountAsync();
-                    return View("ManageSystem");
-
-                case "users":
-                    var users = await _userManager.Users.ToListAsync();
-                    var userList = new List<ManagerUsersViewModel>();
-                    foreach (var u in users)
-                    {
-                        var roles = await _userManager.GetRolesAsync(u);
-                        var isLocked = await _userManager.IsLockedOutAsync(u);
-                        userList.Add(new ManagerUsersViewModel
-                        {
-                            User = u,
-                            Roles = roles.ToList(),
-                            TotalTros = await _context.Tros.CountAsync(t => t.UserId == u.Id),
-                            TotalBookings = await _context.Bookings.CountAsync(b => b.UserId == u.Id),
-                            IsLocked = isLocked
-                        });
-                    }
-                    ViewBag.Users = userList;
-                    return View("Users");
-
                 case "rooms":
-                    // Lấy danh sách phòng trọ kèm thông tin chủ trọ
                     var rooms = await _context.Tros
-                        .Include(t => t.User) // Lấy thông tin chủ trọ
+                        .Include(t => t.User)
                         .Include(t => t.AnhPhongs)
                         .OrderByDescending(t => t.NgayDang)
                         .ToListAsync();
@@ -374,24 +246,65 @@ namespace BaiCuoiKy.Controllers
                     ViewBag.Rooms = rooms;
                     return View("_Rooms");
 
-                case "posts":
-                    // Tạo view Posts.cshtml sau
-                    ViewBag.Message = "Tính năng đang phát triển";
-                    return View("Posts");
+                case "users":
+                    var users = await _userManager.Users.ToListAsync();
+                    var userList = new List<ManagerUsersViewModel>();
 
-                case "settings":
-                    // Tạo view Settings.cshtml sau
-                    ViewBag.Message = "Tính năng đang phát triển";
-                    return View("Settings");
+                    foreach (var u in users)
+                    {
+                        var roles = await _userManager.GetRolesAsync(u);
+                        var isLocked = await _userManager.IsLockedOutAsync(u);
+
+                        userList.Add(new ManagerUsersViewModel
+                        {
+                            User = u,
+                            Roles = roles.ToList(),
+                            IsLocked = isLocked
+                        });
+                    }
+
+                    ViewBag.Users = userList;
+                    return View("Users");
 
                 default:
-                    return RedirectToAction("ManageSystem");
+                    ViewBag.TotalUsers = await _userManager.Users.CountAsync();
+                    ViewBag.TotalTros = await _context.Tros.CountAsync();
+                    return View("ManageSystem");
             }
         }
-        //Chỉnh sửa thông tin tài khoản người dùng
 
+        // =====================================================
+        // XEM CHI TIẾT PHÒNG (ADMIN)
+        // =====================================================
+        public async Task<IActionResult> RoomDetail(int id)
+        {
+            var room = await _context.Tros
+                .Include(t => t.User)
+                .Include(t => t.Category)
+                .Include(t => t.AnhPhongs)
+                .FirstOrDefaultAsync(t => t.Id == id);
+
+            if (room == null) return NotFound();
+
+            ViewBag.IsAdmin = true;
+            ViewBag.CanEdit = true;
+
+            return View("~/Views/Tro/Details.cshtml", room);
+        }
+
+        // =====================================================
+        // (GỢI Ý) XÓA / ẨN ĐÁNH GIÁ - BẠN SẼ DÙNG SAU
+        // =====================================================
+        [HttpPost]
+        public async Task<IActionResult> DeleteReview(int id)
+        {
+            var review = await _context.Reviews.FindAsync(id);
+            if (review == null) return Json(new { success = false });
+
+            _context.Reviews.Remove(review);
+            await _context.SaveChangesAsync();
+
+            return Json(new { success = true });
+        }
     }
-
 }
-
-

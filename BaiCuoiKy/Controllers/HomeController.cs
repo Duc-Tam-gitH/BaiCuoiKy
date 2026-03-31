@@ -23,6 +23,7 @@ namespace BaiCuoiKy.Controllers
         {
             var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
 
+            // 🔔 Notifications
             if (userId != null)
             {
                 ViewBag.Notifications = await _context.Notifications
@@ -34,6 +35,12 @@ namespace BaiCuoiKy.Controllers
                 ViewBag.NotiCount = await _context.Notifications
                     .CountAsync(n => n.UserId == userId && !n.IsRead);
             }
+
+            // 📂 Load danh mục cho dropdown
+            ViewBag.Categories = await _context.Categories
+                .Where(c => c.TrangThai == true)
+                .OrderBy(c => c.ThuTu)
+                .ToListAsync();
 
             try
             {
@@ -58,27 +65,38 @@ namespace BaiCuoiKy.Controllers
         [HttpGet]
         public async Task<IActionResult> Search(string keyword, string khuvuc, string loai, string gia)
         {
+            // 📂 Load danh mục cho dropdown (quan trọng)
+            ViewBag.Categories = await _context.Categories
+                .Where(c => c.TrangThai == true)
+                .OrderBy(c => c.ThuTu)
+                .ToListAsync();
+
             var query = _context.Tros
                 .Include(t => t.AnhPhongs)
                 .Include(t => t.Category)
                 .Where(t => t.TrangThai == TrangThaiPhong.DangTrong
                          || t.TrangThai == TrangThaiPhong.DangXuLy);
 
+            // 🔍 Tìm theo từ khóa
             if (!string.IsNullOrEmpty(keyword))
             {
                 query = query.Where(t => t.TieuDe.Contains(keyword) || t.MoTa.Contains(keyword));
             }
 
+            // 📍 Lọc khu vực
             if (!string.IsNullOrEmpty(khuvuc))
             {
                 query = query.Where(t => t.DiaChi.Contains(khuvuc));
             }
 
+            // 📂 Lọc theo danh mục (từ dropdown)
             if (!string.IsNullOrEmpty(loai))
             {
-                query = query.Where(t => t.Category != null && t.Category.TenDanhMuc.Contains(loai));
+                query = query.Where(t => t.Category != null
+                                      && t.Category.TenDanhMuc.Contains(loai));
             }
 
+            // 💰 Lọc theo giá
             if (!string.IsNullOrEmpty(gia))
             {
                 switch (gia)
@@ -99,6 +117,7 @@ namespace BaiCuoiKy.Controllers
                 .OrderByDescending(t => t.NgayDang)
                 .ToListAsync();
 
+            // 🔁 giữ lại giá trị filter
             ViewBag.Keyword = keyword;
             ViewBag.KhuVuc = khuvuc;
             ViewBag.Loai = loai;
@@ -115,7 +134,7 @@ namespace BaiCuoiKy.Controllers
             var tro = await _context.Tros
                 .Include(t => t.User)
                 .Include(t => t.AnhPhongs)
-                .Include(t => t.Reviews.Where(r => !r.IsHidden)) // 🔥 chỉ lấy review chưa bị ẩn
+                .Include(t => t.Reviews.Where(r => !r.IsHidden))
                 .ThenInclude(r => r.User)
                 .FirstOrDefaultAsync(m => m.Id == id.Value);
 
@@ -128,7 +147,10 @@ namespace BaiCuoiKy.Controllers
         [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
         public IActionResult Error()
         {
-            return View(new ErrorViewModel { RequestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier });
+            return View(new ErrorViewModel
+            {
+                RequestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier
+            });
         }
     }
 }

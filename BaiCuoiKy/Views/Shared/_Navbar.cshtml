@@ -4,11 +4,18 @@
         <a asp-controller="Home" asp-action="Index">Trang chủ</a>
 
         <div class="dropdown">
-            <a href="#" class="dropdown-toggle">Danh mục ▼</a>
+            <a href="#" class="dropdown-toggle">Danh mục</a>
             <ul class="dropdown-menu">
-                <li><a asp-controller="Home" asp-action="Index" asp-route-category="TruyenThong">Trọ truyền thống</a></li>
-                <li><a asp-controller="Home" asp-action="Index" asp-route-category="Ghep">Trọ ghép</a></li>
-                <li><a asp-controller="Home" asp-action="Index" asp-route-category="ChungCuMini">Chung cư mini</a></li>
+                @foreach (var item in ViewBag.Categories)
+                {
+                    <li>
+                        <a asp-controller="Home"
+                           asp-action="Search"
+                           asp-route-loai="@item.TenDanhMuc">
+                            @item.TenDanhMuc
+                        </a>
+                    </li>
+                }
             </ul>
         </div>
 

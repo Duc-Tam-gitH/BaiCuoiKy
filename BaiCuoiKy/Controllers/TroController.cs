@@ -139,10 +139,18 @@ namespace BaiCuoiKy.Controllers
         // =========================================================
 
         [Authorize]
+        [HttpGet]
         public async Task<IActionResult> Edit(int id)
         {
             var tro = await _context.Tros.FindAsync(id);
             if (tro == null) return NotFound();
+
+            var currentUserId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+            if (tro.UserId != currentUserId && !User.IsInRole("Admin"))
+            {
+                TempData["Error"] = "Bạn không có quyền chỉnh sửa phòng này!";
+                return RedirectToAction("Index", "Home");
+            }
 
             var model = new EditTroViewModel
             {
@@ -152,12 +160,9 @@ namespace BaiCuoiKy.Controllers
                 Gia = tro.Gia,
                 MoTa = tro.MoTa,
                 DienTich = tro.DienTich,
-
-                // ✅ FIX
                 TrangThai = tro.TrangThai,
-
                 CategoryId = tro.CategoryId,
-                Categories = await _context.Categories.ToListAsync()
+                Categories = await _context.Categories.Where(c => c.TrangThai == true).ToListAsync()
             };
 
             return View("EditRoom", model);
@@ -165,27 +170,40 @@ namespace BaiCuoiKy.Controllers
 
         [HttpPost]
         [Authorize]
+        [ValidateAntiForgeryToken]
         public async Task<IActionResult> Edit(EditTroViewModel model)
         {
-            if (!ModelState.IsValid) return View(model);
+            if (!ModelState.IsValid)
+            {
+                model.Categories = await _context.Categories.Where(c => c.TrangThai == true).ToListAsync();
+                return View("EditRoom", model);
+            }
 
             var tro = await _context.Tros.FindAsync(model.Id);
             if (tro == null) return NotFound();
+
+            var currentUserId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+            if (tro.UserId != currentUserId && !User.IsInRole("Admin"))
+            {
+                return Forbid();
+            }
 
             tro.TieuDe = model.TieuDe;
             tro.DiaChi = model.DiaChi;
             tro.Gia = model.Gia;
             tro.MoTa = model.MoTa;
             tro.DienTich = model.DienTich;
-
-            // ✅ FIX
             tro.TrangThai = model.TrangThai;
-
             tro.CategoryId = model.CategoryId;
 
             await _context.SaveChangesAsync();
-
             TempData["Success"] = "Cập nhật thành công!";
+
+            // Trở về đúng trang tùy theo Role
+            if (User.IsInRole("Admin"))
+            {
+                return RedirectToAction("ManageSystem", "Admin");
+            }
             return RedirectToAction("Manage");
         }
 
@@ -216,7 +234,7 @@ namespace BaiCuoiKy.Controllers
             await _context.SaveChangesAsync();
 
             TempData["Success"] = "Đã xóa!";
-            return RedirectToAction("Manage");
+            return RedirectToAction("_Rooms", "Admin");
         }
     }
 }

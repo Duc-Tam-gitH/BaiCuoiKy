@@ -53,10 +53,6 @@
                         <i class="fas fa-users"></i>
                         <span>Người dùng</span>
                     </a>
-                    <a href="@Url.Action("Dashboard", "Admin", new { section = "posts" })" class="admin-nav-item @(activeSection == "posts" ? "active" : "")">
-                        <i class="fas fa-newspaper"></i>
-                        <span>Bài đăng</span>
-                    </a>
                     <div class="admin-section-divider"></div>
                     <a href="@Url.Action("Dashboard", "Admin", new { section = "settings" })" class="admin-nav-item @(activeSection == "settings" ? "active" : "")">
                         <i class="fas fa-sliders-h"></i>

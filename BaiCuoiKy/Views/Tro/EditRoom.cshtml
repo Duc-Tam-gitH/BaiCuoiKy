@@ -1,0 +1,84 @@
+﻿@model BaiCuoiKy.Models.ViewModel.EditTroViewModel
+@using BaiCuoiKy.Models
+
+@{
+    ViewData["Title"] = "Chỉnh sửa phòng trọ";
+    }
+
+<div class="container mt-5 mb-5">
+    <div class="row justify-content-center">
+        <div class="col-lg-8">
+            <div class="card shadow border-0 rounded-lg">
+                <div class="card-header bg-primary text-white text-center py-3 rounded-top">
+                    <h3 class="mb-0 fw-bold">Chỉnh Sửa Thông Tin Phòng</h3>
+                </div>
+                <div class="card-body p-4">
+                    <form asp-action="Edit" method="post">
+                        <input type="hidden" asp-for="Id" />
+
+                        <div class="row g-3">
+                            <div class="col-md-12">
+                                <label asp-for="TieuDe" class="form-label fw-bold">Tiêu đề phòng <span class="text-danger">*</span></label>
+                                <input asp-for="TieuDe" class="form-control" placeholder="Nhập tiêu đề thu hút..." />
+                                <span asp-validation-for="TieuDe" class="text-danger small"></span>
+                            </div>
+
+                            <div class="col-md-6">
+                                <label asp-for="Gia" class="form-label fw-bold">Giá thuê (VNĐ/tháng) <span class="text-danger">*</span></label>
+                                <input asp-for="Gia" class="form-control" type="number" />
+                                <span asp-validation-for="Gia" class="text-danger small"></span>
+                            </div>
+
+                            <div class="col-md-6">
+                                <label asp-for="DienTich" class="form-label fw-bold">Diện tích (m2) <span class="text-danger">*</span></label>
+                                <input asp-for="DienTich" class="form-control" type="number" />
+                                <span asp-validation-for="DienTich" class="text-danger small"></span>
+                            </div>
+
+                            <div class="col-md-12">
+                                <label asp-for="DiaChi" class="form-label fw-bold">Địa chỉ chi tiết <span class="text-danger">*</span></label>
+                                <input asp-for="DiaChi" class="form-control" placeholder="Số nhà, Đường, Quận/Huyện..." />
+                                <span asp-validation-for="DiaChi" class="text-danger small"></span>
+                            </div>
+
+                            <div class="col-md-6">
+                                <label asp-for="CategoryId" class="form-label fw-bold">Danh mục <span class="text-danger">*</span></label>
+                                <select asp-for="CategoryId" class="form-select" asp-items="@(new SelectList(Model.Categories, "Id", "TenDanhMuc"))">
+                                    <option value="">-- Chọn danh mục --</option>
+                                </select>
+                                <span asp-validation-for="CategoryId" class="text-danger small"></span>
+                            </div>
+
+                            <div class="col-md-6">
+                                <label asp-for="TrangThai" class="form-label fw-bold">Trạng thái phòng</label>
+                                <select asp-for="TrangThai" class="form-select" asp-items="Html.GetEnumSelectList<TrangThaiPhong>()"></select>
+                            </div>
+
+                            <div class="col-12">
+                                <label asp-for="MoTa" class="form-label fw-bold">Mô tả chi tiết</label>
+                                <textarea asp-for="MoTa" class="form-control" rows="5" placeholder="Mô tả tiện ích, điện nước, nội thất..."></textarea>
+                                <span asp-validation-for="MoTa" class="text-danger small"></span>
+                            </div>
+
+                            <div class="col-12 text-center mt-4">
+                                <button type="submit" class="btn btn-success px-5 py-2 fw-bold">
+                                    💾 Lưu Thay Đổi
+                                </button>
+                                <a href="javascript:history.back()" class="btn btn-secondary px-5 py-2 ms-2 fw-bold">
+                                    Hủy bỏ
+                                </a>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}
+@section Styles {
+   <link href="~/css/EditRoom.css" rel="stylesheet" />
+}

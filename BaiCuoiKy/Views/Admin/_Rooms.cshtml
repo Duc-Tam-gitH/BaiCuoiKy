@@ -136,9 +136,19 @@
 </form>
 
 @section Scripts {
+    <!-- File JS dùng chung của bạn -->
     <script src="~/js/Admin-Rooms.js"></script>
-}
 
+    <!-- Khối JS xử lý nút xóa -->
+    <script>
+        function confirmDelete(id, title) {
+            if (confirm(`Bạn có chắc chắn muốn xóa phòng trọ "${title}"? Hành động này không thể hoàn tác.`)) {
+                document.getElementById('deleteRoomId').value = id;
+                document.getElementById('deleteForm').submit();
+            }
+        }
+    </script>
+}
 @section Styles {
     <link rel="stylesheet" href="~/css/Admin-Rooms.css" asp-append-version="true" />
 }

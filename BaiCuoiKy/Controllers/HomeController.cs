@@ -157,28 +157,5 @@ namespace BaiCuoiKy.Controllers
                 RequestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier
             });
         }
-        [HttpPost]
-        [Authorize]
-        public async Task<IActionResult> PostReview(int TroId, string Comment, int Rating)
-        {
-            if (string.IsNullOrWhiteSpace(Comment)) return RedirectToAction("Details", new { id = TroId });
-
-            var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
-
-            var review = new Review
-            {
-                TroId = TroId,
-                UserId = userId,
-                Comment = Comment, // Đổi từ Content sang Comment
-                Rating = Rating,
-                NgayDanhGia = DateTime.Now, // Đổi từ NgayDang sang NgayDanhGia
-                IsHidden = false
-            };
-
-            _context.Reviews.Add(review);
-            await _context.SaveChangesAsync();
-
-            return RedirectToAction("Details", new { id = TroId });
-        }
     }
 }

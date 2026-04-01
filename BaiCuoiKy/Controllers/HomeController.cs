@@ -4,6 +4,7 @@ using Microsoft.Extensions.Logging;
 using BaiCuoiKy.Models;
 using System.Diagnostics;
 using System.Security.Claims;
+using Microsoft.AspNetCore.Authorization;
 
 namespace BaiCuoiKy.Controllers
 {
@@ -134,7 +135,7 @@ namespace BaiCuoiKy.Controllers
             var tro = await _context.Tros
                 .Include(t => t.User)
                 .Include(t => t.AnhPhongs)
-                .Include(t => t.Reviews.Where(r => !r.IsHidden))
+                .Include(t => t.Reviews)
                 .ThenInclude(r => r.User)
                 .FirstOrDefaultAsync(m => m.Id == id.Value);
 
@@ -151,6 +152,29 @@ namespace BaiCuoiKy.Controllers
             {
                 RequestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier
             });
+        }
+        [HttpPost]
+        [Authorize]
+        public async Task<IActionResult> PostReview(int TroId, string Comment, int Rating)
+        {
+            if (string.IsNullOrWhiteSpace(Comment)) return RedirectToAction("Details", new { id = TroId });
+
+            var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+
+            var review = new Review
+            {
+                TroId = TroId,
+                UserId = userId,
+                Comment = Comment, // Đổi từ Content sang Comment
+                Rating = Rating,
+                NgayDanhGia = DateTime.Now, // Đổi từ NgayDang sang NgayDanhGia
+                IsHidden = false
+            };
+
+            _context.Reviews.Add(review);
+            await _context.SaveChangesAsync();
+
+            return RedirectToAction("Details", new { id = TroId });
         }
     }
 }

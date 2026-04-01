@@ -236,5 +236,64 @@ namespace BaiCuoiKy.Controllers
             TempData["Success"] = "Đã xóa!";
             return RedirectToAction("_Rooms", "Admin");
         }
+        [HttpPost]
+        [Authorize]
+        public async Task<IActionResult> BookRoom(int troId)
+        {
+            var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+            var userName = User.Identity?.Name ?? "Một khách hàng";
+
+            // 1. Lấy thông tin phòng để tính tiền cọc
+            var tro = await _context.Tros.FindAsync(troId);
+            if (tro == null || tro.TrangThai == TrangThaiPhong.DaChoThue)
+            {
+                TempData["Error"] = "Phòng không tồn tại hoặc đã được thuê!";
+                return RedirectToAction("Details", new { id = troId });
+            }
+
+            // 2. Chống Spam: Kiểm tra xem khách đã gửi yêu cầu phòng này chưa
+            var daDatPhong = await _context.Bookings
+                .AnyAsync(b => b.TroId == troId && b.UserId == userId && (b.TrangThai == "ChoDuyet" || b.TrangThai == "ChoThanhToan"));
+
+            if (daDatPhong)
+            {
+                TempData["Error"] = "Bạn đã gửi yêu cầu đặt phòng này rồi. Vui lòng chờ Admin duyệt!";
+                return RedirectToAction("Details", new { id = troId });
+            }
+
+            // 3. Tạo Đơn đặt phòng (Booking)
+            var booking = new Booking
+            {
+                TroId = troId,
+                UserId = userId,
+                NgayDat = DateTime.Now,
+                NgayNhan = DateTime.Now.AddDays(1), // Mặc định báo nhận phòng vào ngày mai
+                TienCoc = (decimal)(tro.Gia * 0.2m), // 🔥 TỰ ĐỘNG TÍNH CỌC 20%
+                TrangThai = "ChoDuyet"
+            };
+            _context.Bookings.Add(booking);
+
+            // 4. Bắn thông báo cho Admin/Chủ trọ
+            if (tro.UserId != userId)
+            {
+                var notification = new Notification
+                {
+                    UserId = tro.UserId,
+                    CreatedAt = DateTime.Now,
+                    IsRead = false,
+                    Message = $"Khách hàng {userName} vừa yêu cầu đặt phòng '{tro.TieuDe}'. Vui lòng kiểm duyệt!",
+                    Url = "/Admin" // Tạm thời trỏ về trang Admin, sau này có trang quản lý duyệt thì đổi lại
+                };
+                _context.Notifications.Add(notification);
+            }
+
+            await _context.SaveChangesAsync();
+
+            TempData["Success"] = "Gửi yêu cầu đặt phòng thành công! Đang chờ duyệt.";
+
+            // 5. Chuyển hướng sang trang quản lý Booking của khách hàng
+            return RedirectToAction("Bookings", "Khachthue");
+        }
     }
+
 }

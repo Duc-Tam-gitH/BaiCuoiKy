@@ -39,19 +39,35 @@ namespace BaiCuoiKy.Controllers
         // 2. TRANG QUẢN LÝ ĐẶT PHÒNG (BOOKINGS)
         // URL: /Khachthue/Bookings
         // ==========================================
+        [Authorize]
         public async Task<IActionResult> Bookings()
         {
+            // Lấy ID của khách hàng đang đăng nhập
             var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
 
-            // Lấy danh sách các yêu cầu thuê phòng của User hiện tại
-            var myBookings = await _context.Bookings
-                .Include(b => b.Tro) // Để lấy tên phòng, giá phòng
-                    .ThenInclude(t => t.AnhPhongs)
+            // Lấy danh sách phòng đã đặt của người này
+            var danhSachDatPhong = await _context.Bookings
+                .Include(b => b.Tro)   // 🔥 QUAN TRỌNG: Phải có dòng này thì View mới gọi được item.Tro.TieuDe
+                .Include(b => b.User)  // Nối bảng User
                 .Where(b => b.UserId == userId)
                 .OrderByDescending(b => b.NgayDat)
                 .ToListAsync();
 
-            return View(myBookings); // Sẽ tìm file Views/Khachthue/Bookings.cshtml
+            return View(danhSachDatPhong);
+        }
+        [HttpPost]
+        [Authorize]
+        public async Task<IActionResult> ConfirmPayment(int bookingId)
+        {
+            var booking = await _context.Bookings.FindAsync(bookingId);
+            if (booking != null)
+            {
+                // Chuyển sang trạng thái chờ Admin check tiền trong tài khoản
+                booking.TrangThai = "ChoXacNhan";
+                await _context.SaveChangesAsync();
+                TempData["Success"] = "Đã gửi thông báo xác nhận thanh toán cho Admin!";
+            }
+            return RedirectToAction("Bookings");
         }
     }
 }

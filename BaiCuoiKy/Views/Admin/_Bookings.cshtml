@@ -1,0 +1,84 @@
+﻿@{
+    Layout = "_AdminLayout";
+}
+
+<div class="p-4" style="background-color: #f8f9fa; min-height: 100vh;">
+    <div class="card shadow-sm border-0 rounded-3">
+        <div class="card-header bg-white border-0 py-3">
+            <div class="d-flex align-items-center">
+                <div class="p-2 bg-danger text-white rounded-3 me-3">
+                    <i class="fas fa-clipboard-list fs-4"></i>
+                </div>
+                <div>
+                    <h5 class="mb-0 fw-bold">Quản lý yêu cầu đặt phòng</h5>
+                    <small class="text-muted">Kiểm duyệt và xác nhận thanh toán cọc từ khách thuê</small>
+                </div>
+            </div>
+        </div>
+        <div class="card-body">
+            <div class="table-responsive">
+                <table class="table table-hover align-middle">
+                    <thead class="text-muted small text-uppercase">
+                        <tr>
+                            <th>Khách hàng</th>
+                            <th>Phòng trọ</th>
+                            <th>Ngày đặt</th>
+                            <th>Tiền cọc (20%)</th>
+                            <th>Trạng thái</th>
+                            <th class="text-center">Thao tác</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @if (ViewBag.Bookings != null)
+                        {
+                            foreach (var b in ViewBag.Bookings)
+                            {
+                                <tr>
+                                    <td>
+                                        <div class="d-flex align-items-center">
+                                            <div class="bg-light rounded-circle d-flex align-items-center justify-content-center me-2" style="width: 35px; height: 35px; font-weight: bold;">
+                                                @(b.User?.FullName?.Substring(0, 1).ToUpper() ?? "U")
+                                            </div>
+                                            <span class="fw-bold">@b.User?.FullName</span>
+                                        </div>
+                                    </td>
+                                    <td>
+                                        <div class="fw-bold">@b.Tro?.TieuDe</div>
+                                        <div class="small text-muted">Mã: #@b.TroId</div>
+                                    </td>
+                                    <td class="small">@b.NgayDat.ToString("dd/MM/yyyy HH:mm")</td>
+                                    <td class="fw-bold text-danger">@b.TienCoc.ToString("N0") đ</td>
+                                    <td>
+                                        @if (b.TrangThai == "ChoXacNhan")
+                                        {
+                                            <span class="badge bg-primary px-3 py-2 rounded-pill">Khách đã báo cọc</span>
+                                        }
+                                        else if (b.TrangThai == "HoanTat")
+                                        {
+                                            <span class="badge bg-success px-3 py-2 rounded-pill">Thành công</span>
+                                        }
+                                        else
+                                        {
+                                            <span class="badge bg-warning text-dark px-3 py-2 rounded-pill">@b.TrangThai</span>
+                                        }
+                                    </td>
+                                    <td class="text-center">
+                                        @if (b.TrangThai == "ChoXacNhan")
+                                        {
+                                            <form asp-controller="Admin" asp-action="ConfirmBookingFinal" method="post">
+                                                <input type="hidden" name="bookingId" value="@b.Id" />
+                                                <button type="submit" class="btn btn-dark btn-sm rounded-3 px-3 shadow-sm">
+                                                    <i class="fas fa-money-check-alt me-1"></i> Xác nhận tiền
+                                                </button>
+                                            </form>
+                                        }
+                                    </td>
+                                </tr>
+                            }
+                        }
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>

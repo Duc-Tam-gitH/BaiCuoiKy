@@ -1,42 +1,155 @@
 ﻿@model List<BaiCuoiKy.Models.Booking>
 
-<div class="booking-page">
+@{
+    ViewData["Title"] = "Quản lý Đặt phòng";
+    Layout = "_Layout";
+}
 
-    <h2>Danh Sách Đặt Phòng</h2>
+<div class="container py-5" style="min-height: 75vh;">
+    <div class="d-flex align-items-center mb-4">
+        <div class="bg-primary text-white rounded-circle d-flex align-items-center justify-content-center me-3 shadow" style="width: 50px; height: 50px; background-color: #002b49 !important;">
+            <i class="fas fa-calendar-check fs-4"></i>
+        </div>
+        <div>
+            <h2 class="fw-bold mb-0" style="color: #002b49;">Danh sách phòng đã đặt</h2>
+            <p class="text-muted mb-0">Theo dõi trạng thái các yêu cầu thuê phòng của bạn</p>
+        </div>
+    </div>
 
-    <table class="table table-dark table-hover">
-        <thead>
-            <tr>
-                <th>Phòng</th>
-                <th>Người đặt</th>
-                <th>Ngày đặt</th>
-                <th>Ngày nhận</th>
-                <th>Trạng thái</th>
-            </tr>
-        </thead>
-
-        <tbody>
-            @foreach (var item in Model)
-            {
-                <tr>
-                    <td>@item.Tro.TieuDe</td>
-                    <td>@item.User.Id</td>
-                    <td>@item.NgayDat.ToString("dd/MM/yyyy")</td>
-                    <td>@item.NgayNhan.ToString("dd/MM/yyyy")</td>
-
-                    <td>
-                        @if (item.TrangThai == "Chờ duyệt")
+    <div class="card border-0 shadow-lg rounded-4 overflow-hidden">
+        @if (Model != null && Model.Any())
+        {
+            <div class="table-responsive">
+                <table class="table table-hover align-middle mb-0">
+                    <thead class="bg-light" style="color: #002b49;">
+                        <tr>
+                            <th class="py-3 px-4">Tên phòng</th>
+                            <th class="py-3">Ngày đặt</th>
+                            <th class="py-3">Ngày nhận (dự kiến)</th>
+                            <th class="py-3 text-end">Tiền cọc (20%)</th>
+                            <th class="py-3 text-center">Trạng thái</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var item in Model)
                         {
-                            <span class="badge bg-warning">Chờ duyệt</span>
+                            <tr>
+                                <td class="px-4 fw-bold text-primary">
+                                    <a href="/Tro/Details/@item.TroId" class="text-decoration-none">
+                                        @(item.Tro?.TieuDe ?? "Phòng không tồn tại")
+                                    </a>
+                                </td>
+                                <td>@item.NgayDat.ToString("dd/MM/yyyy HH:mm")</td>
+                                <td>@item.NgayNhan.ToString("dd/MM/yyyy")</td>
+                                <td class="text-end fw-bold text-danger">
+                                    @item.TienCoc.ToString("N0") VNĐ
+                                </td>
+                                <td class="text-center">
+                                    @if (item.TrangThai == "ChoDuyet")
+                                    {
+                                        <span class="badge bg-warning text-dark py-2 px-3 rounded-pill">Chờ Admin duyệt</span>
+                                    }
+                                    else if (item.TrangThai == "ChoThanhToan")
+                                    {
+                                        <div class="d-flex flex-column align-items-center gap-2">
+                                            <span class="badge bg-info text-dark py-2 px-3 rounded-pill">Đã duyệt - Chờ cọc</span>
+                                            <button class="btn btn-sm btn-danger rounded-pill px-3 shadow-sm"
+                                                    onclick="openPaymentModal('@item.Id', '@item.TienCoc', '@item.Tro?.TieuDe')">
+                                                <i class="fas fa-qrcode me-1"></i> Thanh toán ngay
+                                            </button>
+                                        </div>
+                                    }
+                                    else if (item.TrangThai == "ChoXacNhan")
+                                    {
+                                        <span class="badge bg-primary py-2 px-3 rounded-pill">Đang chờ Admin xác nhận tiền</span>
+                                    }
+                                    else if (item.TrangThai == "HoanTat")
+                                    {
+                                        <span class="badge bg-success py-2 px-3 rounded-pill">Giao dịch thành công</span>
+                                    }
+                                    else if (item.TrangThai == "DaHuy")
+                                    {
+                                        <span class="badge bg-danger py-2 px-3 rounded-pill">Đã hủy</span>
+                                    }
+                                </td>
+                            </tr>
                         }
-                        else
-                        {
-                            <span class="badge bg-success">Đã duyệt</span>
-                        }
-                    </td>
-                </tr>
-            }
-        </tbody>
-    </table>
-
+                    </tbody>
+                </table>
+            </div>
+        }
+        else
+        {
+            <div class="card-body text-center py-5">
+                <div class="empty-state-icon mb-4">
+                    <i class="far fa-calendar-times fa-4x text-muted" style="opacity: 0.3;"></i>
+                </div>
+                <h5 class="fw-bold text-secondary">Bạn chưa đặt phòng nào</h5>
+                <p class="text-muted">Hãy tìm kiếm và đặt ngay cho mình một căn phòng ưng ý nhé!</p>
+                <a href="/" class="btn btn-outline-primary rounded-pill px-4 mt-2">Đi tìm phòng ngay</a>
+            </div>
+        }
+    </div>
 </div>
+
+<div class="modal fade" id="paymentModal" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content border-0 shadow-lg rounded-4">
+            <div class="modal-header border-0 pb-0 justify-content-end">
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body text-center pt-0">
+                <div class="mb-3">
+                    <i class="fas fa-shield-alt text-success fa-3x"></i>
+                </div>
+                <h4 class="fw-bold mb-1" style="color: #002b49;">Thanh toán tiền cọc</h4>
+                <p class="text-muted small mb-4" id="roomNameDisplay"></p>
+
+                <div class="bg-white p-2 rounded-4 mb-3 d-inline-block border shadow-sm">
+                    <img id="qrImage" src="" alt="QR Payment" class="img-fluid" style="max-width: 220px;">
+                </div>
+
+                <div class="alert alert-warning border-0 small py-2">
+                    <i class="fas fa-info-circle me-2"></i>
+                    Số tiền cần chuyển: <strong id="amountDisplay" class="text-danger"></strong>
+                </div>
+
+                <form asp-controller="Khachthue" asp-action="ConfirmPayment" method="post">
+                    <input type="hidden" name="bookingId" id="bookingIdInput" />
+                    <button type="submit" class="btn btn-primary w-100 rounded-pill py-2 fw-bold shadow">
+                        Xác nhận: Tôi đã chuyển khoản xong
+                    </button>
+                </form>
+                <p class="text-muted mt-3" style="font-size: 0.75rem;">
+                    Hệ thống sẽ cập nhật sau khi Admin xác nhận nhận tiền.
+                </p>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <script>
+        function openPaymentModal(id, amount, roomName) {
+            document.getElementById('bookingIdInput').value = id;
+            document.getElementById('roomNameDisplay').innerText = "Phòng: " + roomName;
+
+            // Định dạng tiền tệ VNĐ
+            let formattedAmount = new Intl.NumberFormat('vi-VN').format(amount) + " VNĐ";
+            document.getElementById('amountDisplay').innerText = formattedAmount;
+
+            // 🔥 TẠO QR TỰ ĐỘNG (Thay MB-123456... bằng Ngân hàng và STK của bạn)
+            // bank: MB, STK: 999988887777 (Ví dụ)
+            let bankId = "MB";
+            let accountNo = "999988887777";
+            let content = "CocPhong_" + id;
+            let qrUrl = `https://img.vietqr.io/image/${bankId}-${accountNo}-compact.png?amount=${amount}&addInfo=${content}`;
+
+            document.getElementById('qrImage').src = qrUrl;
+
+            // Hiển thị Modal
+            var myModal = new bootstrap.Modal(document.getElementById('paymentModal'));
+            myModal.show();
+        }
+    </script>
+}

@@ -277,9 +277,14 @@
                             <button type="button" class="btn btn-primary w-100 mb-2" onclick="contactOwner()">
                                 <i class="fas fa-phone-alt me-2"></i> Liên hệ chủ trọ
                             </button>
-                            <button type="button" class="btn btn-outline-success w-100" onclick="bookRoom(@Model.Id)">
-                                <i class="fas fa-calendar-check me-2"></i> Đặt phòng ngay
-                            </button>
+
+                            <form asp-controller="Tro" asp-action="BookRoom" method="post">
+                                <input type="hidden" name="troId" value="@Model.Id" />
+                                <button type="submit" class="btn btn-outline-success w-100 mb-2"
+                                        onclick="return confirm('Xác nhận: Bạn muốn gửi yêu cầu đặt phòng này? Cọc phí dự kiến là 20% giá trị phòng.');">
+                                    <i class="fas fa-calendar-check me-2"></i> Đặt phòng ngay
+                                </button>
+                            </form>
                         }
                         else
                         {

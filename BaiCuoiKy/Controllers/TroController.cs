@@ -34,12 +34,11 @@ namespace BaiCuoiKy.Controllers
                 Gia = 0,
                 DienTich = 0,
 
-                // ✅ FIX: dùng enum
+                
                 TrangThai = TrangThaiPhong.DangTrong,
 
                 Categories = await _context.Categories
                     .Where(c => c.TrangThai == true)
-                    .OrderBy(c => c.ThuTu)
                     .ToListAsync()
             };
 

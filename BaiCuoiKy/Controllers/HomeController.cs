@@ -1,7 +1,8 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using BaiCuoiKy.Models;
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
-using BaiCuoiKy.Models;
 using System.Diagnostics;
 using System.Security.Claims;
 using Microsoft.AspNetCore.Authorization;
@@ -40,7 +41,6 @@ namespace BaiCuoiKy.Controllers
             // 📂 Load danh mục cho dropdown
             ViewBag.Categories = await _context.Categories
                 .Where(c => c.TrangThai == true)
-                .OrderBy(c => c.ThuTu)
                 .ToListAsync();
 
             try
@@ -69,7 +69,6 @@ namespace BaiCuoiKy.Controllers
             // 📂 Load danh mục cho dropdown (quan trọng)
             ViewBag.Categories = await _context.Categories
                 .Where(c => c.TrangThai == true)
-                .OrderBy(c => c.ThuTu)
                 .ToListAsync();
 
             var query = _context.Tros
@@ -135,7 +134,6 @@ namespace BaiCuoiKy.Controllers
             // Thêm đoạn này để Navbar có dữ liệu hiển thị
             ViewBag.Categories = await _context.Categories
                 .Where(c => c.TrangThai == true)
-                .OrderBy(c => c.ThuTu)
                 .ToListAsync();
 
             var tro = await _context.Tros
@@ -163,55 +161,24 @@ namespace BaiCuoiKy.Controllers
         [Authorize]
         public async Task<IActionResult> PostReview(int TroId, string Comment, int Rating)
         {
-            // Chặn Admin tự bình luận
-            if (User.IsInRole("Admin"))
-            {
-                return RedirectToAction("Details", "Tro", new { id = TroId });
-            }
-
-            if (string.IsNullOrWhiteSpace(Comment))
-                return RedirectToAction("Details", "Tro", new { id = TroId });
+            if (string.IsNullOrWhiteSpace(Comment)) return RedirectToAction("Details", new { id = TroId });
 
             var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
-            var userName = User.Identity?.Name ?? "Một khách thuê"; // Lấy tên người bình luận
 
-            // 1. Lưu đánh giá vào DB
             var review = new Review
             {
                 TroId = TroId,
                 UserId = userId,
-                Comment = Comment,
+                Comment = Comment, // Đổi từ Content sang Comment
                 Rating = Rating,
-                NgayDanhGia = DateTime.Now,
+                NgayDanhGia = DateTime.Now, // Đổi từ NgayDang sang NgayDanhGia
                 IsHidden = false
             };
 
             _context.Reviews.Add(review);
-
-            // 🔥 2. CODE TẠO THÔNG BÁO CHO ADMIN / CHỦ TRỌ 🔥
-            // Tìm thông tin phòng để biết ai là người đăng (Admin/Chủ trọ)
-            var tro = await _context.Tros.FindAsync(TroId);
-
-            if (tro != null && tro.UserId != userId) // Đảm bảo không tự thông báo cho chính mình
-            {
-                var notification = new Notification
-                {
-                    UserId = tro.UserId, // ID của Admin/Chủ trọ nhận thông báo
-                    CreatedAt = DateTime.Now,
-                    IsRead = false,
-                    Message = $"Phòng '{tro.TieuDe}' vừa có đánh giá {Rating} sao từ {userName}.",
-                    Url = $"/Tro/Details/{TroId}"
-
-                };
-
-                _context.Notifications.Add(notification);
-                
-            }
-
-            // 3. Lưu cả Bình luận và Thông báo cùng lúc
             await _context.SaveChangesAsync();
 
-            return RedirectToAction("Details", "Tro", new { id = TroId });
+            return RedirectToAction("Details", new { id = TroId });
         }
     }
 }

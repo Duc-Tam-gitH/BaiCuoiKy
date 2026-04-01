@@ -6,15 +6,19 @@
         <div class="dropdown">
             <a href="#" class="dropdown-toggle">Danh mục</a>
             <ul class="dropdown-menu">
-                @foreach (var item in ViewBag.Categories)
+             
+                @if (ViewBag.Categories != null)
                 {
-                    <li>
-                        <a asp-controller="Home"
-                           asp-action="Search"
-                           asp-route-loai="@item.TenDanhMuc">
-                            @item.TenDanhMuc
-                        </a>
-                    </li>
+                    foreach (var item in ViewBag.Categories)
+                    {
+                        <li>
+                            <a asp-controller="Home"
+                               asp-action="Search"
+                               asp-route-loai="@item.TenDanhMuc">
+                                @item.TenDanhMuc
+                            </a>
+                        </li>
+                    }
                 }
             </ul>
         </div>

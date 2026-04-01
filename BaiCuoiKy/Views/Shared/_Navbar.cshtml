@@ -4,22 +4,16 @@
         <a asp-controller="Home" asp-action="Index">Trang chủ</a>
 
         <div class="dropdown">
-            <a href="#" class="dropdown-toggle">Danh mục</a>
-            <ul class="dropdown-menu">
-             
-                @if (ViewBag.Categories != null)
-                {
-                    foreach (var item in ViewBag.Categories)
-                    {
-                        <li>
-                            <a asp-controller="Home"
-                               asp-action="Search"
-                               asp-route-loai="@item.TenDanhMuc">
-                                @item.TenDanhMuc
-                            </a>
-                        </li>
-                    }
-                }
+            <a href="#" class="dropdown-toggle" id="categoryDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                Danh mục
+            </a>
+            <ul class="dropdown-menu" aria-labelledby="categoryDropdown">
+
+                <li>
+                    <a class="dropdown-item fw-bold" style="color: #ED005A;" asp-controller="Home" asp-action="Category">
+                        🌟 Xem tất cả danh mục
+                    </a>
+                </li>
             </ul>
         </div>
 

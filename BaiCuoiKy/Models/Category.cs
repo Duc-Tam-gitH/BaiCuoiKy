@@ -13,8 +13,6 @@ namespace BaiCuoiKy.Models
         [Display(Name = "Mô tả")]
         public string? MoTa { get; set; }
 
-        [Display(Name = "Thứ tự hiển thị")]
-        public int ThuTu { get; set; } = 0;
 
         [Display(Name = "Trạng thái")]
         public bool TrangThai { get; set; } = true;

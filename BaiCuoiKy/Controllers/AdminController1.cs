@@ -295,16 +295,30 @@ namespace BaiCuoiKy.Controllers
         // =====================================================
         // (GỢI Ý) XÓA / ẨN ĐÁNH GIÁ - BẠN SẼ DÙNG SAU
         // =====================================================
-        [HttpPost]
+        
+
+        [Authorize(Roles = "Admin")]
+        public async Task<IActionResult> ToggleReview(int id)
+        {
+            var review = await _context.Reviews.FindAsync(id);
+            if (review != null)
+            {
+                review.IsHidden = !review.IsHidden; // Đảo trạng thái Ẩn/Hiện
+                await _context.SaveChangesAsync();
+            }
+            return RedirectToAction("Reviews");
+        }
+
+        [Authorize(Roles = "Admin")]
         public async Task<IActionResult> DeleteReview(int id)
         {
             var review = await _context.Reviews.FindAsync(id);
-            if (review == null) return Json(new { success = false });
-
-            _context.Reviews.Remove(review);
-            await _context.SaveChangesAsync();
-
-            return Json(new { success = true });
+            if (review != null)
+            {
+                _context.Reviews.Remove(review);
+                await _context.SaveChangesAsync();
+            }
+            return RedirectToAction("Reviews");
         }
     }
 }

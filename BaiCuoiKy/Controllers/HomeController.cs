@@ -5,6 +5,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 using System.Diagnostics;
 using System.Security.Claims;
+using Microsoft.AspNetCore.Authorization;
 
 namespace BaiCuoiKy.Controllers
 {
@@ -138,7 +139,7 @@ namespace BaiCuoiKy.Controllers
             var tro = await _context.Tros
                 .Include(t => t.User)
                 .Include(t => t.AnhPhongs)
-                .Include(t => t.Reviews.Where(r => !r.IsHidden))
+                .Include(t => t.Reviews)
                 .ThenInclude(r => r.User)
                 .FirstOrDefaultAsync(m => m.Id == id.Value);
 
@@ -155,74 +156,6 @@ namespace BaiCuoiKy.Controllers
             {
                 RequestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier
             });
-        }
-
-        // ==================== TRANG HIỂN THỊ DANH MỤC ====================
-        public async Task<IActionResult> Category()
-        {
-            // Lấy danh sách danh mục đang hoạt động
-            var categories = await _context.Categories
-                .Where(c => c.TrangThai == true)
-                .ToListAsync();
-
-            return View(categories);
-        }
-
-        // ==================== TRANG QUẢN LÝ DANH MỤC (Cho Admin) ====================
-        [Authorize(Roles = "Admin")]
-        public async Task<IActionResult> ManageCategory()
-        {
-            // Lấy tất cả danh mục để Admin quản lý
-            var categories = await _context.Categories
-                .ToListAsync();
-
-            return View(categories);
-        }
-
-
-        // ==================== THÊM DANH MỤC ====================
-        [HttpPost]
-        [Authorize(Roles = "Admin")]
-        public async Task<IActionResult> AddCategory(Category category)
-        {
-            if (ModelState.IsValid)
-            {
-                category.TrangThai = true; // Mặc định hiển thị
-                _context.Categories.Add(category);
-                await _context.SaveChangesAsync();
-            }
-            // Load lại trang Category sau khi thêm xong
-            return RedirectToAction("Category");
-        }
-
-        // ==================== CẬP NHẬT DANH MỤC ====================
-        [HttpPost]
-        [Authorize(Roles = "Admin")]
-        public async Task<IActionResult> UpdateCategory(int Id, string TenDanhMuc, string MoTa) // Đã xóa int ThuTu
-        {
-            var cat = await _context.Categories.FindAsync(Id);
-            if (cat != null)
-            {
-                cat.TenDanhMuc = TenDanhMuc;
-                cat.MoTa = MoTa;
-                _context.Update(cat);
-                await _context.SaveChangesAsync();
-            }
-            return RedirectToAction("Category");
-        }
-
-        // ==================== XÓA DANH MỤC ====================
-        [HttpGet]
-        [Authorize(Roles = "Admin")]
-        public async Task<IActionResult> DeleteCategory(int id)
-        {
-            var cat = await _context.Categories.FindAsync(id);
-            if (cat != null)
-            {
-                _context.Categories.Remove(cat);
-                await _context.SaveChangesAsync();
-            }
-            return RedirectToAction("Category");
         }
     }
 }

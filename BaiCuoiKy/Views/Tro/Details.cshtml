@@ -15,7 +15,6 @@
 }
 
 <div class="room-detail-container">
-    <!-- Header với breadcrumb -->
     <div class="container-fluid px-0">
         <nav aria-label="breadcrumb" class="bg-light py-2 px-3 rounded">
             <ol class="breadcrumb mb-0">
@@ -33,9 +32,7 @@
     </div>
 
     <div class="row mt-4">
-        <!-- Cột trái: Hình ảnh và thông tin chính -->
         <div class="col-lg-8">
-            <!-- Gallery ảnh -->
             <div class="card shadow-sm mb-4">
                 <div class="card-body p-0">
                     @if (Model.AnhPhongs != null && Model.AnhPhongs.Any())
@@ -70,7 +67,6 @@
                 </div>
             </div>
 
-            <!-- Thông tin chi tiết -->
             <div class="card shadow-sm mb-4">
                 <div class="card-body">
                     <h2 class="room-title">@Model.TieuDe</h2>
@@ -132,11 +128,116 @@
                     </div>
                 </div>
             </div>
+
+            <div class="card shadow-sm mb-4">
+                <div class="card-body">
+                    <h4 class="fw-bold" style="color: #003366;">
+                        <i class="fas fa-comments me-2"></i> Đánh giá từ khách thuê (@(Model.Reviews?.Count(r => !r.IsHidden) ?? 0))
+                    </h4>
+                    <hr />
+
+                    @if (isAdmin)
+                    {
+                        <div class="alert alert-info shadow-sm border-0 mb-4">
+                            <i class="fas fa-user-shield me-2"></i> Bạn đang đăng nhập dưới quyền <strong>Quản trị viên</strong>. Bạn chỉ có quyền kiểm duyệt bình luận, không thể tự thêm đánh giá mới.
+                        </div>
+                    }
+                    else if (isAuthenticated)
+                    {
+                        <div class="mb-4 p-3 rounded" style="background-color: #f8f9fa;">
+                            <h6 class="fw-bold mb-3">Để lại ý kiến của bạn</h6>
+                            <form asp-controller="Home" asp-action="PostReview" method="post">
+                                <input type="hidden" name="TroId" value="@Model.Id" />
+
+                                <div class="mb-3" style="width: 250px;">
+                                    <select name="Rating" class="form-select border-primary">
+                                        <option value="5">⭐⭐⭐⭐⭐ (Tuyệt vời)</option>
+                                        <option value="4">⭐⭐⭐⭐ (Tốt)</option>
+                                        <option value="3">⭐⭐⭐ (Bình thường)</option>
+                                        <option value="2">⭐⭐ (Kém)</option>
+                                        <option value="1">⭐ (Rất tệ)</option>
+                                    </select>
+                                </div>
+
+                                <div class="mb-3">
+                                    <textarea name="Comment" class="form-control" rows="3" placeholder="Chia sẻ trải nghiệm của bạn về phòng trọ này..." required></textarea>
+                                </div>
+
+                                <button type="submit" class="btn btn-primary px-4 rounded-pill">Gửi đánh giá</button>
+                            </form>
+                        </div>
+                    }
+                    else
+                    {
+                        <div class="alert alert-warning shadow-sm border-0">
+                            Vui lòng <a href="/Account/Login" class="fw-bold text-danger">đăng nhập</a> để có thể bình luận và đánh giá phòng trọ này.
+                        </div>
+                    }
+                    <div class="review-list mt-4">
+                        @{
+                            // 🔥 LOGIC MỚI: Admin thấy tất cả, Khách thường chỉ thấy bình luận không bị ẩn
+                            var displayReviews = isAdmin ? Model.Reviews : Model.Reviews?.Where(r => !r.IsHidden);
+                        }
+
+                        @if (displayReviews != null && displayReviews.Any())
+                        {
+                            foreach (var review in displayReviews.OrderByDescending(r => r.NgayDanhGia))
+                            {
+                                <div class="d-flex mb-4 border-bottom pb-3">
+                                    <div class="me-3">
+                                        <div class="bg-primary text-white rounded-circle d-flex align-items-center justify-content-center fs-5 fw-bold" style="width: 50px; height: 50px;">
+                                            @(review.User?.UserName?.Substring(0, 1).ToUpper() ?? "U")
+                                        </div>
+                                    </div>
+                                    <div class="flex-grow-1">
+                                        <div class="d-flex justify-content-between align-items-start">
+                                            <div>
+                                                <h6 class="mb-0 fw-bold">
+                                                    @review.User?.UserName
+                                                    @if (review.IsHidden)
+                                                    {
+                                                        <span class="badge bg-secondary ms-2" style="font-size: 0.7em;">Đã ẩn</span>
+                                                    }
+                                                </h6>
+                                                <small class="text-muted">@review.NgayDanhGia.ToString("dd/MM/yyyy HH:mm")</small>
+                                            </div>
+
+                                            @if (isAdmin)
+                                            {
+                                                <div>
+                                                    <a href="@Url.Action("ToggleReview", "Admin", new { id = review.Id })" class="btn btn-sm btn-outline-warning" title="Ẩn/Hiện bình luận">
+                                                        <i class="fas @(review.IsHidden ? "fa-eye" : "fa-eye-slash")"></i>
+                                                    </a>
+                                                    <a href="@Url.Action("DeleteReview", "Admin", new { id = review.Id })" class="btn btn-sm btn-outline-danger" onclick="return confirm('Xóa vĩnh viễn bình luận này?');" title="Xóa bình luận">
+                                                        <i class="fas fa-trash-alt"></i>
+                                                    </a>
+                                                </div>
+                                            }
+                                        </div>
+                                        <div class="text-warning my-1">
+                                            @for (int i = 1; i <= 5; i++)
+                                            {
+                                                <i class="fas @(i <= review.Rating ? "fa-star" : "fa-star text-light")"></i>
+                                            }
+                                        </div>
+                                        <p class="mb-0 @(review.IsHidden ? "text-muted fst-italic" : "text-dark")">@review.Comment</p>
+                                    </div>
+                                </div>
+                            }
+                        }
+                        else
+                        {
+                            <div class="text-center text-muted my-5">
+                                <i class="fas fa-comment-slash fa-3x mb-3 text-light"></i>
+                                <p>Chưa có đánh giá nào. Hãy là người đầu tiên đánh giá phòng trọ này!</p>
+                            </div>
+                        }
+                    </div>
+                </div>
+            </div>
         </div>
 
-        <!-- Cột phải: Thông tin chủ trọ và hành động -->
         <div class="col-lg-4">
-            <!-- Card thông tin chủ trọ -->
             <div class="card shadow-sm mb-4">
                 <div class="card-header bg-primary text-white">
                     <h5 class="mb-0">
@@ -162,7 +263,6 @@
                 </div>
             </div>
 
-            <!-- Card hành động -->
             <div class="card shadow-sm mb-4">
                 <div class="card-header bg-success text-white">
                     <h5 class="mb-0">
@@ -216,7 +316,6 @@
                                     <i class="fas fa-trash-alt me-2"></i> Xóa
                                 </button>
 
-                                <!-- 🔥 THÊM: đổi trạng thái -->
                                 <select class="form-select" onchange="updateStatus(@Model.Id, this.value)">
                                     <option value="0" selected="@(Model.TrangThai == TrangThaiPhong.DangTrong)">Đang trống</option>
                                     <option value="1" selected="@(Model.TrangThai == TrangThaiPhong.DangXuLy)">Đang xử lý</option>
@@ -228,7 +327,6 @@
                 </div>
             </div>
 
-            <!-- Card thông tin thêm (Admin) -->
             @if (isAdmin)
             {
                 <div class="card shadow-sm mb-4">
@@ -278,7 +376,6 @@
     </div>
 </div>
 
-<!-- Modal xem ảnh lớn -->
 <div class="modal fade" id="imageModal" tabindex="-1">
     <div class="modal-dialog modal-lg modal-dialog-centered">
         <div class="modal-content">
@@ -293,12 +390,9 @@
     </div>
 </div>
 
-
-
-    
 @section Scripts {
     <script src="~/js/Details.js"></script>
-@functions {
+    @functions {
     string GetInitials(string name)
     {
         if (string.IsNullOrEmpty(name)) return "A";

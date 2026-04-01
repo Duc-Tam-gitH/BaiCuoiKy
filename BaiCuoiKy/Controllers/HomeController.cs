@@ -163,24 +163,55 @@ namespace BaiCuoiKy.Controllers
         [Authorize]
         public async Task<IActionResult> PostReview(int TroId, string Comment, int Rating)
         {
-            if (string.IsNullOrWhiteSpace(Comment)) return RedirectToAction("Details", new { id = TroId });
+            // Chặn Admin tự bình luận
+            if (User.IsInRole("Admin"))
+            {
+                return RedirectToAction("Details", "Tro", new { id = TroId });
+            }
+
+            if (string.IsNullOrWhiteSpace(Comment))
+                return RedirectToAction("Details", "Tro", new { id = TroId });
 
             var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+            var userName = User.Identity?.Name ?? "Một khách thuê"; // Lấy tên người bình luận
 
+            // 1. Lưu đánh giá vào DB
             var review = new Review
             {
                 TroId = TroId,
                 UserId = userId,
-                Comment = Comment, // Đổi từ Content sang Comment
+                Comment = Comment,
                 Rating = Rating,
-                NgayDanhGia = DateTime.Now, // Đổi từ NgayDang sang NgayDanhGia
+                NgayDanhGia = DateTime.Now,
                 IsHidden = false
             };
 
             _context.Reviews.Add(review);
+
+            // 🔥 2. CODE TẠO THÔNG BÁO CHO ADMIN / CHỦ TRỌ 🔥
+            // Tìm thông tin phòng để biết ai là người đăng (Admin/Chủ trọ)
+            var tro = await _context.Tros.FindAsync(TroId);
+
+            if (tro != null && tro.UserId != userId) // Đảm bảo không tự thông báo cho chính mình
+            {
+                var notification = new Notification
+                {
+                    UserId = tro.UserId, // ID của Admin/Chủ trọ nhận thông báo
+                    CreatedAt = DateTime.Now,
+                    IsRead = false,
+                    Message = $"Phòng '{tro.TieuDe}' vừa có đánh giá {Rating} sao từ {userName}.",
+                    Url = $"/Tro/Details/{TroId}"
+
+                };
+
+                _context.Notifications.Add(notification);
+                
+            }
+
+            // 3. Lưu cả Bình luận và Thông báo cùng lúc
             await _context.SaveChangesAsync();
 
-            return RedirectToAction("Details", new { id = TroId });
+            return RedirectToAction("Details", "Tro", new { id = TroId });
         }
     }
 }

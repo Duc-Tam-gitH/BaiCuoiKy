@@ -35,4 +35,50 @@ public class NotificationController : Controller
         await _context.SaveChangesAsync();
         return RedirectToAction("Index");
     }
+    [Authorize]
+    public async Task<IActionResult> Read(int id)
+    {
+        // 1. Tìm thông báo trong Database dựa vào ID
+        var notification = await _context.Notifications.FindAsync(id);
+
+        if (notification != null)
+        {
+            // 2. Nếu thông báo chưa đọc (Mới) thì đổi thành Đã đọc
+            if (!notification.IsRead)
+            {
+                notification.IsRead = true;
+                await _context.SaveChangesAsync(); // Lưu thay đổi vào DB
+            }
+
+            // 3. Chuyển hướng đến bài viết (Dựa vào đường link đã lưu ở cột Url)
+            if (!string.IsNullOrEmpty(notification.Url))
+            {
+                return Redirect(notification.Url);
+            }
+        }
+
+        // Nếu thông báo bị lỗi hoặc không có link, cho quay lại trang danh sách thông báo
+        return RedirectToAction("Index");
+    }
+    [HttpPost]
+    [Authorize]
+    [ValidateAntiForgeryToken]
+    public async Task<IActionResult> Delete(int id)
+    {
+        // 1. Lấy ID người dùng hiện tại
+        var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+
+        // 2. Tìm đúng thông báo của người đó
+        var notification = await _context.Notifications
+            .FirstOrDefaultAsync(n => n.Id == id && n.UserId == userId);
+
+        if (notification != null)
+        {
+            _context.Notifications.Remove(notification);
+            await _context.SaveChangesAsync();
+        }
+
+        // 3. Quay lại trang danh sách thông báo
+        return RedirectToAction("Index");
+    }
 }

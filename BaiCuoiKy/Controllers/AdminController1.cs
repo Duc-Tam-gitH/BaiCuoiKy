@@ -295,7 +295,7 @@ namespace BaiCuoiKy.Controllers
         // =====================================================
         // (GỢI Ý) XÓA / ẨN ĐÁNH GIÁ - BẠN SẼ DÙNG SAU
         // =====================================================
-        
+
 
         [Authorize(Roles = "Admin")]
         public async Task<IActionResult> ToggleReview(int id)
@@ -303,10 +303,12 @@ namespace BaiCuoiKy.Controllers
             var review = await _context.Reviews.FindAsync(id);
             if (review != null)
             {
-                review.IsHidden = !review.IsHidden; // Đảo trạng thái Ẩn/Hiện
+                review.IsHidden = !review.IsHidden; // Đảo trạng thái
                 await _context.SaveChangesAsync();
+
+                return RedirectToAction("Details", "Tro", new { id = review.TroId });
             }
-            return RedirectToAction("Reviews");
+            return RedirectToAction("Index", "Home");
         }
 
         [Authorize(Roles = "Admin")]
@@ -315,10 +317,13 @@ namespace BaiCuoiKy.Controllers
             var review = await _context.Reviews.FindAsync(id);
             if (review != null)
             {
+                int troId = review.TroId; // Lưu lại ID phòng trước khi xóa bình luận
+
                 _context.Reviews.Remove(review);
                 await _context.SaveChangesAsync();
+                return RedirectToAction("Details", "Tro", new { id = troId });
             }
-            return RedirectToAction("Reviews");
+            return RedirectToAction("Index", "Home");
         }
     }
 }

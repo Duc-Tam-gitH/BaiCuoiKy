@@ -1,45 +1,82 @@
-﻿@*
-    For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
-*@
+﻿@model IEnumerable<BaiCuoiKy.Models.Notification>
+
 @{
+    ViewData["Title"] = "Trung tâm thông báo";
 }
-@model IEnumerable<BaiCuoiKy.Models.Notification>
 
-<div class="container py-5" style="min-height: 70vh;">
-    <div class="row justify-content-center">
-        <div class="col-md-9">
-            <h3 class="fw-bold mb-4" style="color: #002641;">
-                🔔 Trung tâm thông báo
-            </h3>
+<div class="notification-container py-5" style="min-height: 75vh; background-color: #f8f9fa;">
+    <div class="container">
+        <div class="row justify-content-center">
+            <div class="col-lg-8 col-md-10">
+                <div class="d-flex align-items-center mb-4">
+                    <div class="bg-primary text-white rounded-circle d-flex align-items-center justify-content-center me-3 shadow" style="width: 50px; height: 50px; background-color: #002b49 !important;">
+                        <i class="fas fa-bell fs-4"></i>
+                    </div>
+                    <div>
+                        <h2 class="fw-bold mb-0" style="color: #002b49;">Trung tâm thông báo</h2>
+                        <p class="text-muted mb-0">Cập nhật những tương tác mới nhất về bài đăng của bạn</p>
+                    </div>
+                </div>
 
-            <div class="card shadow-sm border-0 rounded-4 overflow-hidden">
-                <div class="list-group list-group-flush">
+                <div class="card border-0 shadow-lg rounded-4 overflow-hidden">
                     @if (Model != null && Model.Any())
                     {
-                        foreach (var item in Model)
-                        {
-                            <div class="list-group-item p-4 border-start border-4 @(item.IsRead ? "border-light" : "border-danger bg-light")">
-                                <div class="d-flex justify-content-between align-items-start">
-                                    <div>
-                                        <p class="mb-1 @(item.IsRead ? "" : "fw-bold")" style="color: #002641; font-size: 1.05rem;">
-                                            @item.Message
-                                        </p>
-                                        <small class="text-muted">
-                                            📅 @item.CreatedAt.ToString("dd/MM/yyyy HH:mm")
-                                        </small>
-                                    </div>
-                                    @if (!item.IsRead)
-                                    {
-                                        <span class="badge rounded-pill bg-danger">Mới</span>
-                                    }
+                        <div class="list-group list-group-flush">
+                            @foreach (var item in Model.OrderByDescending(n => n.CreatedAt))
+                            {
+                                // Phân biệt màu sắc giữa chưa đọc và đã đọc
+                                var bgClass = item.IsRead ? "bg-white" : "bg-light";
+                                var borderClass = item.IsRead ? "border-start-transparent" : "border-start-danger";
+                                var textColor = item.IsRead ? "text-secondary" : "text-dark fw-bold";
+                                var iconColor = item.IsRead ? "text-muted" : "text-danger";
+
+                                <div class="position-relative notification-wrapper">
+                                    <a href="@Url.Action("Read", "Notification", new { id = item.Id })" class="list-group-item list-group-item-action p-4 border-bottom @bgClass @borderClass notification-item text-decoration-none" style="border-left-width: 5px !important; transition: all 0.3s ease; display: block;">
+                                        <div class="d-flex align-items-start pe-5">
+                                            <div class="icon-circle bg-white shadow-sm rounded-circle d-flex align-items-center justify-content-center me-3 mt-1" style="width: 45px; height: 45px; min-width: 45px;">
+                                                <i class="fas fa-comment-dots fs-5 @iconColor"></i>
+                                            </div>
+
+                                            <div class="flex-grow-1">
+                                                <div class="d-flex justify-content-between align-items-center mb-1">
+                                                    <h6 class="mb-0 @textColor" style="line-height: 1.5; font-size: 1.05rem;">
+                                                        @item.Message
+                                                    </h6>
+                                                    @if (!item.IsRead)
+                                                    {
+                                                        <span class="badge rounded-pill ms-2" style="background-color: #e60049;">Mới</span>
+                                                    }
+                                                </div>
+                                                <div class="d-flex align-items-center mt-2">
+                                                    <small class="text-muted">
+                                                        <i class="far fa-clock me-1"></i> @item.CreatedAt.ToString("dd/MM/yyyy • HH:mm")
+                                                    </small>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </a>
+
+                                    <form asp-action="Delete" asp-route-id="@item.Id" method="post"
+                                          class="position-absolute" style="top: 25px; right: 25px; z-index: 10;">
+                                        <button type="submit" class="btn btn-link text-muted p-0 delete-btn"
+                                                onclick="return confirm('Bạn có chắc chắn muốn xóa thông báo này?')"
+                                                style="font-size: 1.2rem;">
+                                            <i class="fas fa-times"></i>
+                                        </button>
+                                    </form>
                                 </div>
-                            </div>
-                        }
+                            }
+                        </div>
                     }
                     else
                     {
-                        <div class="text-center py-5">
-                            <p class="text-muted">Bạn không có thông báo nào.</p>
+                        <div class="card-body text-center py-5">
+                            <div class="empty-state-icon mb-4">
+                                <i class="far fa-bell-slash fa-4x text-muted" style="opacity: 0.3;"></i>
+                            </div>
+                            <h5 class="fw-bold text-secondary">Chưa có thông báo nào</h5>
+                            <p class="text-muted">Khi có người tương tác hoặc đánh giá phòng của bạn, thông báo sẽ xuất hiện tại đây.</p>
+                            <a href="/" class="btn btn-outline-primary rounded-pill px-4 mt-2" style="border-color: #002b49; color: #002b49;">Quay lại Trang chủ</a>
                         </div>
                     }
                 </div>
@@ -47,3 +84,45 @@
         </div>
     </div>
 </div>
+
+<style>
+    /* Custom Hover Effect cho từng dòng thông báo */
+    .notification-item:hover {
+        background-color: #f1f4f8 !important;
+        cursor: pointer;
+        transform: translateX(5px);
+    }
+
+    /* Tùy chỉnh màu viền bên trái cho thông báo MỚI */
+    .border-start-danger {
+        border-left-color: #e60049 !important; /* Màu hồng đậm của logo web */
+    }
+
+    /* Tùy chỉnh màu viền bên trái cho thông báo ĐÃ ĐỌC */
+    .border-start-transparent {
+        border-left-color: transparent !important;
+    }
+
+    /* CSS CHO NÚT XÓA */
+    .notification-wrapper {
+        transition: all 0.3s ease;
+    }
+
+    /* Mặc định ẩn nút xóa */
+    .delete-btn {
+        opacity: 0;
+        transition: all 0.2s ease;
+        color: #adb5bd !important;
+    }
+
+    /* Hiện nút xóa khi di chuột vào cả khối thông báo */
+    .notification-wrapper:hover .delete-btn {
+        opacity: 1;
+    }
+
+    /* Đổi màu và phóng to khi di chuột đúng vào nút xóa */
+    .delete-btn:hover {
+        color: #e60049 !important;
+        transform: scale(1.2);
+    }
+</style>

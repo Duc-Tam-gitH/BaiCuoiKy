@@ -131,6 +131,12 @@ namespace BaiCuoiKy.Controllers
         {
             if (id == null) return NotFound();
 
+            // Thêm đoạn này để Navbar có dữ liệu hiển thị
+            ViewBag.Categories = await _context.Categories
+                .Where(c => c.TrangThai == true)
+                .OrderBy(c => c.ThuTu)
+                .ToListAsync();
+
             var tro = await _context.Tros
                 .Include(t => t.User)
                 .Include(t => t.AnhPhongs)

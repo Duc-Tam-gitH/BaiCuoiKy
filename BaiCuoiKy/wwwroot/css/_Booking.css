@@ -1,0 +1,290 @@
+﻿/* ============================================================
+   _Booking.css — Quản lý đặt phòng | Admin Panel
+   Palette: #002641 (Navy) · #ED005A (Crimson Pink)
+   ============================================================ */
+
+@import url('https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:wght@300;400;500;600;700;800&display=swap');
+
+:root {
+    --navy: #002641;
+    --navy-light: #003a61;
+    --navy-deep: #001829;
+    --crimson: #ED005A;
+    --crimson-dim: #c0004a;
+    --crimson-soft: #ff2e78;
+    --white: #ffffff;
+    --off-white: #f4f7fb;
+    --muted: #7a8fa6;
+    --border: #dce8f5;
+    --success: #00b87a;
+    --warning: #f59e0b;
+    --radius-sm: 6px;
+    --radius-md: 12px;
+    --radius-lg: 18px;
+    --shadow-card: 0 4px 32px 0 rgba(0, 38, 65, 0.10);
+    --shadow-btn: 0 4px 16px 0 rgba(237, 0, 90, 0.30);
+    --transition: 0.22s cubic-bezier(.4,0,.2,1);
+}
+
+/* ── Page wrapper ────────────────────────────────────────── */
+.p-4 {
+    font-family: 'Be Vietnam Pro', sans-serif;
+    background: linear-gradient(135deg, #eaf2fb 0%, #f4f7fb 60%, #fde8f1 100%) !important;
+    min-height: 100vh;
+}
+
+/* ── Card ────────────────────────────────────────────────── */
+.card.shadow-sm.border-0.rounded-3 {
+    border-radius: var(--radius-lg) !important;
+    box-shadow: var(--shadow-card) !important;
+    overflow: hidden;
+    background: var(--white);
+    border: 1.5px solid var(--border) !important;
+    animation: fadeSlideUp 0.45s ease both;
+}
+
+@keyframes fadeSlideUp {
+    from {
+        opacity: 0;
+        transform: translateY(22px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+/* ── Card Header ─────────────────────────────────────────── */
+.card-header.bg-white {
+    background: linear-gradient(90deg, var(--navy) 0%, var(--navy-light) 100%) !important;
+    border-bottom: none !important;
+    padding: 20px 28px !important;
+    position: relative;
+    overflow: hidden;
+}
+
+    .card-header.bg-white::after {
+        content: '';
+        position: absolute;
+        right: -40px;
+        top: -40px;
+        width: 160px;
+        height: 160px;
+        border-radius: 50%;
+        background: rgba(237, 0, 90, 0.12);
+        pointer-events: none;
+    }
+
+/* Icon box */
+.card-header .p-2.bg-danger {
+    background: linear-gradient(135deg, var(--crimson) 0%, var(--crimson-soft) 100%) !important;
+    border-radius: var(--radius-md) !important;
+    box-shadow: 0 4px 18px rgba(237,0,90,0.35);
+    width: 52px;
+    height: 52px;
+    display: flex !important;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+}
+
+    .card-header .p-2.bg-danger i {
+        font-size: 1.35rem !important;
+        color: var(--white) !important;
+    }
+
+/* Heading text */
+.card-header h5.mb-0.fw-bold {
+    color: var(--white) !important;
+    font-size: 1.1rem;
+    font-weight: 700;
+    letter-spacing: -0.01em;
+}
+
+.card-header small.text-muted {
+    color: rgba(255,255,255,0.65) !important;
+    font-size: 0.8rem;
+    font-weight: 400;
+}
+
+/* ── Card Body ───────────────────────────────────────────── */
+.card-body {
+    padding: 0 !important;
+}
+
+/* ── Table ───────────────────────────────────────────────── */
+.table-responsive {
+    border-radius: 0 0 var(--radius-lg) var(--radius-lg);
+    overflow: hidden;
+}
+
+.table {
+    margin-bottom: 0;
+    font-size: 0.875rem;
+    border-collapse: separate;
+    border-spacing: 0;
+}
+
+    /* Head */
+    .table thead tr {
+        background: var(--off-white);
+    }
+
+    .table thead th {
+        color: var(--navy) !important;
+        font-weight: 700;
+        font-size: 0.72rem;
+        letter-spacing: 0.08em;
+        text-transform: uppercase;
+        padding: 14px 20px;
+        border-bottom: 2px solid var(--border) !important;
+        white-space: nowrap;
+        position: sticky;
+        top: 0;
+        background: var(--off-white);
+        z-index: 2;
+    }
+
+    /* Body rows */
+    .table tbody tr {
+        transition: background var(--transition), box-shadow var(--transition);
+        border-bottom: 1px solid var(--border);
+    }
+
+        .table tbody tr:last-child {
+            border-bottom: none;
+        }
+
+    .table.table-hover tbody tr:hover {
+        background: linear-gradient(90deg, rgba(0,38,65,0.04) 0%, rgba(237,0,90,0.03) 100%) !important;
+        box-shadow: inset 3px 0 0 var(--crimson);
+    }
+
+    .table tbody td {
+        padding: 14px 20px;
+        vertical-align: middle !important;
+        border-bottom: 1px solid var(--border);
+        color: #1a2e40;
+    }
+
+/* ── Avatar circle ───────────────────────────────────────── */
+.bg-light.rounded-circle {
+    background: linear-gradient(135deg, var(--navy) 0%, var(--navy-light) 100%) !important;
+    color: var(--white) !important;
+    font-size: 0.85rem;
+    font-weight: 700;
+    border: 2px solid rgba(237,0,90,0.25);
+    box-shadow: 0 2px 8px rgba(0,38,65,0.18);
+    flex-shrink: 0;
+}
+
+/* ── Customer name ───────────────────────────────────────── */
+.table td .fw-bold {
+    color: var(--navy);
+    font-weight: 600;
+}
+
+/* ── Room code ───────────────────────────────────────────── */
+.table td .small.text-muted {
+    color: var(--muted) !important;
+    font-size: 0.75rem;
+}
+
+/* ── Deposit amount ──────────────────────────────────────── */
+.text-danger {
+    color: var(--crimson) !important;
+    font-weight: 700 !important;
+    font-size: 0.93rem;
+}
+
+/* ── Badges ──────────────────────────────────────────────── */
+.badge {
+    font-family: 'Be Vietnam Pro', sans-serif;
+    font-weight: 600;
+    font-size: 0.72rem;
+    letter-spacing: 0.03em;
+    border-radius: 999px !important;
+}
+
+    /* Pending */
+    .badge.bg-primary {
+        background: linear-gradient(135deg, var(--navy) 0%, #0055a5 100%) !important;
+        color: var(--white) !important;
+        box-shadow: 0 2px 10px rgba(0,38,65,0.25);
+    }
+
+    /* Success */
+    .badge.bg-success {
+        background: linear-gradient(135deg, #00a06a 0%, var(--success) 100%) !important;
+        color: var(--white) !important;
+        box-shadow: 0 2px 10px rgba(0,184,122,0.25);
+    }
+
+    /* Warning */
+    .badge.bg-warning {
+        background: linear-gradient(135deg, #f59e0b 0%, #fbbf24 100%) !important;
+        color: #1a1a1a !important;
+        box-shadow: 0 2px 10px rgba(245,158,11,0.25);
+    }
+
+/* ── Confirm button ──────────────────────────────────────── */
+.btn.btn-dark.btn-sm.rounded-3 {
+    background: linear-gradient(135deg, var(--crimson) 0%, var(--crimson-soft) 100%) !important;
+    border: none !important;
+    color: var(--white) !important;
+    font-family: 'Be Vietnam Pro', sans-serif;
+    font-weight: 600;
+    font-size: 0.78rem;
+    letter-spacing: 0.02em;
+    padding: 7px 16px !important;
+    border-radius: var(--radius-sm) !important;
+    box-shadow: var(--shadow-btn);
+    transition: transform var(--transition), box-shadow var(--transition), filter var(--transition);
+    white-space: nowrap;
+}
+
+    .btn.btn-dark.btn-sm.rounded-3:hover {
+        transform: translateY(-2px) scale(1.03);
+        box-shadow: 0 8px 24px rgba(237,0,90,0.42);
+        filter: brightness(1.08);
+    }
+
+    .btn.btn-dark.btn-sm.rounded-3:active {
+        transform: scale(0.97);
+        filter: brightness(0.95);
+    }
+
+    .btn.btn-dark.btn-sm.rounded-3 i {
+        font-size: 0.78rem;
+    }
+
+/* ── Scrollbar (chromium) ────────────────────────────────── */
+.table-responsive::-webkit-scrollbar {
+    height: 5px;
+}
+
+.table-responsive::-webkit-scrollbar-track {
+    background: var(--off-white);
+}
+
+.table-responsive::-webkit-scrollbar-thumb {
+    background: var(--crimson);
+    border-radius: 99px;
+}
+
+/* ── Responsive tweaks ───────────────────────────────────── */
+@media (max-width: 768px) {
+    .card-header.bg-white {
+        padding: 16px 18px !important;
+    }
+
+    .table thead th,
+    .table tbody td {
+        padding: 11px 14px;
+    }
+
+    .card-header h5.mb-0.fw-bold {
+        font-size: 0.97rem;
+    }
+}

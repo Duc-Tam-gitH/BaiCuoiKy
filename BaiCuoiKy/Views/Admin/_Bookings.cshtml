@@ -1,7 +1,7 @@
 ﻿@{
     Layout = "_AdminLayout";
 }
-
+@addTagHelper *, Microsoft.AspNetCore.Mvc.TagHelpers
 <div class="p-4" style="background-color: #f8f9fa; min-height: 100vh;">
     <div class="card shadow-sm border-0 rounded-3">
         <div class="card-header bg-white border-0 py-3">
@@ -49,7 +49,15 @@
                                     <td class="small">@b.NgayDat.ToString("dd/MM/yyyy HH:mm")</td>
                                     <td class="fw-bold text-danger">@b.TienCoc.ToString("N0") đ</td>
                                     <td>
-                                        @if (b.TrangThai == "ChoXacNhan")
+                                        @if (b.TrangThai == "ChoDuyet")
+                                        {
+                                            <span class="badge bg-warning text-dark px-3 py-2 rounded-pill">Chờ duyệt</span>
+                                        }
+                                        else if (b.TrangThai == "ChoThanhToan")
+                                        {
+                                            <span class="badge bg-info text-dark px-3 py-2 rounded-pill">Chờ thanh toán</span>
+                                        }
+                                        else if (b.TrangThai == "ChoXacNhan")
                                         {
                                             <span class="badge bg-primary px-3 py-2 rounded-pill">Khách đã báo cọc</span>
                                         }
@@ -59,15 +67,25 @@
                                         }
                                         else
                                         {
-                                            <span class="badge bg-warning text-dark px-3 py-2 rounded-pill">@b.TrangThai</span>
+                                            <span class="badge bg-secondary px-3 py-2 rounded-pill">@b.TrangThai</span>
                                         }
                                     </td>
+
                                     <td class="text-center">
-                                        @if (b.TrangThai == "ChoXacNhan")
+                                        @if (b.TrangThai == "ChoDuyet")
                                         {
-                                            <form asp-controller="Admin" asp-action="ConfirmBookingFinal" method="post">
+                                            <form asp-controller="Admin" asp-action="ApproveBooking" method="post" class="d-inline">
                                                 <input type="hidden" name="bookingId" value="@b.Id" />
-                                                <button type="submit" class="btn btn-dark btn-sm rounded-3 px-3 shadow-sm">
+                                                <button type="submit" class="btn btn-warning btn-sm rounded-3 px-3 shadow-sm">
+                                                    <i class="fas fa-check me-1"></i> Duyệt đơn
+                                                </button>
+                                            </form>
+                                        }
+                                        else if (b.TrangThai == "ChoXacNhan")
+                                        {
+                                            <form asp-controller="Admin" asp-action="ConfirmBookingFinal" method="post" class="d-inline">
+                                                <input type="hidden" name="bookingId" value="@b.Id" />
+                                                <button type="submit" class="btn btn-dark btn-sm rounded-3 px-3 shadow-sm" style="background: linear-gradient(135deg, var(--crimson) 0%, var(--crimson-soft) 100%);">
                                                     <i class="fas fa-money-check-alt me-1"></i> Xác nhận tiền
                                                 </button>
                                             </form>
@@ -82,3 +100,7 @@
         </div>
     </div>
 </div>
+
+@section Styles {
+    <link rel="stylesheet" href="~/css/_Booking.css" />
+}

@@ -1,4 +1,5 @@
 ﻿@using BaiCuoiKy.Models
+@using BaiCuoiKy.Models
 <nav class="navbar">
     <div class="nav-left">
         <a asp-controller="Home" asp-action="Index">Trang chủ</a>
@@ -29,12 +30,6 @@
         {
             @if (User.IsInRole("Admin"))
             {
-                <a asp-controller="Tro" asp-action="Create" class="btn btn-register me-2">
-                    + Đăng tin
-                </a>
-                <a asp-controller="Khachthue" asp-action="Bookings" class="nav-link d-inline-block me-2 text-white">
-                    Booking của tôi
-                </a>
                 <a class="nav-link" href="@Url.Action("Dashboard", "Admin", new { section = "bookings" })">
                     <i class="fas fa-clipboard-check"></i> Duyệt đơn đặt phòng
                 </a>
@@ -62,63 +57,69 @@
                     <li class="p-3 border-bottom bg-light">
                         <h6 class="mb-0 fw-bold" style="color: #002641;">Thông báo</h6>
                     </li>
-                    <div class="notification-scroll" style="max-height: 250px; overflow-y: auto; overflow-x: hidden;">
-                        @if (ViewBag.Notifications != null && ((List<Notification>)ViewBag.Notifications).Any())
-                        {
-                            @foreach (var noti in (List<Notification>)ViewBag.Notifications)
-                            {
-                            <li>
-                                <a class="dropdown-item p-3 border-bottom small @(noti.IsRead ? "text-muted" : "fw-bold")" href="#">
-                                        @noti.Message
-                                    <br />
-                                    <small class="text-muted" style="font-size: 0.7rem;">@noti.CreatedAt.ToString("dd/MM HH:mm")</small>
-                                </a>
-                            </li>
-                            }
-                        }
-                        else
-                        {
-                        <div class="p-4 text-center text-muted small">
-                            <p class="mb-0">Bạn chưa có thông báo nào</p>
-                        </div>
-                        }
-            </div>
-            <li class="p-2 text-center border-top">
-                <a asp-controller="Notification" asp-action="Index" class="text-decoration-none small fw-bold" style="color: #ED005A;">Xem tất cả</a>
-            </li>
-            </ul>
-        </div>
 
-        <div class="dropdown d-inline-block">
-            <a class="btn btn-login dropdown-toggle" href="#" role="button" id="userDropdown" data-bs-toggle="dropdown" aria-expanded="false">
-                👤
-            </a>
-            <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="userDropdown">
-                <li><h6 class="dropdown-header">Xin chào, @User.Identity.Name</h6></li>
-                <li><hr class="dropdown-divider"></li>
+                    <li>
+                        <div class="notification-scroll" style="max-height: 250px; overflow-y: auto; overflow-x: hidden;">
+                            @if (ViewBag.Notifications != null && ((List<Notification>)ViewBag.Notifications).Any())
+                            {
+                                @foreach (var noti in (List<Notification>)ViewBag.Notifications)
+                                {
+                                    <a class="dropdown-item p-3 border-bottom small @(noti.IsRead ? "text-muted" : "fw-bold")" href="#">
+                                        @noti.Message
+                                        <br />
+                                        <small class="text-muted" style="font-size: 0.7rem;">@noti.CreatedAt.ToString("dd/MM HH:mm")</small>
+                                    </a>
+                                }
+                            }
+                            else
+                            {
+                                <div class="p-4 text-center text-muted small">
+                                    <p class="mb-0">Bạn chưa có thông báo nào</p>
+                                </div>
+                            }
+                        </div>
+                    </li>
+
+                    <li class="p-2 text-center border-top">
+                        <a asp-controller="Notification" asp-action="Index" class="text-decoration-none small fw-bold" style="color: #ED005A;">Xem tất cả</a>
+                    </li>
+                </ul>
+            </div>
+
+            <div class="dropdown d-inline-block">
+                <a class="btn btn-login dropdown-toggle" href="#" role="button" id="userDropdown" data-bs-toggle="dropdown" aria-expanded="false">
+                    👤
+                </a>
+                <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="userDropdown">
+                    <li><h6 class="dropdown-header">Xin chào, @User.Identity.Name</h6></li>
+                    <li><hr class="dropdown-divider"></li>
+
                     @if (User.IsInRole("Admin"))
                     {
-                    <li><a class="dropdown-item" asp-controller="Admin" asp-action="ManageSystem">Quản trị hệ thống</a></li>
+                        <li><a class="dropdown-item" asp-controller="Admin" asp-action="ManageSystem">Quản trị hệ thống</a></li>
                     }
-                <li><a class="dropdown-item" asp-controller="Account" asp-action="Profile">Thông tin cá nhân</a></li>
+
+                    <li><a class="dropdown-item" asp-controller="Account" asp-action="Profile">Thông tin cá nhân</a></li>
+
                     @if (!User.IsInRole("Admin"))
                     {
-                    <li><a class="dropdown-item" asp-controller="Khachthue" asp-action="Bookings">Lịch sử đặt phòng</a></li>
-                    <li><a class="dropdown-item" asp-controller="Khachthue" asp-action="Favorites">Phòng yêu thích</a></li>
+                        <li><a class="dropdown-item" asp-controller="Khachthue" asp-action="Bookings">Lịch sử đặt phòng</a></li>
+                        <li><a class="dropdown-item" asp-controller="Khachthue" asp-action="Favorites">Phòng yêu thích</a></li>
                     }
-                <li><hr class="dropdown-divider"></li>
-                <li>
-                    <form asp-controller="Account" asp-action="Logout" method="post" class="d-inline">
-                        <button type="submit" class="dropdown-item text-danger">Đăng xuất</button>
-                    </form>
-                </li>
-            </ul>
-        </div>
+
+                    <li><hr class="dropdown-divider"></li>
+                    <li>
+                        <form asp-controller="Account" asp-action="Logout" method="post" class="d-inline">
+                            <button type="submit" class="dropdown-item text-danger">Đăng xuất</button>
+                        </form>
+                    </li>
+                </ul>
+            </div>
         }
         else
         {
-        <a asp-controller="Account" asp-action="Login" class="btn btn-login me-2">Đăng nhập</a>
-        <a asp-controller="Account" asp-action="Register" class="btn btn-register">Đăng ký</a>
+            <a asp-controller="Account" asp-action="Login" class="btn btn-login me-2">Đăng nhập</a>
+            <a asp-controller="Account" asp-action="Register" class="btn btn-register">Đăng ký</a>
         }
     </div>
 </nav>

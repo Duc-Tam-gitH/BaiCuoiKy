@@ -49,6 +49,12 @@
                         <i class="fas fa-building"></i>
                         <span>Phòng trọ</span>
                     </a>
+
+                    <a href="@Url.Action("Dashboard", "Admin", new { section = "bookings" })" class="admin-nav-item @(activeSection == "bookings" ? "active" : "")">
+                        <i class="fas fa-clipboard-check"></i>
+                        <span>Duyệt đơn đặt phòng</span>
+                    </a>
+
                     <a href="@Url.Action("Dashboard", "Admin", new { section = "users" })" class="admin-nav-item @(activeSection == "users" ? "active" : "")">
                         <i class="fas fa-users"></i>
                         <span>Người dùng</span>

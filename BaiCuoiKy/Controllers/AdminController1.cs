@@ -453,7 +453,7 @@ namespace BaiCuoiKy.Controllers
             using (var message = new System.Net.Mail.MailMessage())
             {
                 message.To.Add(new System.Net.Mail.MailAddress(email));
-                message.From = new System.Net.Mail.MailAddress("your-email@gmail.com", "House88");
+                message.From = new System.Net.Mail.MailAddress("tamv5771@gmail.com", "House88");
                 message.Subject = subject;
                 message.Body = body;
                 message.IsBodyHtml = true;
@@ -461,7 +461,7 @@ namespace BaiCuoiKy.Controllers
                 using (var client = new System.Net.Mail.SmtpClient("smtp.gmail.com", 587))
                 {
                     client.EnableSsl = true;
-                    client.Credentials = new System.Net.NetworkCredential("your-email@gmail.com", "your-app-password");
+                    client.Credentials = new System.Net.NetworkCredential("tamv5771@gmail.com", "okfz qiob zlym somn");
                     await client.SendMailAsync(message);
                 }
             }

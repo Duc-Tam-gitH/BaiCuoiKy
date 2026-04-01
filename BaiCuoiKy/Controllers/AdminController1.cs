@@ -4,6 +4,7 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using System.Security.Claims;
 
 namespace BaiCuoiKy.Controllers
 {
@@ -13,16 +14,19 @@ namespace BaiCuoiKy.Controllers
         private readonly UserManager<ApplicationUser> _userManager;
         private readonly RoleManager<IdentityRole> _roleManager;
         private readonly AppDbContext _context;
+        private readonly SignInManager<ApplicationUser> _signInManager;
 
         public AdminController(
-            UserManager<ApplicationUser> userManager,
-            RoleManager<IdentityRole> roleManager,
-            AppDbContext context)
+         UserManager<ApplicationUser> userManager,
+         RoleManager<IdentityRole> roleManager,
+         AppDbContext context, 
+            SignInManager<ApplicationUser> signInManager)
         {
             _userManager = userManager;
-            _roleManager = roleManager; 
-            _context = context;
-        }
+                _roleManager = roleManager; 
+                _context = context;
+                _signInManager = signInManager;
+            }
 
         public IActionResult ManageSystem()
         {
@@ -126,7 +130,7 @@ namespace BaiCuoiKy.Controllers
         // GET: FORM SỬA USER
         // =====================================================
         [HttpGet]
-        public async Task<IActionResult> Edit(string id)
+        public async Task<IActionResult> EditUser(string id)
         {
             var user = await _userManager.FindByIdAsync(id);
             if (user == null) return NotFound();
@@ -155,12 +159,12 @@ namespace BaiCuoiKy.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Edit(EditUserViewModel model)
         {
-            if (!ModelState.IsValid) return View(model);
+            if (!ModelState.IsValid) return View("EditUser", model);
 
             var user = await _userManager.FindByIdAsync(model.Id);
             if (user == null) return NotFound();
 
-            // UPDATE INFO
+            // Cập nhật thông tin
             user.FullName = model.FullName;
             user.Address = model.Address;
             user.PhoneNumber = model.PhoneNumber;
@@ -168,15 +172,16 @@ namespace BaiCuoiKy.Controllers
             user.UserName = model.UserName;
 
             var result = await _userManager.UpdateAsync(user);
-            if (!result.Succeeded) return View(model);
 
-            // LOCK / UNLOCK
+            if (!result.Succeeded) return View("EditUser", model);
+
+            // Khóa/Mở khóa
             if (model.IsLocked)
                 await _userManager.SetLockoutEndDateAsync(user, DateTimeOffset.MaxValue);
             else
                 await _userManager.SetLockoutEndDateAsync(user, null);
 
-            // UPDATE ROLE
+            // Cập nhật quyền (Roles)
             var currentRoles = await _userManager.GetRolesAsync(user);
             var rolesToAdd = model.SelectedRoles?.Except(currentRoles) ?? new List<string>();
             var rolesToRemove = currentRoles.Except(model.SelectedRoles ?? new List<string>());
@@ -185,8 +190,35 @@ namespace BaiCuoiKy.Controllers
             await _userManager.RemoveFromRolesAsync(user, rolesToRemove);
 
             TempData["Success"] = "Cập nhật thành công!";
-            return RedirectToAction("Dashboard", new { section = "users" });
+            if (rolesToAdd.Any())
+                await _userManager.AddToRolesAsync(user, rolesToAdd);
+
+            if (rolesToRemove.Any())
+                await _userManager.RemoveFromRolesAsync(user, rolesToRemove);
+
+            TempData["Success"] = "Cập nhật thành công!";
+
+            var currentUserId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+            if (user.Id == currentUserId)
+            {
+                // Nếu người bị sửa chính là người đang đăng nhập -> Refresh lại Cookie
+                await _signInManager.RefreshSignInAsync(user);
+            }
+
+            TempData["Success"] = "Cập nhật thành công!";
+
+            // Logic chuyển hướng như cũ...
+            var safeSelectedRoles = model.SelectedRoles ?? new List<string>();
+            if (safeSelectedRoles.Contains("Admin"))
+            {
+                return RedirectToAction("ManageSystem", "Admin");
+            }
+            else
+            {
+                return RedirectToAction("Index", "Home");
+            }
         }
+        
 
         // =====================================================
         // KHÓA USER

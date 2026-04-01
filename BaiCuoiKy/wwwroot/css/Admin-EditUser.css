@@ -1,6 +1,379 @@
-﻿namespace BaiCuoiKy.wwwroot.css
-{
-    public class Admin_EditUser
-    {
+﻿/* =========================
+    EDIT USER PAGE (ADMIN)
+    Brand: #002641 (Navy) + #ED005A (Pink-Red)
+========================= */
+
+/* --- Layout Tổng --- */
+.admin-edit-container {
+    max-width: 950px;
+    margin: 0 auto;
+    padding: 20px 0 50px 0;
+}
+
+.admin-page-header {
+    margin-bottom: 30px;
+}
+
+.admin-back-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    color: #64748b;
+    text-decoration: none;
+    margin-bottom: 12px;
+    font-weight: 600;
+    transition: color 0.2s;
+}
+
+    .admin-back-btn:hover {
+        color: #002641;
+    }
+
+.admin-page-title {
+    color: #002641;
+    font-size: 1.8rem;
+    font-weight: 800;
+    margin: 0;
+}
+
+.admin-page-subtitle {
+    color: #64748b;
+    margin-top: 5px;
+}
+
+/* --- Khối Form (Cards) --- */
+.admin-form-grid {
+    display: flex;
+    flex-direction: column;
+    gap: 25px;
+}
+
+.admin-form-card {
+    background: #ffffff;
+    border-radius: 16px;
+    box-shadow: 0 4px 20px rgba(0, 38, 65, 0.05);
+    overflow: hidden;
+    border: 1px solid #f1f5f9;
+}
+
+.admin-card-header {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+    padding: 20px 25px;
+    background: #f8fafc;
+    border-bottom: 1px solid #e2e8f0;
+}
+
+.admin-card-icon {
+    width: 45px;
+    height: 45px;
+    border-radius: 10px;
+    background: rgba(0, 38, 65, 0.08);
+    color: #002641;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.2rem;
+}
+
+.admin-card-title {
+    margin: 0;
+    font-size: 1.15rem;
+    font-weight: 700;
+    color: #002641;
+}
+
+.admin-card-subtitle {
+    margin: 0;
+    font-size: 0.85rem;
+    color: #64748b;
+}
+
+.admin-card-body {
+    padding: 25px;
+}
+
+/* --- Input Fields --- */
+.admin-form-group {
+    margin-bottom: 20px;
+}
+
+.admin-form-row {
+    display: flex;
+    gap: 20px;
+}
+
+.admin-form-group-half {
+    flex: 1;
+}
+
+.admin-form-label {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-weight: 600;
+    color: #334155;
+    margin-bottom: 8px;
+    font-size: 0.9rem;
+}
+
+    .admin-form-label i {
+        color: #94a3b8;
+    }
+
+.admin-form-control {
+    width: 100%;
+    padding: 12px 16px;
+    border: 1.5px solid #cbd5e1;
+    border-radius: 10px;
+    font-size: 0.95rem;
+    color: #0f172a;
+    background: #f8fafc;
+    transition: all 0.2s ease;
+    outline: none;
+}
+
+    .admin-form-control:focus {
+        border-color: #002641;
+        background: #ffffff;
+        box-shadow: 0 0 0 4px rgba(0, 38, 65, 0.08);
+    }
+
+.admin-validation-error {
+    color: #ED005A;
+    font-size: 0.8rem;
+    margin-top: 5px;
+    display: block;
+}
+
+/* --- Nút Gạt (Toggle Switch) Khóa Tài Khoản --- */
+.admin-toggle-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 16px 20px;
+    border: 1px solid #e2e8f0;
+    border-radius: 12px;
+    background: #fafafa;
+}
+
+.admin-toggle-info {
+    display: flex;
+    gap: 16px;
+    align-items: center;
+}
+
+    .admin-toggle-info i {
+        font-size: 1.5rem;
+        color: #ED005A;
+    }
+
+    .admin-toggle-info h4 {
+        margin: 0 0 4px 0;
+        font-size: 1rem;
+        color: #002641;
+        font-weight: 600;
+    }
+
+    .admin-toggle-info p {
+        margin: 0;
+        font-size: 0.85rem;
+        color: #64748b;
+    }
+
+.admin-switch {
+    position: relative;
+    display: inline-block;
+    width: 52px;
+    height: 28px;
+}
+
+    .admin-switch input {
+        opacity: 0;
+        width: 0;
+        height: 0;
+    }
+
+.admin-switch-slider {
+    position: absolute;
+    cursor: pointer;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: #cbd5e1;
+    transition: .3s;
+    border-radius: 34px;
+}
+
+    .admin-switch-slider:before {
+        position: absolute;
+        content: "";
+        height: 20px;
+        width: 20px;
+        left: 4px;
+        bottom: 4px;
+        background-color: white;
+        transition: .3s;
+        border-radius: 50%;
+    }
+
+.admin-switch input:checked + .admin-switch-slider {
+    background-color: #ED005A;
+}
+
+    .admin-switch input:checked + .admin-switch-slider:before {
+        transform: translateX(24px);
+    }
+
+/* --- Chọn Quyền (Roles Grid) --- */
+.admin-roles-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: 16px;
+}
+
+.admin-role-card {
+    cursor: pointer;
+    display: block;
+    margin: 0;
+}
+
+    .admin-role-card input[type="checkbox"] {
+        display: none;
+    }
+
+.admin-role-content {
+    border: 2px solid #e2e8f0;
+    border-radius: 12px;
+    padding: 16px;
+    display: flex;
+    align-items: flex-start;
+    gap: 15px;
+    transition: all 0.2s ease;
+    position: relative;
+    background: #ffffff;
+}
+
+.admin-role-icon {
+    width: 42px;
+    height: 42px;
+    border-radius: 10px;
+    background: #f1f5f9;
+    color: #64748b;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.2rem;
+    transition: all 0.2s ease;
+}
+
+.admin-role-info h4 {
+    margin: 0 0 4px 0;
+    color: #0f172a;
+    font-weight: 700;
+    font-size: 1rem;
+}
+
+.admin-role-info p {
+    margin: 0;
+    font-size: 0.85rem;
+    color: #64748b;
+}
+
+.admin-role-check {
+    position: absolute;
+    top: 16px;
+    right: 16px;
+    color: #10b981; /* Màu xanh lá Success */
+    opacity: 0;
+    transform: scale(0.5);
+    transition: all 0.25s cubic-bezier(0.34, 1.56, 0.64, 1);
+    font-size: 1.3rem;
+}
+
+/* Hiệu ứng khi được chọn (Checked) */
+.admin-role-card input:checked + .admin-role-content,
+.admin-role-card.active .admin-role-content {
+    border-color: #002641;
+    background: rgba(0, 38, 65, 0.02);
+    box-shadow: 0 4px 15px rgba(0, 38, 65, 0.08);
+}
+
+    .admin-role-card input:checked + .admin-role-content .admin-role-icon,
+    .admin-role-card.active .admin-role-content .admin-role-icon {
+        background: #002641;
+        color: #ffffff;
+    }
+
+    .admin-role-card input:checked + .admin-role-content .admin-role-check,
+    .admin-role-card.active .admin-role-content .admin-role-check {
+        opacity: 1;
+        transform: scale(1);
+    }
+
+/* --- Buttons --- */
+.admin-form-actions {
+    display: flex;
+    justify-content: flex-end;
+    gap: 15px;
+    margin-top: 30px;
+}
+
+.admin-btn {
+    padding: 12px 28px;
+    border-radius: 10px;
+    font-weight: 600;
+    font-size: 0.95rem;
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    cursor: pointer;
+    border: none;
+    transition: all 0.2s;
+    text-decoration: none;
+}
+
+.admin-btn-secondary {
+    background: #f1f5f9;
+    color: #475569;
+}
+
+    .admin-btn-secondary:hover {
+        background: #e2e8f0;
+        color: #0f172a;
+    }
+
+.admin-btn-primary {
+    background: linear-gradient(135deg, #002641 0%, #013a58 100%);
+    color: #ffffff;
+    box-shadow: 0 4px 12px rgba(0, 38, 65, 0.15);
+}
+
+    .admin-btn-primary:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 6px 15px rgba(0, 38, 65, 0.25);
+        color: #ffffff;
+    }
+
+/* --- Responsive --- */
+@media (max-width: 768px) {
+    .admin-form-row {
+        flex-direction: column;
+        gap: 0;
+    }
+
+    .admin-card-body {
+        padding: 15px;
+    }
+
+    .admin-form-actions {
+        flex-direction: column-reverse;
+    }
+
+    .admin-btn {
+        width: 100%;
+        justify-content: center;
     }
 }

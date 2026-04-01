@@ -40,8 +40,9 @@ namespace BaiCuoiKy.Models.ViewModel
         [Display(Name = "Khóa tài khoản")]
         public bool IsLocked { get; set; }
 
-        public List<string> Roles { get; set; }
-        public List<string> UserRoles { get; set; }
-        public List<string> SelectedRoles { get; set; }
+        
+        public List<string>? Roles { get; set; }
+        public List<string>? UserRoles { get; set; }
+        public List<string>? SelectedRoles { get; set; }
     }
 }

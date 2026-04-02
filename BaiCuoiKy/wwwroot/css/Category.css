@@ -1,56 +1,64 @@
-﻿/* =========================
-    CATEGORY PAGE
-    Brand: #002641 (Navy) + #ED005A (Pink-Red)
-========================= */
+﻿/* ================================================================
+   CATEGORY PAGE — HOUSE88
+   Brand: #002641 (Navy) + #ED005A (Hot Pink)
+================================================================ */
 
 /* =========================
-    PAGE HEADER
+   1. HERO SECTION (BANNER)
 ========================= */
-.border-bottom {
-    border-color: #dce6ef !important;
-    padding-bottom: 16px !important;
+.category-hero {
+    background: linear-gradient(145deg, #002641 0%, #001929 100%);
+    padding: 70px 0;
+    text-align: center;
+    color: white;
+    border-bottom: 5px solid #ED005A;
+    margin-bottom: 50px;
 }
 
-/* Button quản lý danh mục (Admin) */
-.btn[data-bs-target="#categoryModal"] {
-    background: linear-gradient(135deg, #002641 0%, #ED005A 120%) !important;
-    border: none !important;
-    color: #ffffff !important;
+.admin-action-btn {
+    background: rgba(255, 255, 255, 0.1);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    color: #fff;
+    border-radius: 12px;
+    padding: 10px 24px;
     font-weight: 600;
-    font-size: 0.88rem;
-    border-radius: 10px;
-    padding: 9px 20px;
-    box-shadow: 0 4px 12px rgba(237, 0, 90, 0.2);
-    transition: all 0.25s ease;
-    letter-spacing: 0.1px;
+    transition: all 0.3s ease;
 }
 
-    .btn[data-bs-target="#categoryModal"]:hover {
-        background: linear-gradient(135deg, #013357 0%, #c4004b 120%) !important;
+    .admin-action-btn:hover {
+        background: #ED005A;
+        border-color: #ED005A;
+        color: #fff;
         transform: translateY(-2px);
-        box-shadow: 0 7px 18px rgba(237, 0, 90, 0.3);
+        box-shadow: 0 8px 20px rgba(237, 0, 90, 0.3);
     }
 
 /* =========================
-    CATEGORY CARDS (public)
+   2. CATEGORY CARDS (PUBLIC)
 ========================= */
 .category-card {
-    transition: all 0.3s ease;
-    border-radius: 14px !important;
-    background: #f4f7fb;
-    border: 1px solid #dce6ef !important;
+    background: #ffffff;
+    border-radius: 20px;
+    padding: 35px 20px;
+    transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
+    border: 1px solid rgba(0, 38, 65, 0.05);
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.03);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
     position: relative;
     overflow: hidden;
 }
 
-    /* Đường accent phía trên mỗi card */
+    /* Hiệu ứng viền trên cùng */
     .category-card::before {
         content: '';
         position: absolute;
         top: 0;
         left: 0;
         right: 0;
-        height: 3px;
+        height: 4px;
         background: linear-gradient(90deg, #002641, #ED005A);
         opacity: 0;
         transition: opacity 0.3s ease;
@@ -58,67 +66,59 @@
 
     .category-card:hover {
         transform: translateY(-8px);
-        box-shadow: 0 16px 32px rgba(0, 38, 65, 0.12) !important;
-        background: #ffffff;
-        border-color: rgba(237, 0, 90, 0.2) !important;
+        box-shadow: 0 16px 35px rgba(237, 0, 90, 0.12);
+        border-color: rgba(237, 0, 90, 0.2);
     }
 
         .category-card:hover::before {
             opacity: 1;
         }
 
-        /* Tên danh mục đổi màu khi hover */
-        .category-card:hover .card-title {
-            color: #ED005A !important;
-        }
-
-.card-title {
-    color: #002641 !important;
-    font-size: 1rem;
-    font-weight: 700;
-    transition: color 0.25s ease;
-    letter-spacing: -0.2px;
+.category-icon {
+    width: 70px;
+    height: 70px;
+    background: rgba(237, 0, 90, 0.08);
+    color: #ED005A;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 2rem;
+    margin-bottom: 20px;
+    transition: all 0.3s ease;
 }
 
-.card-body .text-muted.small {
-    font-size: 0.8rem;
-    color: #8a9bb0 !important;
-    line-height: 1.5;
+.category-card:hover .category-icon {
+    background: #ED005A;
+    color: #fff;
+    transform: scale(1.1) rotate(5deg);
+    box-shadow: 0 8px 20px rgba(237, 0, 90, 0.25);
 }
 
-/* Icon/emoji placeholder nếu có */
-.category-card .card-body .display-4 {
-    font-size: 2.2rem;
-    margin-bottom: 10px;
+.category-card h5 {
+    color: #002641;
+    transition: color 0.3s ease;
 }
 
-/* Empty state */
-.col-12 .display-6.text-muted {
-    color: #b0bec9 !important;
-    font-size: 1.4rem;
+.category-card:hover h5 {
+    color: #ED005A !important;
 }
 
 /* =========================
-    ADMIN MODAL
+   3. ADMIN MODAL & FORMS
 ========================= */
 .modal-content {
     border: none;
     border-radius: 16px;
     overflow: hidden;
-    box-shadow: 0 24px 64px rgba(0, 38, 65, 0.18);
+    box-shadow: 0 24px 64px rgba(0, 38, 65, 0.25);
 }
 
 .modal-header {
-    background: linear-gradient(135deg, #002641 0%, #013a58 100%);
+    background: linear-gradient(135deg, #002641 0%, #013a58 100%) !important;
     border-bottom: none;
-    padding: 16px 22px;
+    padding: 18px 24px;
 }
-
-    .modal-header .modal-title {
-        color: #ffffff;
-        font-size: 1rem;
-        font-weight: 700;
-    }
 
     .modal-header .btn-close {
         filter: invert(1) brightness(2);
@@ -129,177 +129,118 @@
             opacity: 1;
         }
 
-.modal-body.bg-light {
-    background: #f4f7fb !important;
-    padding: 20px !important;
-}
-
-/* =========================
-    ADD FORM CARD (trong modal)
-========================= */
-.modal-body .card {
-    border-radius: 12px !important;
-    border: 1px solid #dce6ef !important;
-}
-
-    .modal-body .card h6.text-success {
-        color: #002641 !important;
-        font-size: 0.85rem;
-        text-transform: uppercase;
-        letter-spacing: 0.5px;
-        font-weight: 700;
-        padding-bottom: 10px;
-        border-bottom: 2px solid #f0f4f8;
-        margin-bottom: 14px !important;
-    }
-
-        .modal-body .card h6.text-success::before {
-            content: '＋ ';
-            color: #ED005A;
-        }
-
-/* Form controls trong modal */
+/* Input Fields */
 .modal-body .form-control {
     border: 1px solid #dce6ef;
     border-radius: 8px;
-    padding: 9px 13px;
-    font-size: 0.88rem;
+    padding: 10px 14px;
+    font-size: 0.9rem;
     color: #002641;
     transition: border-color 0.2s, box-shadow 0.2s;
 }
 
     .modal-body .form-control:focus {
         border-color: #ED005A;
-        box-shadow: 0 0 0 3px rgba(237, 0, 90, 0.1);
+        box-shadow: 0 0 0 3px rgba(237, 0, 90, 0.15);
         outline: none;
     }
 
 .modal-body .form-control-sm {
-    padding: 6px 10px;
-    font-size: 0.82rem;
-    border-radius: 6px;
+    padding: 8px 12px;
+    font-size: 0.85rem;
 }
 
-/* Button Thêm */
+/* Buttons inside Modal */
 .modal-body .btn-success {
     background: linear-gradient(135deg, #ED005A 0%, #c4004b 100%) !important;
     border: none !important;
     color: #ffffff !important;
-    font-weight: 600;
     border-radius: 8px;
-    box-shadow: 0 3px 10px rgba(237, 0, 90, 0.22);
+    box-shadow: 0 4px 12px rgba(237, 0, 90, 0.25);
     transition: all 0.25s ease;
 }
 
     .modal-body .btn-success:hover {
-        background: linear-gradient(135deg, #c4004b 0%, #9e003d 100%) !important;
-        transform: translateY(-1px);
-        box-shadow: 0 5px 14px rgba(237, 0, 90, 0.32);
+        transform: translateY(-2px);
+        box-shadow: 0 6px 16px rgba(237, 0, 90, 0.35);
     }
 
-/* =========================
-    ADMIN TABLE (trong modal)
-========================= */
-.modal-body .table {
-    font-size: 0.87rem;
-    color: #002641;
-    margin: 0;
-}
-
-    .modal-body .table thead.table-dark th {
-        background: #002641 !important;
-        color: #ffffff;
-        font-weight: 600;
-        font-size: 0.8rem;
-        text-transform: uppercase;
-        letter-spacing: 0.4px;
-        padding: 12px 14px;
-        border: none;
-    }
-
-        .modal-body .table thead.table-dark th:first-child {
-            border-radius: 8px 0 0 0;
-        }
-
-        .modal-body .table thead.table-dark th:last-child {
-            border-radius: 0 8px 0 0;
-        }
-
-    .modal-body .table tbody tr {
-        border-bottom: 1px solid #f0f4f8;
-        transition: background 0.15s;
-    }
-
-        .modal-body .table tbody tr:hover {
-            background: #e8f0f7;
-        }
-
-        .modal-body .table tbody tr:last-child {
-            border-bottom: none;
-        }
-
-    .modal-body .table tbody td {
-        padding: 10px 14px;
-        vertical-align: middle;
-        border: none;
-    }
-
-/* Button Lưu */
-.modal-body .btn-sm.btn-primary {
+.modal-body .btn-primary {
     background: linear-gradient(135deg, #002641 0%, #013a58 100%) !important;
     border: none !important;
-    color: #ffffff !important;
-    font-weight: 600;
     border-radius: 6px;
     box-shadow: 0 2px 8px rgba(0, 38, 65, 0.18);
     transition: all 0.22s ease;
-    padding: 5px 12px;
-    font-size: 0.8rem;
 }
 
-    .modal-body .btn-sm.btn-primary:hover {
-        background: linear-gradient(135deg, #013357 0%, #025475 100%) !important;
-        transform: translateY(-1px);
+    .modal-body .btn-primary:hover {
+        transform: translateY(-2px);
         box-shadow: 0 4px 12px rgba(0, 38, 65, 0.25);
     }
 
-/* Button Xóa */
-.modal-body .btn-sm.btn-danger {
+.modal-body .btn-danger {
     background: linear-gradient(135deg, #ED005A 0%, #c4004b 100%) !important;
     border: none !important;
-    color: #ffffff !important;
-    font-weight: 600;
     border-radius: 6px;
     box-shadow: 0 2px 8px rgba(237, 0, 90, 0.18);
     transition: all 0.22s ease;
-    padding: 5px 12px;
-    font-size: 0.8rem;
-    margin-left: 4px;
 }
 
-    .modal-body .btn-sm.btn-danger:hover {
-        background: linear-gradient(135deg, #c4004b 0%, #9e003d 100%) !important;
-        transform: translateY(-1px);
+    .modal-body .btn-danger:hover {
+        transform: translateY(-2px);
         box-shadow: 0 4px 12px rgba(237, 0, 90, 0.28);
     }
 
 /* =========================
-    RESPONSIVE
+   4. ADMIN TABLE
+========================= */
+.modal-body .table {
+    margin: 0;
+}
+
+    .modal-body .table thead.table-light th {
+        background: #f4f7fb !important;
+        color: #607385;
+        font-weight: 700;
+        font-size: 0.8rem;
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+        padding: 14px;
+        border-bottom: 2px solid #e1e8f0;
+    }
+
+    .modal-body .table tbody tr {
+        transition: background 0.15s;
+        border-bottom: 1px solid #f0f4f8;
+    }
+
+        .modal-body .table tbody tr:hover {
+            background: #f9fbfe;
+        }
+
+    .modal-body .table tbody td {
+        padding: 12px 14px;
+        vertical-align: middle;
+        border: none;
+    }
+
+/* =========================
+   5. RESPONSIVE
 ========================= */
 @media (max-width: 768px) {
+    .category-hero {
+        padding: 50px 0;
+    }
+
     .category-card {
-        border-radius: 12px !important;
+        padding: 25px 15px;
     }
 
-    .card-title {
-        font-size: 0.92rem;
+    .modal-body {
+        padding: 15px !important;
     }
 
-    .modal-dialog.modal-xl {
-        margin: 10px;
-    }
-
-    .modal-body .table {
-        font-size: 0.78rem;
+    .table-responsive {
+        border: 0;
     }
 }

@@ -12,8 +12,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace BaiCuoiKy.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    [Migration("20260401042640_RemoveThuTuCategory")]
-    partial class RemoveThuTuCategory
+    [Migration("20260402080322_UpdateCascadeDelete")]
+    partial class UpdateCascadeDelete
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -132,6 +132,9 @@ namespace BaiCuoiKy.Migrations
                     b.Property<DateTime>("NgayNhan")
                         .HasColumnType("datetime2");
 
+                    b.Property<decimal>("TienCoc")
+                        .HasColumnType("decimal(18,2)");
+
                     b.Property<string>("TrangThai")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
@@ -211,6 +214,9 @@ namespace BaiCuoiKy.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<string>("Url")
+                        .HasColumnType("nvarchar(max)");
+
                     b.Property<string>("UserId")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
@@ -257,6 +263,44 @@ namespace BaiCuoiKy.Migrations
                     b.ToTable("Reviews");
                 });
 
+            modelBuilder.Entity("BaiCuoiKy.Models.SupportTicket", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<DateTime>("CreatedAt")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("Email")
+                        .IsRequired()
+                        .HasMaxLength(100)
+                        .HasColumnType("nvarchar(100)");
+
+                    b.Property<bool>("IsResolved")
+                        .HasColumnType("bit");
+
+                    b.Property<string>("Message")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasMaxLength(100)
+                        .HasColumnType("nvarchar(100)");
+
+                    b.Property<string>("Phone")
+                        .IsRequired()
+                        .HasMaxLength(20)
+                        .HasColumnType("nvarchar(20)");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("SupportTickets");
+                });
+
             modelBuilder.Entity("BaiCuoiKy.Models.Tro", b =>
                 {
                     b.Property<int>("Id")
@@ -281,6 +325,10 @@ namespace BaiCuoiKy.Migrations
 
                     b.Property<bool>("IsDeleted")
                         .HasColumnType("bit");
+
+                    b.Property<string>("KhuVuc")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("MoTa")
                         .IsRequired()
@@ -518,7 +566,7 @@ namespace BaiCuoiKy.Migrations
                     b.HasOne("BaiCuoiKy.Models.Category", "Category")
                         .WithMany("Tros")
                         .HasForeignKey("CategoryId")
-                        .OnDelete(DeleteBehavior.SetNull);
+                        .OnDelete(DeleteBehavior.Cascade);
 
                     b.HasOne("BaiCuoiKy.Models.ApplicationUser", "User")
                         .WithMany("Tros")

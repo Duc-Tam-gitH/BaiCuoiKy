@@ -1,0 +1,377 @@
+﻿/* ============================================================
+   Search Hero — Modern Luxury Design
+   ============================================================ */
+
+@import url('https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700;800&family=DM+Sans:wght@300;400;500;600&display=swap');
+
+/* ---------- CSS Variables ---------- */
+:root {
+    --clr-bg-from: #002641;
+    --clr-bg-to: #001a2e;
+    --clr-accent: #ED005A;
+    --clr-accent2: #ff4d8d;
+    --clr-blue: #0066a6;
+    --clr-card: rgba(255, 255, 255, 0.045);
+    --clr-border: rgba(255, 255, 255, 0.08);
+    --clr-text: #f1f5f9;
+    --clr-muted: rgba(241, 245, 249, 0.5);
+    --radius-card: 24px;
+    --radius-btn: 14px;
+    --font-display: 'Playfair Display', serif;
+    --font-body: 'DM Sans', sans-serif;
+    --transition: 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+/* ---------- Hero Wrapper ---------- */
+.search-hero {
+    font-family: var(--font-body);
+    position: relative;
+    min-height: 90vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: linear-gradient(135deg, var(--clr-bg-from) 0%, var(--clr-bg-to) 100%);
+    overflow: hidden;
+    padding: 80px 20px 100px;
+}
+
+/* ---------- Animated Background ---------- */
+.hero-bg {
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+    z-index: 0;
+}
+
+.blob {
+    position: absolute;
+    border-radius: 50%;
+    filter: blur(100px);
+    opacity: 0.35;
+    animation: blobFloat 10s ease-in-out infinite;
+}
+
+.blob-1 {
+    width: 560px;
+    height: 560px;
+    background: radial-gradient(circle, #002641, #0066a6);
+    top: -120px;
+    left: -120px;
+    animation-delay: 0s;
+}
+
+.blob-2 {
+    width: 460px;
+    height: 460px;
+    background: radial-gradient(circle, #8b0035, #ED005A);
+    bottom: -80px;
+    right: -80px;
+    animation-delay: -4s;
+}
+
+.blob-3 {
+    width: 320px;
+    height: 320px;
+    background: radial-gradient(circle, #ED005A, #ff4d8d);
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    animation-delay: -7s;
+}
+
+.grid-overlay {
+    position: absolute;
+    inset: 0;
+    background-image: linear-gradient(rgba(255,255,255,0.03) 1px, transparent 1px), linear-gradient(90deg, rgba(255,255,255,0.03) 1px, transparent 1px);
+    background-size: 40px 40px;
+}
+
+@keyframes blobFloat {
+    0%, 100% {
+        transform: translateY(0) scale(1);
+    }
+
+    50% {
+        transform: translateY(-30px) scale(1.05);
+    }
+}
+
+/* ---------- Hero Content ---------- */
+.hero-content {
+    position: relative;
+    z-index: 1;
+    width: 100%;
+    max-width: 940px;
+    margin: 0 auto;
+    text-align: center;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 28px;
+}
+
+/* ---------- Animate on load ---------- */
+[data-animate="fade-up"] {
+    opacity: 0;
+    transform: translateY(24px);
+    animation: fadeUp 0.65s ease forwards;
+    animation-delay: var(--delay, 0ms);
+}
+
+@keyframes fadeUp {
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+/* ---------- Badge ---------- */
+.hero-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    background: rgba(237, 0, 90, 0.12);
+    border: 1px solid rgba(237, 0, 90, 0.3);
+    color: #ff4d8d;
+    font-size: 0.82rem;
+    font-weight: 500;
+    letter-spacing: 0.04em;
+    padding: 6px 16px;
+    border-radius: 999px;
+}
+
+.badge-dot {
+    width: 7px;
+    height: 7px;
+    background: #ED005A;
+    border-radius: 50%;
+    animation: pulse 2s ease-in-out infinite;
+}
+
+@keyframes pulse {
+    0%, 100% {
+        box-shadow: 0 0 0 0 rgba(237,0,90,0.5);
+    }
+
+    50% {
+        box-shadow: 0 0 0 6px rgba(237,0,90,0);
+    }
+}
+
+/* ---------- Title ---------- */
+.hero-title {
+    font-family: var(--font-display);
+    font-size: clamp(2.4rem, 6vw, 4.2rem);
+    font-weight: 800;
+    color: var(--clr-text);
+    line-height: 1.1;
+    letter-spacing: -0.02em;
+    margin: 0;
+}
+
+.hero-title-highlight {
+    background: linear-gradient(90deg, #ED005A, #ff4d8d);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+}
+
+/* ---------- Subtitle ---------- */
+.hero-subtitle {
+    font-size: 1.05rem;
+    color: var(--clr-muted);
+    font-weight: 300;
+    max-width: 520px;
+    line-height: 1.7;
+    margin: 0;
+}
+
+/* ---------- Search Card ---------- */
+.search-card {
+    width: 100%;
+    background: rgba(255, 255, 255, 0.06);
+    backdrop-filter: blur(24px);
+    -webkit-backdrop-filter: blur(24px);
+    border: 1px solid var(--clr-border);
+    border-radius: var(--radius-card);
+    padding: 10px 10px 10px 10px;
+    box-shadow: 0 32px 80px rgba(0,0,0,0.4), inset 0 1px 0 rgba(255,255,255,0.07);
+    transition: box-shadow var(--transition);
+}
+
+    .search-card:hover {
+        box-shadow: 0 40px 100px rgba(0,0,0,0.5), inset 0 1px 0 rgba(255,255,255,0.1);
+    }
+
+/* ---------- Search Form ---------- */
+.search-form {
+    display: flex;
+    align-items: center;
+    gap: 0;
+    flex-wrap: wrap;
+}
+
+/* ---------- Search Field ---------- */
+.search-field {
+    flex: 1 1 160px;
+    padding: 12px 20px;
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+    min-width: 130px;
+}
+
+.search-field--keyword {
+    flex: 1.4 1 180px;
+}
+
+.search-label {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    font-size: 0.7rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.07em;
+    color: var(--clr-accent);
+    white-space: nowrap;
+}
+
+.search-icon {
+    font-size: 0.7rem;
+    opacity: 0.9;
+}
+
+.search-select,
+.search-input {
+    background: transparent;
+    border: none;
+    outline: none;
+    color: var(--clr-text);
+    font-family: var(--font-body);
+    font-size: 0.92rem;
+    font-weight: 500;
+    width: 100%;
+    padding: 0;
+    cursor: pointer;
+    appearance: none;
+    -webkit-appearance: none;
+}
+
+    .search-select option {
+        background: #1e293b;
+        color: var(--clr-text);
+    }
+
+    .search-input::placeholder {
+        color: var(--clr-muted);
+        font-weight: 400;
+    }
+
+    .search-select:focus,
+    .search-input:focus {
+        outline: none;
+    }
+
+/* ---------- Divider ---------- */
+.search-divider {
+    width: 1px;
+    height: 42px;
+    background: var(--clr-border);
+    flex-shrink: 0;
+    align-self: center;
+}
+
+/* ---------- Search Button ---------- */
+.search-btn {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    flex-shrink: 0;
+    margin: 6px;
+    padding: 14px 28px;
+    background: linear-gradient(135deg, #ED005A 0%, #b8004a 100%);
+    color: #fff;
+    font-family: var(--font-body);
+    font-size: 0.92rem;
+    font-weight: 600;
+    border: none;
+    border-radius: var(--radius-btn);
+    cursor: pointer;
+    transition: all var(--transition);
+    box-shadow: 0 8px 24px rgba(237,0,90,0.4);
+    white-space: nowrap;
+}
+
+    .search-btn:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 12px 32px rgba(237,0,90,0.55);
+        background: linear-gradient(135deg, #ff1a6e 0%, #ED005A 100%);
+    }
+
+    .search-btn:active {
+        transform: translateY(0);
+        box-shadow: 0 4px 16px rgba(237,0,90,0.3);
+    }
+
+/* ---------- Stats Row ---------- */
+.hero-stats {
+    display: flex;
+    align-items: center;
+    gap: 20px;
+    color: var(--clr-muted);
+    font-size: 0.875rem;
+}
+
+.stat-item {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 2px;
+}
+
+    .stat-item strong {
+        font-size: 1.1rem;
+        font-weight: 700;
+        color: var(--clr-text);
+    }
+
+.stat-sep {
+    font-size: 1.4rem;
+    opacity: 0.25;
+    line-height: 1;
+}
+
+/* ---------- Responsive ---------- */
+@media (max-width: 768px) {
+    .search-form {
+        flex-direction: column;
+        align-items: stretch;
+    }
+
+    .search-divider {
+        display: none;
+    }
+
+    .search-field {
+        padding: 10px 16px;
+        border-bottom: 1px solid var(--clr-border);
+    }
+
+        .search-field:last-of-type {
+            border-bottom: none;
+        }
+
+    .search-btn {
+        margin: 8px 12px 12px;
+        padding: 14px;
+        border-radius: 12px;
+    }
+
+    .hero-stats {
+        flex-wrap: wrap;
+        justify-content: center;
+        gap: 12px 16px;
+    }
+}

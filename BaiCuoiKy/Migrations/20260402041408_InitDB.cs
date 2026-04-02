@@ -6,7 +6,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 namespace BaiCuoiKy.Migrations
 {
     /// <inheritdoc />
-    public partial class InitialCreate : Migration
+    public partial class InitDB : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -60,7 +60,6 @@ namespace BaiCuoiKy.Migrations
                         .Annotation("SqlServer:Identity", "1, 1"),
                     TenDanhMuc = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     MoTa = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    ThuTu = table.Column<int>(type: "int", nullable: false),
                     TrangThai = table.Column<bool>(type: "bit", nullable: false)
                 },
                 constraints: table =>
@@ -77,7 +76,8 @@ namespace BaiCuoiKy.Migrations
                     UserId = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     Message = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     CreatedAt = table.Column<DateTime>(type: "datetime2", nullable: false),
-                    IsRead = table.Column<bool>(type: "bit", nullable: false)
+                    IsRead = table.Column<bool>(type: "bit", nullable: false),
+                    Url = table.Column<string>(type: "nvarchar(max)", nullable: true)
                 },
                 constraints: table =>
                 {
@@ -201,6 +201,7 @@ namespace BaiCuoiKy.Migrations
                     Gia = table.Column<decimal>(type: "decimal(18,2)", precision: 18, scale: 2, nullable: false),
                     DienTich = table.Column<double>(type: "float", nullable: false),
                     DiaChi = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    KhuVuc = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     NgayDang = table.Column<DateTime>(type: "datetime2", nullable: false),
                     TrangThai = table.Column<int>(type: "int", nullable: false),
                     IsDeleted = table.Column<bool>(type: "bit", nullable: false),
@@ -254,6 +255,7 @@ namespace BaiCuoiKy.Migrations
                     NgayDat = table.Column<DateTime>(type: "datetime2", nullable: false),
                     NgayNhan = table.Column<DateTime>(type: "datetime2", nullable: false),
                     TrangThai = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    TienCoc = table.Column<decimal>(type: "decimal(18,2)", nullable: false),
                     UserId = table.Column<string>(type: "nvarchar(450)", nullable: false),
                     TroId = table.Column<int>(type: "int", nullable: false)
                 },

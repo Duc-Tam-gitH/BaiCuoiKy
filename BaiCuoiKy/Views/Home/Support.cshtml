@@ -1,0 +1,122 @@
+﻿@{
+    ViewData["Title"] = "Trung tâm hỗ trợ - House88";
+}
+
+@section Styles {
+    <link rel="stylesheet" href="~/css/Support.css" asp-append-version="true" />
+    
+}
+
+<div class="support-hero shadow-lg">
+    <div class="container">
+        <h1 class="fw-bold mb-2" style="font-family: var(--font-display); font-size: 2.8rem;">Trung Tâm Hỗ Trợ</h1>
+        <p class="text-light opacity-75 mb-0" style="font-size: 1.1rem;">Chúng tôi luôn sẵn sàng lắng nghe và giải đáp mọi thắc mắc của bạn</p>
+    </div>
+</div>
+
+<div class="container mb-5 pb-4">
+
+    @if (TempData["SuccessMessage"] != null)
+    {
+        <div class="alert alert-success alert-dismissible fade show shadow-sm" role="alert" style="border-radius: 12px; border-left: 5px solid #198754;">
+            <i class="fas fa-check-circle me-2"></i> @TempData["SuccessMessage"]
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+        </div>
+    }
+
+    <div class="row g-4">
+        <div class="col-lg-5">
+            <div class="info-card mb-4" data-anim="up" class="anim-in">
+                <h4><i class="fas fa-headset me-2 text-danger"></i> Thông tin liên hệ</h4>
+                <div class="mb-3 d-flex align-items-center gap-3">
+                    <div class="rounded-circle bg-light d-flex align-items-center justify-content-center" style="width: 45px; height: 45px; color: var(--navy);">
+                        <i class="fas fa-envelope"></i>
+                    </div>
+                    <div>
+                        <small class="text-muted d-block">Email hỗ trợ</small>
+                        <strong style="color: var(--navy);">admin@house88.com</strong>
+                    </div>
+                </div>
+                <div class="mb-3 d-flex align-items-center gap-3">
+                    <div class="rounded-circle bg-light d-flex align-items-center justify-content-center" style="width: 45px; height: 45px; color: var(--navy);">
+                        <i class="fas fa-phone-alt"></i>
+                    </div>
+                    <div>
+                        <small class="text-muted d-block">Hotline</small>
+                        <strong style="color: var(--navy);">1900 8888 (24/7)</strong>
+                    </div>
+                </div>
+                <div class="d-flex align-items-center gap-3">
+                    <div class="rounded-circle bg-light d-flex align-items-center justify-content-center" style="width: 45px; height: 45px; color: var(--navy);">
+                        <i class="fas fa-map-marker-alt"></i>
+                    </div>
+                    <div>
+                        <small class="text-muted d-block">Địa chỉ văn phòng</small>
+                        <strong style="color: var(--navy);">Số 951 Bình Giã, Phường 11, Thành phố Vũng Tàu, Tỉnh Bà Rịa – Vũng Tàu</strong>
+                    </div>
+                </div>
+            </div>
+
+            <div class="info-card" data-anim="up" style="--i: 1" class="anim-in">
+                <h4><i class="fas fa-code me-2 text-danger"></i> Đội ngũ phát triển</h4>
+
+                <div class="team-member">
+                    <img src="~/images/M1.jpg" alt="Nguyễn Phạm Đức Tâm" class="team-avatar" />
+                    <div class="team-info">
+                        <h6>Nguyễn Phạm Đức Tâm</h6>
+                        <p>Lead Developer</p>
+                    </div>
+                </div>
+
+                <div class="team-member">
+                    <img src="~/images/M2.jpg" alt="Hồ Triết Minh" class="team-avatar" />
+                    <div class="team-info">
+                        <h6>Hồ Triết Minh</h6>
+                        <p>Fullstack Developer</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-lg-7">
+            <div class="support-form-wrapper" data-anim="up" style="--i: 2" class="anim-in">
+                <h3 class="fw-bold mb-2" style="color: var(--navy); font-family: var(--font-display);">Gửi yêu cầu hỗ trợ</h3>
+                <p class="text-muted mb-4">Vui lòng điền thông tin chi tiết để Admin có thể hỗ trợ bạn nhanh nhất.</p>
+
+                <form asp-controller="Home" asp-action="SubmitSupport" method="post">
+                    <div class="row g-3">
+                        <div class="col-md-12">
+                            <label class="form-label">Họ và tên của bạn</label>
+                            <input type="text" name="Name" class="form-control" placeholder="Nhập họ tên..." required />
+                        </div>
+
+                        <div class="col-md-6">
+                            <label class="form-label">Email liên hệ</label>
+                            <input type="email" name="Email" class="form-control" placeholder="vidu@email.com" required />
+                        </div>
+
+                        <div class="col-md-6">
+                            <label class="form-label">Số điện thoại</label>
+                            <input type="tel" name="Phone" class="form-control" placeholder="09xx xxx xxx" required />
+                        </div>
+
+                        <div class="col-12">
+                            <label class="form-label">Nội dung cần hỗ trợ</label>
+                            <textarea name="Message" class="form-control" rows="5" placeholder="Mô tả chi tiết vấn đề bạn đang gặp phải..." required></textarea>
+                        </div>
+
+                        <div class="col-12 mt-4">
+                            <button type="submit" class="btn btn-submit w-100">
+                                Gửi yêu cầu <i class="fas fa-paper-plane ms-2"></i>
+                            </button>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <script src="~/js/Support.js"></script>
+}

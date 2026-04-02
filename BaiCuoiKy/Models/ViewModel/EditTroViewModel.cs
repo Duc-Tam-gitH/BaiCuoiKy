@@ -10,6 +10,7 @@ namespace BaiCuoiKy.Models.ViewModel
         public required string TieuDe { get; set; }
 
         public required string DiaChi { get; set; }
+        public string KhuVuc { get; set; }
 
         public decimal Gia { get; set; }
 

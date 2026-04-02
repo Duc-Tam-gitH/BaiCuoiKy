@@ -1,22 +1,81 @@
 ﻿@{
-    ViewData["Title"] = "Chính sách bảo mật";
-    // KHÔNG dùng Layout = null;
+    ViewData["Title"] = "Chính sách bảo mật - House88";
 }
 
-<div class="privacy-page-content container my-5 pt-4">
-    <div class="card shadow-sm border-0 p-5 bg-white rounded">
-        <h1 class="text-primary fw-bold mb-4">Chính sách bảo mật</h1>
-        <hr />
-        <div class="mt-4">
-            <h5 class="fw-semibold">1. Thu thập thông tin cá nhân</h5>
-            <p class="text-secondary">Chúng tôi thu thập thông tin cá nhân khi bạn đăng ký tài khoản hoặc sử dụng dịch vụ tìm phòng trọ...</p>
+@section Styles {
+    <link rel="stylesheet" href="~/css/Privacy.css" asp-append-version="true" />
+    
+}
 
-            <h5 class="fw-semibold mt-4">2. Bảo mật dữ liệu</h5>
-            <p class="text-secondary">Dữ liệu của bạn được bảo vệ bằng các công nghệ mã hóa tiên tiến nhất hiện nay.</p>
-
-            <div class="alert alert-info mt-5">
-                Cập nhật lần cuối ngày: 24/03/2026
-            </div>
-        </div>
+<div class="privacy-hero shadow-lg">
+    <div class="container">
+        <h1 class="fw-bold mb-2" style="font-family: var(--font-display); font-size: 2.8rem;">Chính Sách Bảo Mật</h1>
+        <p class="text-light opacity-75 mb-0" style="font-size: 1.1rem;">Cam kết bảo vệ dữ liệu và quyền riêng tư của bạn tại House88</p>
     </div>
 </div>
+
+<div class="privacy-container">
+
+    <div class="privacy-section" data-anim="up" class="anim-in">
+        <p>Chào mừng bạn đến với <strong>House88</strong>. Chúng tôi hiểu rằng quyền riêng tư của bạn là vô cùng quan trọng. Chính sách bảo mật này nhằm mục đích giúp bạn hiểu rõ những thông tin chúng tôi thu thập, lý do chúng tôi thu thập và cách bạn có thể cập nhật, quản lý, xuất cũng như xóa thông tin của mình.</p>
+    </div>
+
+    <div class="privacy-section" data-anim="up" class="anim-in">
+        <h3><i class="fas fa-database"></i> 1. Thông tin chúng tôi thu thập</h3>
+        <p>Để cung cấp dịch vụ tìm kiếm và đặt phòng trọ tốt nhất, chúng tôi có thể thu thập các loại thông tin sau:</p>
+        <ul>
+            <li><strong>Thông tin cá nhân:</strong> Họ tên, email, số điện thoại khi bạn tạo tài khoản, đăng tin hoặc gửi yêu cầu đặt phòng.</li>
+            <li><strong>Nội dung do bạn tạo ra:</strong> Các bài đăng cho thuê phòng, hình ảnh, nhận xét và đánh giá của bạn trên hệ thống.</li>
+            <li><strong>Dữ liệu tương tác:</strong> Lịch sử tìm kiếm, lịch sử xem phòng và danh sách phòng yêu thích của bạn.</li>
+        </ul>
+    </div>
+
+    <div class="privacy-section" data-anim="up" class="anim-in">
+        <h3><i class="fas fa-bullseye"></i> 2. Mục đích sử dụng thông tin</h3>
+        <p>House88 sử dụng thông tin thu thập được cho các mục đích chính sau:</p>
+        <ul>
+            <li>Hỗ trợ khách hàng gửi yêu cầu đặt phòng và kết nối trực tiếp với chủ trọ.</li>
+            <li>Cung cấp, duy trì và cải thiện các tính năng của nền tảng.</li>
+            <li>Gửi thông báo về trạng thái đơn đặt phòng, tin nhắn mới và các cập nhật quan trọng (thông qua hệ thống chuông báo hoặc email).</li>
+            <li>Ngăn chặn các hoạt động gian lận, tài khoản giả mạo nhằm bảo vệ cộng đồng.</li>
+        </ul>
+    </div>
+
+    <div class="privacy-section" data-anim="up" class="anim-in">
+        <h3><i class="fas fa-shield-alt"></i> 3. Bảo mật thông tin</h3>
+        <p>Chúng tôi cam kết không bán, trao đổi hay chia sẻ thông tin cá nhân của bạn cho bất kỳ bên thứ ba nào vì mục đích thương mại. Thông tin của bạn chỉ được chia sẻ trong các trường hợp:</p>
+        <ul>
+            <li>Chia sẻ thông tin liên hệ cơ bản (tên, số điện thoại) cho chủ phòng khi bạn gửi yêu cầu đặt phòng để hai bên có thể trao đổi.</li>
+            <li>Có sự đồng ý rõ ràng từ phía bạn.</li>
+            <li>Thực hiện theo yêu cầu của các cơ quan pháp luật có thẩm quyền.</li>
+        </ul>
+    </div>
+
+    <div class="privacy-section" data-anim="up" class="anim-in">
+        <h3><i class="fas fa-user-check"></i> 4. Quyền lợi của bạn</h3>
+        <p>Với tư cách là người dùng của House88, bạn có toàn quyền đối với dữ liệu cá nhân của mình:</p>
+        <ul>
+            <li>Bạn có thể xem, chỉnh sửa hoặc cập nhật thông tin cá nhân bất kỳ lúc nào tại trang "Thông tin cá nhân".</li>
+            <li>Bạn có quyền xóa tài khoản và toàn bộ dữ liệu liên quan khỏi hệ thống của chúng tôi.</li>
+            <li>Bạn có thể quản lý lịch sử đặt phòng, bài đăng và các đánh giá của mình.</li>
+        </ul>
+    </div>
+
+    <div class="privacy-section" data-anim="up" class="anim-in">
+        <h3><i class="fas fa-headset"></i> 5. Liên hệ với chúng tôi</h3>
+        <p>Nếu bạn có bất kỳ câu hỏi, thắc mắc hoặc góp ý nào về Chính sách bảo mật này, vui lòng liên hệ với đội ngũ hỗ trợ của House88 qua:</p>
+        <ul>
+            <li><strong>Email:</strong> support@house88.com</li>
+            <li><strong>Hotline:</strong> 1900 8888</li>
+            <li><strong>Địa chỉ:</strong> Khu Công Nghệ Cao, Thành phố Thủ Đức, TP. Hồ Chí Minh</li>
+        </ul>
+    </div>
+
+    <div class="last-updated">
+        <i class="far fa-clock me-1"></i> Cập nhật lần cuối: Tháng 04/2026
+    </div>
+</div>
+
+@section Scripts {
+   <script src="~/js/Privacy.js"></script>
+}

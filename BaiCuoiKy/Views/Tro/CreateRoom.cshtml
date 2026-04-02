@@ -42,6 +42,13 @@
                             <input asp-for="DiaChi" class="form-control" placeholder="Số nhà, đường, phường/xã, quận/huyện, thành phố" />
                             <span asp-validation-for="DiaChi" class="text-danger"></span>
                         </div>
+                        <div class="mb-3">
+                            <label asp-for="KhuVuc" class="form-label fw-bold text-navy">
+                                <i class="fas fa-city me-1 text-primary"></i> Khu vực / Quận huyện
+                            </label>
+                            <input asp-for="KhuVuc" class="form-control shadow-sm" placeholder="Ví dụ: Quận 1, TP. Thủ Đức, Bình Thạnh..." />
+                            <span asp-validation-for="KhuVuc" class="text-danger small"></span>
+                        </div>
 
                         <div class="row">
                             <div class="col-md-6 mb-3">
@@ -123,9 +130,9 @@
                         </div>
 
                         <div class="d-flex justify-content-between">
-                            <button type="button" id="btnBack" class="btn btn-secondary">
+                            <a asp-controller="Admin" asp-action="Dashboard" asp-route-section="rooms" class="btn btn-secondary">
                                 <i class="fas fa-arrow-left me-1"></i> Quay lại
-                            </button>
+                            </a>
                             <button type="button" id="btnSubmit" class="btn btn-primary">
                                 <i class="fas fa-save me-1"></i> Thêm phòng trọ
                             </button>

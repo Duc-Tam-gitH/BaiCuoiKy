@@ -25,6 +25,7 @@ namespace BaiCuoiKy.Models
         public DbSet<Favorite> Favorites { get; set; }
         public DbSet<Notification> Notifications { get; set; }
         public DbSet<Category> Categories { get; set; }
+        public DbSet<SupportTicket> SupportTickets { get; set; }
 
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
@@ -109,6 +110,12 @@ namespace BaiCuoiKy.Models
                 .WithMany(c => c.Tros)
                 .HasForeignKey(t => t.CategoryId)
                 .OnDelete(DeleteBehavior.SetNull);
+            // Nếu bạn muốn xóa tất cả các Tro liên quan khi xóa Category, dùng Cascade:
+            modelBuilder.Entity<Tro>()
+                .HasOne(t => t.Category)
+                .WithMany(c => c.Tros)
+                .HasForeignKey(t => t.CategoryId)
+                .OnDelete(DeleteBehavior.Cascade);
         }
     }
 }

@@ -1,650 +1,957 @@
-﻿/* =========================
-    ROOM DETAIL PAGE
-    Brand: #002641 (Navy) + #ED005A (Pink-Red)
-========================= */
+﻿/* ================================================================
+   House88 — Premium Property Details  ·  v2.0
+   Palette: #002641 (Navy) × #ED005A (Hot Pink)
+   Aesthetic: Luxury Editorial — refined, spatial, animated
+   ================================================================ */
 
-.hidden-form {
-    display: none;
+@import url('https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,700;0,900;1,700&family=DM+Sans:wght@300;400;500;600&display=swap');
+
+/* ─────────────────────────────────────────
+   1. DESIGN TOKENS & RESET
+───────────────────────────────────────── */
+:root {
+    --navy: #002641;
+    --navy-deep: #001829;
+    --navy-mid: #003459;
+    --navy-light: #0a4a78;
+    --pink: #ED005A;
+    --pink-hover: #c4004a;
+    --pink-vivid: #ff1a6e;
+    --pink-soft: rgba(237, 0, 90, 0.07);
+    --pink-glow: rgba(237, 0, 90, 0.22);
+    --gold: #c9a96e;
+    --bg: #f4f6f9;
+    --surface: #ffffff;
+    --surface-2: #fafbfd;
+    --border: rgba(0, 38, 65, 0.09);
+    --border-mid: rgba(0, 38, 65, 0.15);
+    --text: #0d1b2a;
+    --text-muted: #5a7185;
+    --text-light: #96aab8;
+    --shadow-xs: 0 1px 4px rgba(0, 38, 65, 0.06);
+    --shadow-sm: 0 4px 16px rgba(0, 38, 65, 0.08);
+    --shadow-md: 0 10px 36px rgba(0, 38, 65, 0.12);
+    --shadow-lg: 0 24px 64px rgba(0, 38, 65, 0.16);
+    --shadow-pink: 0 12px 36px rgba(237, 0, 90, 0.32);
+    --radius-xs: 6px;
+    --radius-sm: 12px;
+    --radius-md: 20px;
+    --radius-lg: 32px;
+    --radius-xl: 48px;
+    --ease: cubic-bezier(0.22, 0.9, 0.35, 1);
+    --ease-spring: cubic-bezier(0.34, 1.56, 0.64, 1);
+    --dur: 0.28s;
+    --dur-slow: 0.5s;
+    --font-display: 'Playfair Display', serif;
+    --font-body: 'DM Sans', sans-serif;
 }
-/* =========================
-    CONTAINER
-========================= */
-.room-detail-container {
-    max-width: 1400px;
-    margin: 0 auto;
+
+*, *::before, *::after {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+
+body {
+    font-family: var(--font-body);
+    background: var(--bg);
+    color: var(--text);
+    -webkit-font-smoothing: antialiased;
+    line-height: 1.65;
+}
+
+/* ─────────────────────────────────────────
+   2. MAIN LAYOUT
+───────────────────────────────────────── */
+.details-container {
+    max-width: 1300px;
+    margin: 48px auto;
     padding: 0 24px;
+    display: grid;
+    grid-template-columns: 2fr 1fr;
+    gap: 36px;
+    align-items: start;
 }
 
-/* =========================
-    GALLERY
-========================= */
-.room-gallery {
-    background: #f0f4f8;
-    border-radius: 16px;
+@media (max-width: 1024px) {
+    .details-container {
+        grid-template-columns: 1fr;
+        margin: 24px auto;
+        gap: 24px;
+    }
+}
+
+/* ─────────────────────────────────────────
+   3. CONTENT CARD (LEFT)
+───────────────────────────────────────── */
+.room-details__content {
+    background: var(--surface);
+    border-radius: var(--radius-md);
+    box-shadow: var(--shadow-md);
+    border: 1px solid var(--border);
     overflow: hidden;
-    box-shadow: 0 4px 20px rgba(0, 38, 65, 0.08);
+    animation: fadeSlideUp 0.55s var(--ease) both;
 }
 
-.main-image {
-    width: 100%;
-    height: 420px;
-    cursor: pointer;
+@keyframes fadeSlideUp {
+    from {
+        opacity: 0;
+        transform: translateY(20px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+/* ─────────────────────────────────────────
+   4. HERO — GALLERY + HEADER
+───────────────────────────────────────── */
+.room-details__hero {
+    display: grid;
+    grid-template-columns: 1.55fr 1fr;
+    min-height: 400px;
+}
+
+@media (max-width: 768px) {
+    .room-details__hero {
+        grid-template-columns: 1fr;
+    }
+}
+
+/* ── Gallery ── */
+.room-gallery {
     position: relative;
     overflow: hidden;
 }
 
-    .main-image img {
+    .room-gallery img {
         width: 100%;
         height: 100%;
+        min-height: 360px;
         object-fit: cover;
-        transition: transform 0.4s ease;
+        display: block;
+        transition: transform 0.6s var(--ease);
     }
 
-    .main-image:hover img {
+    .room-gallery:hover img {
         transform: scale(1.03);
     }
 
-.thumbnail-list {
-    display: flex;
-    gap: 10px;
-    padding: 14px 16px;
-    overflow-x: auto;
-    scrollbar-width: thin;
-    scrollbar-color: #ED005A #f0f4f8;
-}
-
-    .thumbnail-list::-webkit-scrollbar {
-        height: 4px;
-    }
-
-    .thumbnail-list::-webkit-scrollbar-track {
-        background: #f0f4f8;
-    }
-
-    .thumbnail-list::-webkit-scrollbar-thumb {
-        background: #ED005A;
-        border-radius: 4px;
-    }
-
-.thumbnail-item {
-    width: 82px;
-    height: 82px;
-    flex-shrink: 0;
-    cursor: pointer;
-    border-radius: 10px;
-    overflow: hidden;
-    border: 2.5px solid transparent;
-    transition: all 0.22s ease;
-}
-
-    .thumbnail-item:hover,
-    .thumbnail-item.active {
-        border-color: #ED005A;
-        transform: scale(1.06);
-        box-shadow: 0 4px 12px rgba(237, 0, 90, 0.25);
-    }
-
-    .thumbnail-item img {
-        width: 100%;
-        height: 100%;
-        object-fit: cover;
-    }
-
-/* =========================
-    ROOM INFO
-========================= */
-.room-title {
-    font-size: 1.85rem;
-    font-weight: 800;
-    margin-bottom: 12px;
-    color: #002641;
-    line-height: 1.25;
-    letter-spacing: -0.4px;
-}
-
-.room-location {
-    font-size: 0.95rem;
-    color: #6b7f93;
-    display: flex;
-    align-items: center;
-    gap: 5px;
-}
-
-    .room-location i {
-        color: #ED005A;
-    }
-
-/* =========================
-    PRICE BOX
-========================= */
-.room-price {
-    background: linear-gradient(135deg, #002641 0%, #013a58 55%, #ED005A 160%);
-    padding: 18px 22px;
-    border-radius: 14px;
-    color: white;
-    box-shadow: 0 6px 20px rgba(0, 38, 65, 0.2);
-    position: relative;
-    overflow: hidden;
-}
-
-    .room-price::before {
+    .room-gallery::after {
         content: '';
         position: absolute;
-        top: -30px;
-        right: -30px;
-        width: 100px;
-        height: 100px;
-        background: rgba(237, 0, 90, 0.15);
-        border-radius: 50%;
+        inset: 0;
+        background: linear-gradient( to bottom, transparent 50%, rgba(0, 22, 40, 0.45) 100% );
+        pointer-events: none;
+        z-index: 1;
     }
 
-.price-value {
-    font-size: 2rem;
-    font-weight: 800;
-    letter-spacing: -0.5px;
-    position: relative;
-}
-
-.price-unit {
-    font-size: 0.95rem;
-    opacity: 0.85;
-    font-weight: 500;
-    position: relative;
-}
-
-/* =========================
-    INFO GRID
-========================= */
-.room-info-grid {
-    display: grid;
-    grid-template-columns: repeat(2, 1fr);
-    gap: 12px;
-}
-
-.info-item {
-    display: flex;
-    align-items: center;
-    gap: 12px;
-    padding: 13px 15px;
-    background: #f4f7fb;
-    border-radius: 12px;
-    border: 1px solid #dce6ef;
-    transition: box-shadow 0.2s ease, transform 0.2s ease;
-}
-
-    .info-item:hover {
-        transform: translateY(-2px);
-        box-shadow: 0 4px 14px rgba(0, 38, 65, 0.08);
-        border-color: rgba(237, 0, 90, 0.2);
-    }
-
-.info-icon {
-    width: 42px;
-    height: 42px;
-    background: white;
-    border-radius: 10px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    color: #ED005A;
-    font-size: 1.15rem;
-    flex-shrink: 0;
-    box-shadow: 0 2px 8px rgba(237, 0, 90, 0.12);
-}
-
-.info-text {
-    flex: 1;
-    min-width: 0;
-}
-
-.info-label {
-    display: block;
-    font-size: 0.72rem;
-    color: #8a9bb0;
+/* Area badge */
+.room-gallery__badge {
+    position: absolute;
+    top: 18px;
+    left: 18px;
+    z-index: 10;
+    background: var(--pink);
+    color: #fff;
+    font-size: 0.68rem;
+    font-weight: 600;
+    letter-spacing: 0.1em;
     text-transform: uppercase;
-    letter-spacing: 0.5px;
-    font-weight: 600;
-    margin-bottom: 2px;
+    padding: 5px 14px;
+    border-radius: 999px;
+    box-shadow: var(--shadow-pink);
+    animation: badgePop 0.4s var(--ease-spring) 0.3s both;
 }
 
-.info-value {
-    display: block;
-    font-size: 0.97rem;
-    font-weight: 700;
-    color: #002641;
-    white-space: nowrap;
-    overflow: hidden;
-    text-overflow: ellipsis;
-}
-
-/* =========================
-    DESCRIPTION
-========================= */
-.description-content {
-    line-height: 1.85;
-    color: #445566;
-    font-size: 0.93rem;
-}
-
-/* =========================
-    OWNER CARD
-========================= */
-.owner-avatar-large {
-    display: inline-block;
-}
-
-.avatar-circle-large {
-    width: 78px;
-    height: 78px;
-    background: linear-gradient(135deg, #002641 0%, #ED005A 100%);
-    border-radius: 50%;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    color: white;
-    font-weight: 800;
-    font-size: 1.8rem;
-    margin: 0 auto;
-    box-shadow: 0 6px 18px rgba(237, 0, 90, 0.25);
-    border: 3px solid white;
-    outline: 2px solid rgba(237, 0, 90, 0.2);
-}
-
-.owner-name {
-    margin-bottom: 8px;
-    font-weight: 700;
-    color: #002641;
-    font-size: 1.05rem;
-}
-
-.owner-email,
-.owner-phone {
-    font-size: 0.875rem;
-    color: #6b7f93;
-    margin-bottom: 4px;
-    display: flex;
-    align-items: center;
-    gap: 6px;
-}
-
-    .owner-email i,
-    .owner-phone i {
-        color: #ED005A;
-        font-size: 0.8rem;
+@keyframes badgePop {
+    from {
+        opacity: 0;
+        transform: scale(0.7);
     }
 
-/* =========================
-    ADMIN STATS
-========================= */
-.admin-stats .stat-row {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    padding: 10px 0;
-    border-bottom: 1px solid #edf2f7;
-    font-size: 0.9rem;
-}
-
-    .admin-stats .stat-row:last-child {
-        border-bottom: none;
-    }
-
-    .admin-stats .stat-row span:first-child {
-        color: #6b7f93;
-        font-weight: 500;
-    }
-
-    .admin-stats .stat-row span:last-child {
-        color: #002641;
-        font-weight: 700;
-    }
-
-/* =========================
-    BREADCRUMB
-========================= */
-nav[aria-label="breadcrumb"] {
-    background: #f0f4f8 !important;
-    border-radius: 10px;
-    border: 1px solid #dce6ef;
-    padding: 10px 16px !important;
-}
-
-.breadcrumb {
-    margin: 0;
-    font-size: 0.85rem;
-    align-items: center;
-}
-
-.breadcrumb-item a {
-    color: #002641;
-    font-weight: 500;
-    text-decoration: none;
-    transition: color 0.2s;
-}
-
-    .breadcrumb-item a:hover {
-        color: #ED005A;
-    }
-
-.breadcrumb-item.active {
-    color: #8a9bb0;
-}
-
-.breadcrumb-item + .breadcrumb-item::before {
-    color: #b0bec9;
-}
-
-/* =========================
-    CARD HEADERS (all variants)
-========================= */
-.card-header {
-    border-bottom: none !important;
-    padding: 14px 20px !important;
-    border-radius: 14px 14px 0 0 !important;
-}
-
-    .card-header h5 {
-        font-size: 0.95rem;
-        font-weight: 700;
-        letter-spacing: 0.1px;
-    }
-
-    /* Chủ trọ — Navy */
-    .card-header.bg-primary {
-        background: linear-gradient(135deg, #002641 0%, #013a58 100%) !important;
-        color: #ffffff !important;
-    }
-
-    /* Hành động — Accent hồng */
-    .card-header.bg-success {
-        background: linear-gradient(135deg, #ED005A 0%, #c4004b 100%) !important;
-        color: #ffffff !important;
-    }
-
-    /* Thống kê Admin — Navy nhạt */
-    .card-header.bg-info {
-        background: linear-gradient(135deg, #013a58 0%, #025475 100%) !important;
-        color: #ffffff !important;
-    }
-
-/* Modal từ chối — đổi sang navy thay vàng */
-.modal-header.bg-warning {
-    background: linear-gradient(135deg, #002641 0%, #013a58 100%) !important;
-    color: #ffffff !important;
-}
-
-    .modal-header.bg-warning .modal-title,
-    .modal-header.bg-warning .btn-close-white {
-        color: #ffffff !important;
+    to {
         opacity: 1;
+        transform: scale(1);
     }
-
-/* =========================
-    BUTTON: ĐẶT PHÒNG (btn-outline-success)
-========================= */
-.btn-outline-success {
-    color: #002641 !important;
-    border: 2px solid #002641 !important;
-    background: transparent !important;
-    font-weight: 600;
-    border-radius: 10px;
-    transition: all 0.25s ease;
 }
 
-    .btn-outline-success:hover,
-    .btn-outline-success:focus {
-        background: #002641 !important;
-        color: #ffffff !important;
-        transform: translateY(-2px);
-        box-shadow: 0 6px 16px rgba(0, 38, 65, 0.2);
-    }
-
-/* =========================
-    BUTTON: CHỈNH SỬA (btn-warning)
-========================= */
-.btn-warning {
-    background: linear-gradient(135deg, #002641 0%, #024068 100%) !important;
-    border: none !important;
-    color: #ffffff !important;
-    font-weight: 600;
-    border-radius: 10px;
-    box-shadow: 0 4px 12px rgba(0, 38, 65, 0.2);
-    transition: all 0.25s ease;
+/* Carousel Controls */
+.carousel-control-prev,
+.carousel-control-next {
+    width: 44px;
+    height: 44px;
+    top: 50%;
+    transform: translateY(-50%);
+    bottom: auto;
+    opacity: 0;
+    transition: opacity var(--dur) var(--ease), transform var(--dur) var(--ease-spring);
+    z-index: 10;
 }
 
-    .btn-warning:hover,
-    .btn-warning:focus {
-        background: linear-gradient(135deg, #013357 0%, #025475 100%) !important;
-        color: #ffffff !important;
-        transform: translateY(-2px);
-        box-shadow: 0 7px 18px rgba(0, 38, 65, 0.28);
-    }
-
-/* =========================
-    BUTTON: XÓA (btn-outline-danger)
-========================= */
-.btn-outline-danger {
-    color: #ED005A !important;
-    border: 2px solid #ED005A !important;
-    background: transparent !important;
-    font-weight: 600;
-    border-radius: 10px;
-    transition: all 0.25s ease;
+.room-gallery:hover .carousel-control-prev,
+.room-gallery:hover .carousel-control-next {
+    opacity: 1;
 }
 
-    .btn-outline-danger:hover,
-    .btn-outline-danger:focus {
-        background: #ED005A !important;
-        color: #ffffff !important;
-        transform: translateY(-2px);
-        box-shadow: 0 6px 16px rgba(237, 0, 90, 0.3);
-    }
-
-/* =========================
-    BUTTON: DUYỆT — Admin (btn-success sm)
-========================= */
-.btn-success {
-    background: linear-gradient(135deg, #002641 0%, #013a58 100%) !important;
-    border: none !important;
-    color: #ffffff !important;
-    font-weight: 600;
-    border-radius: 8px;
-    box-shadow: 0 3px 10px rgba(0, 38, 65, 0.2);
-    transition: all 0.25s ease;
+.carousel-control-prev {
+    left: 14px;
 }
 
-    .btn-success:hover,
-    .btn-success:focus {
-        background: linear-gradient(135deg, #013357 0%, #025475 100%) !important;
-        color: #ffffff !important;
-        transform: translateY(-1px);
-        box-shadow: 0 5px 14px rgba(0, 38, 65, 0.28);
-    }
-
-/* =========================
-    BUTTON: TỪ CHỐI — Admin (btn-danger)
-========================= */
-.btn-danger {
-    background: linear-gradient(135deg, #ED005A 0%, #c4004b 100%) !important;
-    border: none !important;
-    color: #ffffff !important;
-    font-weight: 600;
-    border-radius: 8px;
-    box-shadow: 0 3px 10px rgba(237, 0, 90, 0.22);
-    transition: all 0.25s ease;
+.carousel-control-next {
+    right: 14px;
 }
 
-    .btn-danger:hover,
-    .btn-danger:focus {
-        background: linear-gradient(135deg, #c4004b 0%, #9e003d 100%) !important;
-        color: #ffffff !important;
-        transform: translateY(-1px);
-        box-shadow: 0 5px 14px rgba(237, 0, 90, 0.32);
-    }
-
-/* =========================
-    BUTTON: HỦY — Modal (btn-secondary)
-========================= */
-.btn-secondary {
-    background: transparent !important;
-    border: 2px solid #b0bec9 !important;
-    color: #445566 !important;
-    font-weight: 600;
-    border-radius: 8px;
-    transition: all 0.22s ease;
+.carousel-control-prev:hover {
+    transform: translateY(-50%) translateX(-2px);
 }
 
-    .btn-secondary:hover,
-    .btn-secondary:focus {
-        background: #8a9bb0 !important;
-        border-color: #8a9bb0 !important;
-        color: #ffffff !important;
-        transform: translateY(-1px);
-    }
-
-/* =========================
-    ALERTS
-========================= */
-/* Alert info — yêu cầu đăng nhập */
-.alert-info {
-    background: #e8f0f7;
-    border: 1px solid rgba(0, 38, 65, 0.12);
-    border-left: 4px solid #002641;
-    color: #002641;
-    border-radius: 10px;
-    font-size: 0.88rem;
-    padding: 13px 16px;
+.carousel-control-next:hover {
+    transform: translateY(-50%) translateX(2px);
 }
 
-    .alert-info a {
-        color: #ED005A;
-        font-weight: 600;
-        text-decoration: underline;
-        text-underline-offset: 2px;
-    }
-
-        .alert-info a:hover {
-            color: #c4004b;
-        }
-
-/* Alert warning — chờ duyệt */
-.alert-warning {
-    background: #fff8e8;
-    border: 1px solid rgba(237, 160, 0, 0.2);
-    border-left: 4px solid #ED005A;
-    color: #7a4500;
-    border-radius: 10px;
-    font-size: 0.88rem;
-    padding: 13px 16px;
+.carousel-control-prev-icon,
+.carousel-control-next-icon {
+    background-color: rgba(255,255,255,0.92);
+    border-radius: 50%;
+    padding: 20px;
+    background-size: 55%;
+    filter: invert(1) hue-rotate(180deg);
+    box-shadow: 0 2px 12px rgba(0,0,0,0.2);
 }
 
-/* =========================
-    MODAL
-========================= */
-.modal-content {
+.carousel-indicators [data-bs-target] {
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    background-color: rgba(255,255,255,0.5);
     border: none;
-    border-radius: 16px;
+    transition: all var(--dur) var(--ease);
+}
+
+.carousel-indicators .active {
+    background-color: var(--pink);
+    width: 20px;
+    border-radius: 3px;
+}
+
+/* ── Key Info Panel ── */
+.room-details__header {
+    padding: 36px 32px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    gap: 20px;
+    background: var(--navy-deep);
+    position: relative;
     overflow: hidden;
-    box-shadow: 0 20px 60px rgba(0, 38, 65, 0.18);
 }
 
-.modal-header {
-    padding: 16px 22px;
-    border-bottom: 1px solid #edf2f7;
-}
-
-    .modal-header .modal-title {
-        font-size: 1rem;
-        font-weight: 700;
-        color: #002641;
+    .room-details__header::before {
+        content: '';
+        position: absolute;
+        top: -60px;
+        right: -60px;
+        width: 200px;
+        height: 200px;
+        border-radius: 50%;
+        background: radial-gradient(circle, rgba(237,0,90,0.18) 0%, transparent 70%);
+        pointer-events: none;
     }
 
-.modal-body {
-    padding: 20px 22px;
-    color: #445566;
-    font-size: 0.92rem;
+    .room-details__header::after {
+        content: '';
+        position: absolute;
+        bottom: -40px;
+        left: -40px;
+        width: 140px;
+        height: 140px;
+        border-radius: 50%;
+        background: radial-gradient(circle, rgba(10,74,120,0.6) 0%, transparent 70%);
+        pointer-events: none;
+    }
+
+.room-details__title {
+    font-family: var(--font-display);
+    font-size: clamp(1.6rem, 3vw, 2.5rem);
+    font-weight: 900;
+    color: #fff;
+    line-height: 1.1;
+    letter-spacing: -0.01em;
+    position: relative;
+    z-index: 1;
 }
 
-.modal-footer {
-    padding: 14px 22px;
-    border-top: 1px solid #edf2f7;
+.room-details__price {
+    position: relative;
+    z-index: 1;
+    display: flex;
+    align-items: baseline;
     gap: 8px;
 }
 
-/* =========================
-    ROOM DESCRIPTION HEADING
-========================= */
-.room-description h5 {
-    color: #002641;
+.room-details__price-value {
+    font-size: 2rem;
     font-weight: 700;
-    font-size: 1rem;
-    margin-bottom: 12px;
-    padding-bottom: 10px;
-    border-bottom: 2px solid #f0f4f8;
+    color: var(--pink-vivid);
+    letter-spacing: -0.02em;
+    text-shadow: 0 0 24px rgba(237,0,90,0.4);
 }
 
-    .room-description h5 i {
-        color: #ED005A;
-    }
-
-/* =========================
-    ADMIN ACTIONS SECTION
-========================= */
-.admin-actions h6.text-muted {
-    color: #8a9bb0 !important;
-    font-size: 0.75rem;
-    text-transform: uppercase;
-    letter-spacing: 0.5px;
-    font-weight: 700;
+.room-details__price-unit {
+    font-size: 0.78rem;
+    font-weight: 400;
+    color: rgba(255,255,255,0.5);
+    letter-spacing: 0.02em;
 }
 
-.admin-status-actions label.fw-bold {
-    color: #002641;
-    font-size: 0.85rem;
+/* Fallback: keep old price element working */
+.room-details__price span {
+    font-size: 0.78rem;
+    font-weight: 400;
+    color: rgba(255,255,255,0.5);
 }
 
-/* =========================
-    NO IMAGE PLACEHOLDER
-========================= */
-.no-image-placeholder {
-    background: #f0f4f8;
-    border-radius: 14px;
-    min-height: 220px;
+.room-details__meta {
     display: flex;
     flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    color: #b0bec9;
+    gap: 10px;
+    position: relative;
+    z-index: 1;
 }
 
-/* =========================
-    RESPONSIVE
-========================= */
-@media (max-width: 768px) {
-    .room-title {
+    .room-details__meta-item,
+    .room-details__meta > span {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        font-size: 0.85rem;
+        color: rgba(255,255,255,0.65);
+    }
+
+        .room-details__meta > span i {
+            color: var(--pink);
+            width: 16px;
+            text-align: center;
+        }
+
+.room-details__address,
+.room-details__hero .small {
+    display: flex;
+    align-items: flex-start;
+    gap: 8px;
+    font-size: 0.82rem;
+    color: rgba(255,255,255,0.5) !important;
+    margin-top: 4px;
+    position: relative;
+    z-index: 1;
+    line-height: 1.5;
+}
+
+/* Override Bootstrap text-muted in dark context */
+.room-details__header .text-muted {
+    color: rgba(255,255,255,0.5) !important;
+}
+
+.room-details__header .text-danger {
+    color: var(--pink) !important;
+}
+
+/* ─────────────────────────────────────────
+   5. BODY SECTIONS
+───────────────────────────────────────── */
+.details-body {
+    padding: 36px 32px;
+}
+
+.room-details__description,
+.room-details__amenities,
+.room-reviews {
+    padding: 0;
+}
+
+    /* Section heading shared */
+    .room-details__description h3,
+    .room-details__amenities h3,
+    .room-reviews h3 {
+        font-family: var(--font-display);
         font-size: 1.35rem;
+        font-weight: 700;
+        color: var(--navy);
+        margin-bottom: 20px;
+        display: flex;
+        align-items: center;
+        gap: 12px;
     }
 
-    .price-value {
-        font-size: 1.55rem;
+        .room-details__description h3::before,
+        .room-details__amenities h3::before,
+        .room-reviews h3::before {
+            content: '';
+            width: 5px;
+            height: 22px;
+            background: linear-gradient(180deg, var(--pink), var(--pink-hover));
+            border-radius: 999px;
+            flex-shrink: 0;
+        }
+
+/* Page padding for inner sections */
+.room-details__content > .room-details__description,
+.room-details__content > .room-details__amenities,
+.room-details__content > .room-reviews {
+    padding: 0 32px;
+}
+
+/* Body padding wrapper */
+.room-details__content > hr {
+    margin: 0 32px;
+    opacity: 0.15;
+    border-color: var(--navy);
+}
+
+/* Description text */
+.room-details__description p {
+    font-size: 0.93rem;
+    color: var(--text-muted);
+    line-height: 1.8;
+    margin-bottom: 14px;
+}
+
+/* Spacing for sections inside content */
+.room-details__description {
+    margin-top: 30px;
+}
+
+.room-details__amenities {
+    margin-top: 30px;
+    margin-bottom: 10px;
+}
+
+    /* ── Amenities ── */
+    .room-details__amenities ul {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(175px, 1fr));
+        gap: 12px;
+        list-style: none;
+        margin-top: 8px;
     }
 
-    .main-image {
-        height: 260px;
+    .room-details__amenities li {
+        display: flex;
+        align-items: center;
+        gap: 11px;
+        background: var(--surface-2);
+        border: 1px solid var(--border);
+        padding: 13px 15px;
+        border-radius: var(--radius-sm);
+        font-size: 0.85rem;
+        font-weight: 500;
+        color: var(--navy);
+        transition: all var(--dur) var(--ease);
+        cursor: default;
     }
 
-    .room-info-grid {
+        .room-details__amenities li:hover {
+            border-color: var(--pink);
+            background: var(--pink-soft);
+            transform: translateY(-3px);
+            box-shadow: var(--shadow-sm);
+        }
+
+.amenity-icon {
+    width: 34px;
+    height: 34px;
+    background: var(--pink-soft);
+    color: var(--pink);
+    border-radius: 9px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 0.95rem;
+    flex-shrink: 0;
+    transition: background var(--dur) var(--ease), color var(--dur) var(--ease);
+}
+
+.room-details__amenities li:hover .amenity-icon {
+    background: var(--pink);
+    color: #fff;
+}
+
+/* ─────────────────────────────────────────
+   6. REVIEWS
+───────────────────────────────────────── */
+.room-reviews {
+    margin-top: 40px;
+    padding-top: 36px;
+    border-top: 1px solid var(--border);
+    padding-bottom: 32px;
+}
+
+.review-list {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+    margin-top: 4px;
+}
+
+.review-item {
+    background: var(--surface-2);
+    border-radius: var(--radius-sm);
+    padding: 20px;
+    border: 1px solid var(--border);
+    display: flex;
+    gap: 16px;
+    transition: box-shadow var(--dur) var(--ease), border-color var(--dur) var(--ease);
+}
+
+    .review-item:hover {
+        border-color: var(--border-mid);
+        box-shadow: var(--shadow-sm);
+    }
+
+.review-item__avatar {
+    width: 42px;
+    height: 42px;
+    border-radius: 50%;
+    background: linear-gradient(135deg, var(--navy-mid), var(--navy-light));
+    color: #fff;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.1rem;
+    font-weight: 700;
+    flex-shrink: 0;
+    border: 2px solid rgba(255,255,255,0.8);
+    box-shadow: var(--shadow-xs);
+}
+
+.review-item__content {
+    flex: 1;
+}
+
+.review-item__header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 6px;
+}
+
+    .review-item__header h5 {
+        font-size: 0.92rem;
+        font-weight: 600;
+        color: var(--navy);
+        margin: 0;
+    }
+
+.review-item__date {
+    font-size: 0.73rem;
+    color: var(--text-light);
+}
+
+.review-item__rating {
+    color: var(--pink);
+    font-size: 0.77rem;
+    margin-bottom: 9px;
+    letter-spacing: 1px;
+}
+
+.review-item__text {
+    font-size: 0.87rem;
+    color: var(--text-muted);
+    line-height: 1.65;
+}
+
+.reviews-empty {
+    text-align: center;
+    padding: 48px 24px;
+    color: var(--text-light);
+    background: var(--surface-2);
+    border-radius: var(--radius-sm);
+    border: 1px dashed var(--border-mid);
+    font-size: 0.9rem;
+    font-style: italic;
+}
+
+/* ─────────────────────────────────────────
+   7. SUBMIT REVIEW FORM
+───────────────────────────────────────── */
+.submit-review {
+    margin-top: 32px;
+    background: var(--navy-deep);
+    border-radius: var(--radius-md);
+    padding: 28px;
+    position: relative;
+    overflow: hidden;
+}
+
+    .submit-review::before {
+        content: '';
+        position: absolute;
+        top: -40px;
+        right: -40px;
+        width: 160px;
+        height: 160px;
+        border-radius: 50%;
+        background: radial-gradient(circle, rgba(237,0,90,0.2), transparent 65%);
+        pointer-events: none;
+    }
+
+    .submit-review h4 {
+        font-family: var(--font-display);
+        font-size: 1.25rem;
+        color: #fff;
+        margin-bottom: 20px;
+        position: relative;
+        z-index: 1;
+    }
+
+.rating-select {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin-bottom: 16px;
+    position: relative;
+    z-index: 1;
+}
+
+    .rating-select label {
+        font-size: 0.8rem;
+        color: rgba(255,255,255,0.6);
+        white-space: nowrap;
+    }
+
+    .rating-select select {
+        background: rgba(255,255,255,0.08);
+        border: 1px solid rgba(255,255,255,0.15);
+        color: #fff;
+        font-size: 0.82rem;
+        padding: 6px 12px;
+        border-radius: 8px;
+        cursor: pointer;
+        transition: border-color var(--dur) var(--ease), background var(--dur) var(--ease);
+        font-family: var(--font-body);
+    }
+
+        .rating-select select:focus {
+            border-color: var(--pink);
+            background: rgba(255,255,255,0.12);
+            outline: none;
+        }
+
+.submit-review textarea {
+    background: rgba(255,255,255,0.05);
+    border: 1px solid rgba(255,255,255,0.1);
+    color: #fff;
+    border-radius: var(--radius-sm);
+    padding: 14px 16px;
+    font-size: 0.88rem;
+    font-family: var(--font-body);
+    margin-bottom: 16px;
+    resize: vertical;
+    position: relative;
+    z-index: 1;
+    width: 100%;
+    transition: all var(--dur) var(--ease);
+}
+
+    .submit-review textarea::placeholder {
+        color: rgba(255,255,255,0.3);
+    }
+
+    .submit-review textarea:focus {
+        background: rgba(255,255,255,0.09);
+        border-color: var(--pink);
+        box-shadow: 0 0 0 3px rgba(237, 0, 90, 0.12);
+        outline: none;
+    }
+
+.btn-submit {
+    background: linear-gradient(135deg, var(--pink) 0%, var(--pink-hover) 100%);
+    color: #fff !important;
+    border: none !important;
+    font-weight: 600;
+    font-size: 0.88rem;
+    padding: 13px 28px;
+    border-radius: var(--radius-sm);
+    transition: all var(--dur) var(--ease);
+    position: relative;
+    z-index: 1;
+    letter-spacing: 0.02em;
+    cursor: pointer;
+    font-family: var(--font-body);
+}
+
+    .btn-submit:hover {
+        transform: translateY(-3px);
+        box-shadow: var(--shadow-pink);
+        filter: brightness(1.08);
+    }
+
+    .btn-submit:active {
+        transform: translateY(-1px);
+    }
+
+/* Not logged in */
+.submit-review.bg-light {
+    background: var(--surface-2) !important;
+    border: 1px dashed var(--border-mid) !important;
+    border-radius: var(--radius-sm);
+    padding: 20px;
+    text-align: center;
+    font-size: 0.88rem;
+    color: var(--text-muted);
+}
+
+    .submit-review.bg-light a.text-danger {
+        color: var(--pink) !important;
+        font-weight: 600;
+        text-decoration: none;
+    }
+
+        .submit-review.bg-light a.text-danger:hover {
+            text-decoration: underline;
+        }
+
+/* ─────────────────────────────────────────
+   8. SIDEBAR
+───────────────────────────────────────── */
+.details-sidebar {
+    display: flex;
+    flex-direction: column;
+    gap: 24px;
+    position: sticky;
+    top: 24px;
+    animation: fadeSlideUp 0.55s var(--ease) 0.12s both;
+}
+
+/* ── Contact Card ── */
+.contact-card {
+    background: var(--surface);
+    border-radius: var(--radius-md);
+    box-shadow: var(--shadow-md);
+    border: 1px solid var(--border);
+    overflow: hidden;
+    text-align: center;
+}
+
+    /* Dark header band */
+    .contact-card::before {
+        content: '';
+        display: block;
+        height: 72px;
+        background: linear-gradient(135deg, var(--navy-deep) 0%, var(--navy-mid) 60%, #0a5fa0 100%);
+        position: relative;
+    }
+
+.contact-card__avatar {
+    width: 72px;
+    height: 72px;
+    border-radius: 50%;
+    background: linear-gradient(135deg, var(--navy-mid), var(--navy-light));
+    color: #fff;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 2rem;
+    font-weight: 700;
+    border: 3px solid var(--surface);
+    box-shadow: var(--shadow-md);
+    margin: -36px auto 0;
+    position: relative;
+    z-index: 2;
+}
+
+.contact-card__info {
+    padding: 10px 24px 0;
+}
+
+    .contact-card__info h4 {
+        font-size: 1rem;
+        font-weight: 700;
+        color: var(--navy);
+        margin-bottom: 3px;
+    }
+
+    .contact-card__info p {
+        font-size: 0.78rem;
+        color: var(--text-light);
+        margin-bottom: 0;
+    }
+
+.contact-card__actions {
+    padding: 18px 20px 22px;
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.contact-card__sub-actions {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 10px;
+    width: 100%;
+}
+
+/* Contact Buttons */
+.btn-contact {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    padding: 12px 16px;
+    border-radius: var(--radius-sm);
+    font-size: 0.83rem;
+    font-weight: 600;
+    text-decoration: none;
+    transition: all var(--dur) var(--ease-spring);
+    cursor: pointer;
+    border: none;
+    font-family: var(--font-body);
+    letter-spacing: 0.01em;
+}
+
+.btn-contact--phone {
+    background: linear-gradient(135deg, var(--navy) 0%, var(--navy-mid) 100%);
+    color: #fff;
+    box-shadow: 0 4px 12px rgba(0,38,65,0.25);
+}
+
+    .btn-contact--phone:hover {
+        transform: translateY(-3px);
+        box-shadow: 0 8px 20px rgba(0,38,65,0.35);
+        color: #fff;
+    }
+
+.btn-contact--message {
+    background: var(--pink-soft);
+    color: var(--pink);
+    border: 1.5px solid rgba(237,0,90,0.3);
+}
+
+    .btn-contact--message:hover {
+        background: var(--pink);
+        color: #fff;
+        border-color: var(--pink);
+        transform: translateY(-3px);
+        box-shadow: var(--shadow-pink);
+    }
+
+/* Book button (inline style override) */
+.contact-card__actions button[style*="28a745"],
+.contact-card__actions .btn-contact[style*="28a745"] {
+    background: linear-gradient(135deg, #16a34a, #15803d) !important;
+    color: #fff !important;
+    border: none !important;
+    box-shadow: 0 4px 14px rgba(22,163,74,0.3);
+    font-family: var(--font-body);
+    border-radius: var(--radius-sm);
+    font-weight: 600;
+    font-size: 0.83rem;
+    transition: all var(--dur) var(--ease-spring);
+}
+
+    .contact-card__actions button[style*="28a745"]:hover {
+        transform: translateY(-3px);
+        box-shadow: 0 8px 22px rgba(22,163,74,0.4) !important;
+    }
+
+/* Rented alert */
+.contact-card .alert-danger {
+    background: rgba(239,68,68,0.08) !important;
+    color: #ef4444 !important;
+    border: 1px solid rgba(239,68,68,0.2) !important;
+    border-radius: var(--radius-sm) !important;
+    font-size: 0.8rem;
+}
+
+/* ── Map Card ── */
+.map-section {
+    background: var(--surface);
+    border-radius: var(--radius-md);
+    box-shadow: var(--shadow-md);
+    border: 1px solid var(--border);
+    overflow: hidden;
+}
+
+    .map-section h6.small {
+        padding: 16px 18px 12px;
+        font-size: 0.75rem;
+        font-weight: 600;
+        letter-spacing: 0.1em;
+        text-transform: uppercase;
+        color: var(--text-muted);
+        border-bottom: 1px solid var(--border);
+        margin: 0;
+    }
+
+.map-placeholder {
+    height: 240px;
+    background: linear-gradient(135deg, #e8eef5 0%, #dce5ef 100%);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-direction: column;
+    gap: 10px;
+    color: var(--text-light);
+    font-size: 0.85rem;
+    font-style: italic;
+}
+
+    .map-placeholder i {
+        font-size: 2rem;
+        opacity: 0.3;
+    }
+
+/* ─────────────────────────────────────────
+   9. SCROLLBAR
+───────────────────────────────────────── */
+::-webkit-scrollbar {
+    width: 6px;
+}
+
+::-webkit-scrollbar-track {
+    background: transparent;
+}
+
+::-webkit-scrollbar-thumb {
+    background: rgba(0,38,65,0.18);
+    border-radius: 999px;
+}
+
+    ::-webkit-scrollbar-thumb:hover {
+        background: rgba(0,38,65,0.3);
+    }
+
+/* ─────────────────────────────────────────
+   10. RESPONSIVE
+───────────────────────────────────────── */
+@media (max-width: 768px) {
+    .room-details__header {
+        padding: 24px 20px;
+    }
+
+    .room-details__content > .room-details__description,
+    .room-details__content > .room-details__amenities,
+    .room-details__content > .room-reviews {
+        padding: 0 18px;
+    }
+
+    .room-details__content > hr {
+        margin: 0 18px;
+    }
+
+    .room-details__amenities ul {
+        grid-template-columns: repeat(auto-fill, minmax(145px, 1fr));
+    }
+
+    .details-sidebar {
+        position: static;
+    }
+
+    .contact-card__sub-actions {
         grid-template-columns: 1fr;
-    }
-
-    .avatar-circle-large {
-        width: 62px;
-        height: 62px;
-        font-size: 1.4rem;
-    }
-
-    .thumbnail-item {
-        width: 66px;
-        height: 66px;
     }
 }

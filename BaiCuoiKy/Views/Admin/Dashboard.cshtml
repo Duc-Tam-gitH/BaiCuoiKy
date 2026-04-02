@@ -16,8 +16,11 @@
             case "rooms":
                 @:Quản lý phòng trọ
                 break;
-            case "posts":
-                @:Quản lý bài đăng
+            case "bookings":
+                @:Duyệt đơn đặt phòng
+                break;
+            case "users":
+                @:Quản lý người dùng
                 break;
             case "settings":
                 @:Cài đặt hệ thống
@@ -36,8 +39,11 @@
             case "rooms":
                 @:Danh sách, tình trạng và thông tin phòng trọ.
                 break;
-            case "posts":
-                @:Duyệt, chỉnh sửa và kiểm soát bài đăng.
+            case "bookings":
+                @:Quản lý và xét duyệt các yêu cầu đặt phòng từ khách hàng.
+                break;
+            case "users":
+                @:Quản lý tài khoản người dùng hệ thống.
                 break;
             case "settings":
                 @:Cấu hình chung, bảo mật và tùy chỉnh nền tảng.
@@ -47,7 +53,7 @@
 </div>
 
 <div id="contentRenderer">
-    @if (Model.ActiveSection == "overview")
+    @if (Model.ActiveSection == "overview" || string.IsNullOrEmpty(Model.ActiveSection))
     {
         await Html.RenderPartialAsync("_Overview", Model);
     }
@@ -55,9 +61,13 @@
     {
         await Html.RenderPartialAsync("_Rooms", Model);
     }
-    else if (Model.ActiveSection == "posts")
+    else if (Model.ActiveSection == "bookings")
     {
-        await Html.RenderPartialAsync("_Posts", Model);
+        await Html.RenderPartialAsync("_Bookings", Model);
+    }
+    else if (Model.ActiveSection == "users")
+    {
+        await Html.RenderPartialAsync("Users", Model);
     }
     else if (Model.ActiveSection == "settings")
     {
@@ -74,6 +84,7 @@
                 if (section && window.location.pathname.includes('Dashboard')) {
                     e.preventDefault();
                     // Có thể load nội dung bằng AJAX ở đây
+                    window.location.href = '?section=' + section;
                 }
             });
         });

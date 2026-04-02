@@ -6,6 +6,11 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using System.Security.Claims;
 
+//admin@gmail.com
+//Admin@123
+
+
+
 namespace BaiCuoiKy.Controllers
 {
     [Authorize(Roles = "Admin")]
@@ -465,6 +470,44 @@ namespace BaiCuoiKy.Controllers
                     await client.SendMailAsync(message);
                 }
             }
+        }
+        [HttpPost]
+        [Authorize(Roles = "Admin")]
+        public async Task<IActionResult> ApproveCheckout(int bookingId)
+        {
+            // 1. Tìm đơn đặt phòng kèm thông tin phòng và khách thuê
+            var booking = await _context.Bookings
+                .Include(b => b.Tro)
+                .Include(b => b.User)
+                .FirstOrDefaultAsync(b => b.Id == bookingId);
+
+            if (booking == null) return NotFound();
+
+            // 2. Cập nhật trạng thái đơn đặt
+            booking.TrangThai = "DaTraPhong";
+
+            // 3. Giải phóng phòng (Đưa phòng về trạng thái Đang trống)
+            if (booking.Tro != null)
+            {
+                booking.Tro.TrangThai = TrangThaiPhong.DangTrong;
+            }
+
+            // 4. Tạo thông báo kèm THƯ CẢM ƠN gửi cho Khách thuê
+            var thankYouNote = new Notification
+            {
+                UserId = booking.UserId, // Gửi cho khách thuê
+                CreatedAt = DateTime.Now,
+                IsRead = false,
+                Message = $"✨ [Thư cảm ơn] House88 chân thành cảm ơn bạn {booking.User?.FullName} đã tin tưởng sử dụng dịch vụ thuê phòng '{booking.Tro?.TieuDe}'. " +
+                          "Yêu cầu trả phòng của bạn đã hoàn tất. Chúc bạn nhiều sức khỏe và hy vọng sẽ sớm gặp lại bạn!",
+                Url = "/Khachthue/Bookings" 
+            };
+            _context.Notifications.Add(thankYouNote);
+
+            await _context.SaveChangesAsync();
+
+            TempData["Success"] = "Đã duyệt trả phòng và gửi thư cảm ơn cho khách!";
+            return RedirectToAction("Dashboard", new { section = "bookings" });
         }
     }
 }

@@ -1,33 +1,170 @@
-﻿<div class="search-hero">
-    <div class="container">
-        <h1>Tìm Phòng Trọ & Nhà Cho Thuê</h1>
+﻿@model IEnumerable<BaiCuoiKy.Models.Tro>
 
-        <div class="search-filter-box">
-            <form asp-action="Search" method="get" class="row g-3 align-items-center">
-                <div class="col-md-3">
-                    <select name="khuvuc" class="form-select">
-                        <option value="">Khu vực</option>
-                    </select>
+@{
+    ViewData["Title"] = "Kết quả tìm kiếm - House88";
+}
+
+@section Styles {
+    <link rel="stylesheet" href="~/css/House88.css" asp-append-version="true" />
+    <style>
+        /* CSS riêng cho header thu gọn của trang tìm kiếm */
+        .search-page-header {
+            background: linear-gradient(145deg, var(--navy) 0%, var(--navy-deep) 100%);
+            padding: 100px 0 40px 0; /* Padding top để không bị menu đè */
+            position: relative;
+        }
+
+            .search-page-header .search-bar {
+                max-width: 1000px;
+                margin: 0 auto;
+                transform: translateY(20px); /* Kéo thanh search xích xuống một chút cho đẹp */
+            }
+
+        .search-results-info {
+            border-bottom: 1px solid var(--border);
+            padding-bottom: 15px;
+            margin-bottom: 30px;
+            margin-top: 20px;
+        }
+    </style>
+}
+
+<div class="search-page-header">
+    <div class="container">
+        <h2 class="text-white text-center fw-bold mb-4" style="font-family: var(--font-display);">
+            Kết quả tìm kiếm
+        </h2>
+
+        <div class="search-bar shadow-lg">
+            <form asp-action="Search" asp-controller="Home" method="get" class="search-bar__form">
+
+                <div class="search-bar__field">
+                    <i class="fas fa-map-marker-alt search-bar__icon"></i>
+                    <div class="search-bar__inner">
+                        <label>Khu vực</label>
+                        <select name="khuvuc">
+                            <option value="">Tất cả</option>
+                            @if (ViewBag.KhuVucs != null)
+                            {
+                                foreach (var kv in ViewBag.KhuVucs)
+                                {
+                                    <option value="@kv" selected="@(ViewBag.KhuVuc == kv ? "selected" : null)">@kv</option>
+                                }
+                            }
+                        </select>
+                    </div>
                 </div>
-                <div class="col-md-2">
-                    <select name="loaihinh" class="form-select">
-                        <option value="">Loại hình</option>
-                    </select>
+
+                <div class="search-bar__sep"></div>
+
+                <div class="search-bar__field">
+                    <i class="fas fa-home search-bar__icon"></i>
+                    <div class="search-bar__inner">
+                        <label>Loại hình</label>
+                        <select name="loai">
+                            <option value="">Tất cả</option>
+                            @if (ViewBag.Categories != null)
+                            {
+                                foreach (var cat in ViewBag.Categories)
+                                {
+                                    <option value="@cat.TenDanhMuc" selected="@(ViewBag.Loai == cat.TenDanhMuc ? "selected" : null)">@cat.TenDanhMuc</option>
+                                }
+                            }
+                        </select>
+                    </div>
                 </div>
-                <div class="col-md-2">
-                    <select name="gia" class="form-select">
-                        <option value="">Giá</option>
-                    </select>
+
+                <div class="search-bar__sep"></div>
+
+                <div class="search-bar__field">
+                    <i class="fas fa-coins search-bar__icon"></i>
+                    <div class="search-bar__inner">
+                        <label>Mức giá</label>
+                        <select name="gia">
+                            <option value="">Tất cả</option>
+                            <option value="1" selected="@(ViewBag.Gia == "1" ? "selected" : null)">Dưới 2 triệu</option>
+                            <option value="2" selected="@(ViewBag.Gia == "2" ? "selected" : null)">2 - 5 triệu</option>
+                            <option value="3" selected="@(ViewBag.Gia == "3" ? "selected" : null)">Trên 5 triệu</option>
+                        </select>
+                    </div>
                 </div>
-                <div class="col-md-3">
-                    <input type="text" name="tukhoa" class="form-control" placeholder="Nhập từ khóa...">
+
+                <div class="search-bar__sep"></div>
+
+                <div class="search-bar__field search-bar__field--kw">
+                    <i class="fas fa-search search-bar__icon"></i>
+                    <div class="search-bar__inner">
+                        <label>Từ khóa</label>
+                        <input type="text" name="keyword" value="@ViewBag.Keyword" placeholder="Tên đường, phường..." />
+                    </div>
                 </div>
-                <div class="col-md-2">
-                    <button type="submit" class="btn btn-search w-100" style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; border: none;">
-                        <i class="fa-solid fa-magnifying-glass"></i>Tìm kiếm 
-                    </button>
-                </div>
+
+                <button type="submit" class="search-bar__btn">Lọc kết quả</button>
             </form>
         </div>
     </div>
+</div>
+
+<div class="container py-5" style="background-color: var(--bg); min-height: 50vh;">
+
+    <div class="search-results-info d-flex justify-content-between align-items-end">
+        <div>
+            <h4 class="fw-bold m-0" style="color: var(--navy);">Danh sách phòng trọ</h4>
+            <p class="text-muted mb-0 mt-2">
+                Tìm thấy <strong class="text-danger fs-5">@Model.Count()</strong> phòng phù hợp với tiêu chí của bạn.
+            </p>
+        </div>
+    </div>
+
+    @if (Model != null && Model.Any())
+    {
+        <div class="room-grid mt-4">
+            @foreach (var item in Model)
+            {
+                var img = (item.AnhPhongs != null && item.AnhPhongs.Any())
+                ? item.AnhPhongs.First().Url
+                : "https://via.placeholder.com/400x300?text=Chưa+có+ảnh";
+
+                <a href="@Url.Action("Details", "Home", new { id = item.Id })" class="room-card anim-in" data-anim="up">
+                    <div class="room-card__img-wrap">
+                        @if (!string.IsNullOrEmpty(item.KhuVuc))
+                        {
+                            <span class="room-card__badge">@item.KhuVuc</span>
+                        }
+                        <img src="@img" alt="@item.TieuDe" loading="lazy" />
+                        <div class="room-card__overlay"></div>
+                    </div>
+
+                    <div class="room-card__body">
+                        <div class="room-card__price">
+                            @item.Gia.ToString("N0") <span>VNĐ/tháng</span>
+                        </div>
+                        <h3 class="room-card__title">@item.TieuDe</h3>
+
+                        <div class="d-flex justify-content-between align-items-center mt-2">
+                            <div class="room-card__address w-75 text-truncate">
+                                <i class="fas fa-map-marker-alt"></i> @item.DiaChi
+                            </div>
+                            <span class="badge bg-light text-dark border">@item.DienTich m²</span>
+                        </div>
+                    </div>
+
+                    <div class="room-card__footer">
+                        <div class="room-card__cta">Xem chi tiết <i class="fas fa-arrow-right"></i></div>
+                    </div>
+                </a>
+            }
+        </div>
+    }
+    else
+    {
+        <div class="rooms-empty text-center py-5 mt-4 bg-white rounded-4 border shadow-sm">
+            <div class="rooms-empty__icon" style="color: var(--pink);"><i class="fas fa-search-minus"></i></div>
+            <h4 class="fw-bold mt-3 text-dark">Rất tiếc, không tìm thấy phòng trọ nào!</h4>
+            <p class="text-muted mb-4">Vui lòng thử thay đổi khu vực, mức giá hoặc bỏ bớt từ khóa để xem thêm kết quả.</p>
+            <a href="@Url.Action("Search", "Home")" class="btn-more">
+                <i class="fas fa-sync-alt me-2"></i> Xóa bộ lọc
+            </a>
+        </div>
+    }
 </div>

@@ -1,21 +1,10 @@
 ﻿@using BaiCuoiKy.Models
-@using BaiCuoiKy.Models
+
 <nav class="navbar">
     <div class="nav-left">
         <a asp-controller="Home" asp-action="Index">Trang chủ</a>
 
-        <div class="dropdown">
-            <a href="#" class="dropdown-toggle" id="categoryDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-                Danh mục
-            </a>
-            <ul class="dropdown-menu" aria-labelledby="categoryDropdown">
-                <li>
-                    <a class="dropdown-item fw-bold" style="color: #ED005A;" asp-controller="Home" asp-action="Category">
-                        🌟 Xem tất cả danh mục
-                    </a>
-                </li>
-            </ul>
-        </div>
+        <a asp-controller="Category" asp-action="Index">Danh mục</a>
 
         <a asp-controller="Home" asp-action="Privacy">Chính sách bảo mật</a>
         <a asp-controller="Home" asp-action="Support">Hỗ trợ</a>
@@ -47,27 +36,27 @@
 
                     @if (ViewBag.NotiCount != null && ViewBag.NotiCount > 0)
                     {
-                        <span class="position-absolute badge rounded-pill"
-                              style="background-color: #ED005A; font-size: 0.6rem; top: -5px; right: -10px; padding: 0.35em 0.5em;">
+                        <span class="position-absolute badge noti-badge rounded-pill" style="background-color: #ED005A;">
                             @ViewBag.NotiCount
                         </span>
                     }
                 </a>
-                <ul class="dropdown-menu dropdown-menu-end shadow-lg border-0 mt-3 py-0 overflow-hidden" aria-labelledby="notiDropdown" style="width: 280px; border-radius: 12px;">
-                    <li class="p-3 border-bottom bg-light">
+                <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="notiDropdown">
+                    <li class="noti-header p-3 border-bottom bg-light">
                         <h6 class="mb-0 fw-bold" style="color: #002641;">Thông báo</h6>
                     </li>
 
                     <li>
-                        <div class="notification-scroll" style="max-height: 250px; overflow-y: auto; overflow-x: hidden;">
+                        <div class="notification-scroll">
                             @if (ViewBag.Notifications != null && ((List<Notification>)ViewBag.Notifications).Any())
                             {
                                 @foreach (var noti in (List<Notification>)ViewBag.Notifications)
                                 {
-                                    <a class="dropdown-item p-3 border-bottom small @(noti.IsRead ? "text-muted" : "fw-bold")" href="#">
+                                    <a class="dropdown-item p-3 border-bottom small @(noti.IsRead ? "text-muted" : "fw-bold")"
+                                       href="@Url.Action("Read", "Notification", new { id = noti.Id })">
                                         @noti.Message
                                         <br />
-                                        <small class="text-muted" style="font-size: 0.7rem;">@noti.CreatedAt.ToString("dd/MM HH:mm")</small>
+                                        <small class="noti-time">@noti.CreatedAt.ToString("dd/MM HH:mm")</small>
                                     </a>
                                 }
                             }
@@ -80,7 +69,7 @@
                         </div>
                     </li>
 
-                    <li class="p-2 text-center border-top">
+                    <li class="noti-footer p-2 text-center border-top">
                         <a asp-controller="Notification" asp-action="Index" class="text-decoration-none small fw-bold" style="color: #ED005A;">Xem tất cả</a>
                     </li>
                 </ul>
@@ -123,3 +112,6 @@
         }
     </div>
 </nav>
+@section styles {    
+    <link rel="stylesheet" href="~/css/navbar.css" />
+}

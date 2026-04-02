@@ -9,6 +9,7 @@ namespace BaiCuoiKy.Models.ViewModel
         public required string TieuDe { get; set; } = string.Empty;
 
         public required string DiaChi { get; set; } = string.Empty;
+        public string KhuVuc { get; set; } = string.Empty;
 
         public decimal Gia { get; set; }
 

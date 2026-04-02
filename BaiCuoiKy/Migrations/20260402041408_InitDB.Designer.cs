@@ -12,8 +12,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace BaiCuoiKy.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    [Migration("20260331121933_InitialCreate")]
-    partial class InitialCreate
+    [Migration("20260402041408_InitDB")]
+    partial class InitDB
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -132,6 +132,9 @@ namespace BaiCuoiKy.Migrations
                     b.Property<DateTime>("NgayNhan")
                         .HasColumnType("datetime2");
 
+                    b.Property<decimal>("TienCoc")
+                        .HasColumnType("decimal(18,2)");
+
                     b.Property<string>("TrangThai")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
@@ -166,9 +169,6 @@ namespace BaiCuoiKy.Migrations
                     b.Property<string>("TenDanhMuc")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
-
-                    b.Property<int>("ThuTu")
-                        .HasColumnType("int");
 
                     b.Property<bool>("TrangThai")
                         .HasColumnType("bit");
@@ -212,6 +212,9 @@ namespace BaiCuoiKy.Migrations
 
                     b.Property<string>("Message")
                         .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Url")
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("UserId")
@@ -284,6 +287,10 @@ namespace BaiCuoiKy.Migrations
 
                     b.Property<bool>("IsDeleted")
                         .HasColumnType("bit");
+
+                    b.Property<string>("KhuVuc")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("MoTa")
                         .IsRequired()

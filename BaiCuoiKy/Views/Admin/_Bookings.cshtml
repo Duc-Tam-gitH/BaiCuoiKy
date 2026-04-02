@@ -51,19 +51,28 @@
                                     <td>
                                         @if (b.TrangThai == "ChoDuyet")
                                         {
-                                            <span class="badge bg-warning text-dark px-3 py-2 rounded-pill">Chờ duyệt</span>
+                                            <span class="badge bg-warning text-dark px-3 py-2 rounded-pill">Chờ duyệt đơn</span>
                                         }
                                         else if (b.TrangThai == "ChoThanhToan")
                                         {
-                                            <span class="badge bg-info text-dark px-3 py-2 rounded-pill">Chờ thanh toán</span>
+                                            <span class="badge bg-info text-dark px-3 py-2 rounded-pill">Chờ khách cọc</span>
                                         }
                                         else if (b.TrangThai == "ChoXacNhan")
                                         {
                                             <span class="badge bg-primary px-3 py-2 rounded-pill">Khách đã báo cọc</span>
                                         }
+                                        else if (b.TrangThai == "ChoXacNhanTraPhong")
+                                        {
+                                            @* Cập nhật màu sắc cho dễ phân biệt *@
+                                            <span class="badge bg-info px-3 py-2 rounded-pill">Yêu cầu trả phòng</span>
+                                        }
+                                        else if (b.TrangThai == "DaTraPhong")
+                                        {
+                                            <span class="badge bg-dark px-3 py-2 rounded-pill">Đã trả phòng</span>
+                                        }
                                         else if (b.TrangThai == "HoanTat")
                                         {
-                                            <span class="badge bg-success px-3 py-2 rounded-pill">Thành công</span>
+                                            <span class="badge bg-success px-3 py-2 rounded-pill">Đang thuê</span>
                                         }
                                         else
                                         {
@@ -72,6 +81,7 @@
                                     </td>
 
                                     <td class="text-center">
+                                        @* 1. Nút duyệt đơn đặt phòng mới *@
                                         @if (b.TrangThai == "ChoDuyet")
                                         {
                                             <form asp-controller="Admin" asp-action="ApproveBooking" method="post" class="d-inline">
@@ -81,12 +91,23 @@
                                                 </button>
                                             </form>
                                         }
+                                        @* 2. Nút xác nhận tiền cọc của khách *@
                                         else if (b.TrangThai == "ChoXacNhan")
                                         {
                                             <form asp-controller="Admin" asp-action="ConfirmBookingFinal" method="post" class="d-inline">
                                                 <input type="hidden" name="bookingId" value="@b.Id" />
-                                                <button type="submit" class="btn btn-dark btn-sm rounded-3 px-3 shadow-sm" style="background: linear-gradient(135deg, var(--crimson) 0%, var(--crimson-soft) 100%);">
+                                                <button type="submit" class="btn btn-dark btn-sm rounded-3 px-3 shadow-sm">
                                                     <i class="fas fa-money-check-alt me-1"></i> Xác nhận tiền
+                                                </button>
+                                            </form>
+                                        }
+                                        @* 3. NÚT DUYỆT TRẢ PHÒNG (MỚI BỔ SUNG) *@
+                                        else if (b.TrangThai == "ChoXacNhanTraPhong")
+                                        {
+                                            <form asp-controller="Admin" asp-action="ApproveCheckout" method="post" class="d-inline">
+                                                <input type="hidden" name="bookingId" value="@b.Id" />
+                                                <button type="submit" class="btn btn-info btn-sm rounded-3 px-3 shadow-sm text-white">
+                                                    <i class="fas fa-door-open me-1"></i> Duyệt trả phòng
                                                 </button>
                                             </form>
                                         }

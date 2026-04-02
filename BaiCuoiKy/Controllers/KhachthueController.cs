@@ -6,7 +6,7 @@ using BaiCuoiKy.Models;
 
 namespace BaiCuoiKy.Controllers
 {
-    [Authorize(Roles = "Khachthue")] // Chỉ cho phép user có Role "Khachthue" vào
+    [Authorize(Roles = "Khachthue")]
     public class KhachthueController : Controller
     {
         private readonly AppDbContext _context;
@@ -16,10 +16,7 @@ namespace BaiCuoiKy.Controllers
             _context = context;
         }
 
-        // ==========================================
-        // 1. TRANG DANH SÁCH YÊU THÍCH
-        // URL: /Khachthue/Favorites
-        // ==========================================
+        // 1. Trang danh sách yêu thích
         public async Task<IActionResult> Favorites()
         {
             var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
@@ -32,41 +29,71 @@ namespace BaiCuoiKy.Controllers
                 .Select(f => f.Tro)
                 .ToListAsync();
 
-            return View(favorites); // Sẽ tìm file Views/Khachthue/Favorites.cshtml
+            return View(favorites);
         }
 
-        // ==========================================
-        // 2. TRANG QUẢN LÝ ĐẶT PHÒNG (BOOKINGS)
-        // URL: /Khachthue/Bookings
-        // ==========================================
-        [Authorize]
+        // 2. Trang quản lý đặt phòng
         public async Task<IActionResult> Bookings()
         {
-            // Lấy ID của khách hàng đang đăng nhập
             var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
 
-            // Lấy danh sách phòng đã đặt của người này
             var danhSachDatPhong = await _context.Bookings
-                .Include(b => b.Tro)   // 🔥 QUAN TRỌNG: Phải có dòng này thì View mới gọi được item.Tro.TieuDe
-                .Include(b => b.User)  // Nối bảng User
+                .Include(b => b.Tro)
+                .Include(b => b.User)
                 .Where(b => b.UserId == userId)
                 .OrderByDescending(b => b.NgayDat)
                 .ToListAsync();
 
             return View(danhSachDatPhong);
         }
+
+        // 3. Xác nhận thanh toán cọc
         [HttpPost]
-        [Authorize]
+        [ValidateAntiForgeryToken]
         public async Task<IActionResult> ConfirmPayment(int bookingId)
         {
             var booking = await _context.Bookings.FindAsync(bookingId);
             if (booking != null)
             {
-                // Chuyển sang trạng thái chờ Admin check tiền trong tài khoản
                 booking.TrangThai = "ChoXacNhan";
                 await _context.SaveChangesAsync();
-                TempData["Success"] = "Đã gửi thông báo xác nhận thanh toán cho Admin!";
+                TempData["Success"] = "Đã gửi xác nhận thanh toán. Vui lòng chờ Admin kiểm tra tài khoản!";
             }
+            return RedirectToAction("Bookings");
+        }
+
+        // 4. Xác nhận yêu cầu trả phòng
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> ConfirmCheckout(int bookingId, DateTime NgayTra)
+        {
+            var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+            var booking = await _context.Bookings
+                .Include(b => b.Tro)
+                .FirstOrDefaultAsync(b => b.Id == bookingId && b.UserId == userId);
+
+            if (booking == null) return NotFound();
+
+            // Logic tính toán thời gian ở (cần đủ 30 ngày để hoàn cọc)
+            double duration = (NgayTra - booking.NgayNhan).TotalDays;
+
+            booking.TrangThai = "ChoXacNhanTraPhong";
+
+            // Tạo thông báo cho Admin/Chủ trọ
+            var notification = new Notification
+            {
+                UserId = booking.Tro.UserId,
+                CreatedAt = DateTime.Now,
+                IsRead = false,
+                Message = $"🔔 Yêu cầu trả phòng: '{booking.Tro.TieuDe}'. Ngày trả: {NgayTra:dd/MM/yyyy}. " +
+                          (duration < 30 ? "⚠️ Cảnh báo: Ở chưa đủ 1 tháng (mất cọc)." : "✅ Đã ở đủ trên 1 tháng."),
+                Url = "/Admin/Dashboard?section=bookings"
+            };
+            _context.Notifications.Add(notification);
+
+            await _context.SaveChangesAsync();
+
+            TempData["Success"] = "Yêu cầu trả phòng đã được gửi! Admin sẽ sớm liên hệ xác nhận bàn giao.";
             return RedirectToAction("Bookings");
         }
     }

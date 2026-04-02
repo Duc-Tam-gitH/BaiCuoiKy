@@ -25,6 +25,9 @@ namespace BaiCuoiKy.Models
         [Required]
         public string DiaChi { get; set; }
 
+        [Required(ErrorMessage = "Vui lòng nhập khu vực (VD: Quận 1, Quận Gò Vấp...)")]
+        public string KhuVuc { get; set; }
+
         public DateTime NgayDang { get; set; } = DateTime.Now;
 
         // ⭐ Trạng thái phòng (thay cho duyệt)

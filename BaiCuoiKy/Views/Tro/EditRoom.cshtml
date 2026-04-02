@@ -3,7 +3,7 @@
 
 @{
     ViewData["Title"] = "Chỉnh sửa phòng trọ";
-    }
+}
 
 <div class="container mt-5 mb-5">
     <div class="row justify-content-center">
@@ -14,6 +14,7 @@
                 </div>
                 <div class="card-body p-4">
                     <form asp-action="Edit" method="post">
+                        @Html.AntiForgeryToken()
                         <input type="hidden" asp-for="Id" />
 
                         <div class="row g-3">
@@ -30,26 +31,31 @@
                             </div>
 
                             <div class="col-md-6">
-                                <label asp-for="DienTich" class="form-label fw-bold">Diện tích (m2) <span class="text-danger">*</span></label>
+                                <label asp-for="DienTich" class="form-label fw-bold">Diện tích (m²) <span class="text-danger">*</span></label>
                                 <input asp-for="DienTich" class="form-control" type="number" />
                                 <span asp-validation-for="DienTich" class="text-danger small"></span>
                             </div>
 
                             <div class="col-md-12">
                                 <label asp-for="DiaChi" class="form-label fw-bold">Địa chỉ chi tiết <span class="text-danger">*</span></label>
-                                <input asp-for="DiaChi" class="form-control" placeholder="Số nhà, Đường, Quận/Huyện..." />
+                                <input asp-for="DiaChi" class="form-control" placeholder="Số nhà, tên đường..." />
                                 <span asp-validation-for="DiaChi" class="text-danger small"></span>
                             </div>
 
                             <div class="col-md-6">
-                                <label asp-for="CategoryId" class="form-label fw-bold">Danh mục <span class="text-danger">*</span></label>
-                                <select asp-for="CategoryId" class="form-select" asp-items="@(new SelectList(Model.Categories, "Id", "TenDanhMuc"))">
-                                    <option value="">-- Chọn danh mục --</option>
-                                </select>
-                                <span asp-validation-for="CategoryId" class="text-danger small"></span>
+                                <label asp-for="KhuVuc" class="form-label fw-bold">Khu vực / Quận huyện <span class="text-danger">*</span></label>
+                                <input asp-for="KhuVuc" class="form-control" placeholder="Ví dụ: Quận 1, Thủ Đức..." />
+                                <span asp-validation-for="KhuVuc" class="text-danger small"></span>
                             </div>
 
                             <div class="col-md-6">
+                                <label asp-for="CategoryId" class="form-label fw-bold">Loại phòng</label>
+                                <select asp-for="CategoryId" class="form-select"
+                                        asp-items="@(new SelectList(Model.Categories, "Id", "TenDanhMuc"))">
+                                </select>
+                            </div>
+
+                            <div class="col-md-12">
                                 <label asp-for="TrangThai" class="form-label fw-bold">Trạng thái phòng</label>
                                 <select asp-for="TrangThai" class="form-select" asp-items="Html.GetEnumSelectList<TrangThaiPhong>()"></select>
                             </div>
@@ -64,7 +70,8 @@
                                 <button type="submit" class="btn btn-success px-5 py-2 fw-bold">
                                     💾 Lưu Thay Đổi
                                 </button>
-                                <a href="javascript:history.back()" class="btn btn-secondary px-5 py-2 ms-2 fw-bold">
+
+                                <a asp-controller="Admin" asp-action="Dashboard" asp-route-section="rooms" class="btn btn-secondary px-5 py-2 ms-2 fw-bold">
                                     Hủy bỏ
                                 </a>
                             </div>
@@ -79,6 +86,7 @@
 @section Scripts {
     <partial name="_ValidationScriptsPartial" />
 }
+
 @section Styles {
-   <link href="~/css/EditRoom.css" rel="stylesheet" />
+    <link href="~/css/EditRoom.css" rel="stylesheet" />
 }

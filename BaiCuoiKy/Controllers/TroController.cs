@@ -30,11 +30,11 @@ namespace BaiCuoiKy.Controllers
             {
                 TieuDe = "",
                 DiaChi = "",
+                KhuVuc = "", 
                 MoTa = "",
                 Gia = 0,
                 DienTich = 0,
 
-                
                 TrangThai = TrangThaiPhong.DangTrong,
 
                 Categories = await _context.Categories
@@ -65,6 +65,7 @@ namespace BaiCuoiKy.Controllers
                 {
                     TieuDe = model.TieuDe,
                     DiaChi = model.DiaChi,
+                    KhuVuc = model.KhuVuc, 
                     Gia = model.Gia,
                     MoTa = model.MoTa,
                     DienTich = model.DienTich,
@@ -152,17 +153,22 @@ namespace BaiCuoiKy.Controllers
                 return RedirectToAction("Index", "Home");
             }
 
+            // ✅ Bổ sung để Navbar không bị lỗi
+            var categories = await _context.Categories.Where(c => c.TrangThai == true).ToListAsync();
+            ViewBag.Categories = categories;
+
             var model = new EditTroViewModel
             {
                 Id = tro.Id,
                 TieuDe = tro.TieuDe,
                 DiaChi = tro.DiaChi,
+                KhuVuc = tro.KhuVuc,
                 Gia = tro.Gia,
                 MoTa = tro.MoTa,
                 DienTich = tro.DienTich,
                 TrangThai = tro.TrangThai,
                 CategoryId = tro.CategoryId,
-                Categories = await _context.Categories.Where(c => c.TrangThai == true).ToListAsync()
+                Categories = categories // Gán danh sách vào model để dùng cho DropdownList
             };
 
             return View("EditRoom", model);
@@ -175,6 +181,7 @@ namespace BaiCuoiKy.Controllers
         {
             if (!ModelState.IsValid)
             {
+                // Nếu lỗi, phải load lại danh sách Categories để Dropdown không bị trống
                 model.Categories = await _context.Categories.Where(c => c.TrangThai == true).ToListAsync();
                 return View("EditRoom", model);
             }
@@ -182,27 +189,40 @@ namespace BaiCuoiKy.Controllers
             var tro = await _context.Tros.FindAsync(model.Id);
             if (tro == null) return NotFound();
 
+            // Kiểm tra quyền (Chủ phòng hoặc Admin)
             var currentUserId = User.FindFirstValue(ClaimTypes.NameIdentifier);
             if (tro.UserId != currentUserId && !User.IsInRole("Admin"))
             {
                 return Forbid();
             }
 
+            // Cập nhật dữ liệu
             tro.TieuDe = model.TieuDe;
             tro.DiaChi = model.DiaChi;
+            tro.KhuVuc = model.KhuVuc; 
             tro.Gia = model.Gia;
             tro.MoTa = model.MoTa;
             tro.DienTich = model.DienTich;
             tro.TrangThai = model.TrangThai;
             tro.CategoryId = model.CategoryId;
 
-            await _context.SaveChangesAsync();
-            TempData["Success"] = "Cập nhật thành công!";
+            try
+            {
+                _context.Update(tro);
+                await _context.SaveChangesAsync();
+                TempData["Success"] = "Cập nhật phòng trọ thành công!";
+            }
+            catch (Exception ex)
+            {
+                TempData["Error"] = "Lỗi hệ thống: " + ex.Message;
+                model.Categories = await _context.Categories.Where(c => c.TrangThai == true).ToListAsync();
+                return View("EditRoom", model);
+            }
 
-            // Trở về đúng trang tùy theo Role
+            // ĐIỀU HƯỚNG SAU KHI LƯU
             if (User.IsInRole("Admin"))
             {
-                return RedirectToAction("ManageSystem", "Admin");
+                return RedirectToAction("Dashboard", "Admin", new { section = "rooms" });
             }
             return RedirectToAction("Manage");
         }
@@ -234,8 +254,9 @@ namespace BaiCuoiKy.Controllers
             await _context.SaveChangesAsync();
 
             TempData["Success"] = "Đã xóa!";
-            return RedirectToAction("_Rooms", "Admin");
+            return RedirectToAction("Dashboard", "Admin", new { section = "rooms" });
         }
+
         [HttpPost]
         [Authorize]
         public async Task<IActionResult> BookRoom(int troId)
@@ -282,7 +303,7 @@ namespace BaiCuoiKy.Controllers
                     CreatedAt = DateTime.Now,
                     IsRead = false,
                     Message = $"Khách hàng {userName} vừa yêu cầu đặt phòng '{tro.TieuDe}'. Vui lòng kiểm duyệt!",
-                    Url = "/Admin" // Tạm thời trỏ về trang Admin, sau này có trang quản lý duyệt thì đổi lại
+                    Url = "/Admin/Dashboard?section=bookings"
                 };
                 _context.Notifications.Add(notification);
             }
@@ -295,5 +316,4 @@ namespace BaiCuoiKy.Controllers
             return RedirectToAction("Bookings", "Khachthue");
         }
     }
-
 }

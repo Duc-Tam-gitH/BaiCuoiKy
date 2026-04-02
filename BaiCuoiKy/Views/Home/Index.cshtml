@@ -2,7 +2,7 @@
 @model IEnumerable<BaiCuoiKy.Models.Tro>
 
 @{
-    ViewData["Title"] = "Trang Chủ - Thuê Phòng";
+    ViewData["Title"] = "Trang Chủ - House88";
 }
 
 @section Styles {
@@ -10,98 +10,218 @@
 }
 
 <div class="home-container">
-    @* --- Phần Hero và Search Giữ Nguyên --- *@
+
+    @* ─────────────────────────────────────────
+       1. HERO SECTION (Tìm kiếm)
+    ───────────────────────────────────────── *@
     <section class="hero">
-        <h1>Tìm Phòng Trọ & Nhà Cho Thuê</h1>
-        <p>Nhanh Chóng - An Toàn - Tiện Lợi</p>
-        <div class="container">
-            <form asp-controller="Home" asp-action="Search" method="get" class="search-box">
-                <select name="khuvuc" class="form-select w-auto">
-                    <option value="">Khu vực</option>
-                    <option>Hồ Chí Minh</option>
-                    <option>Hà Nội</option>
-                    <option>Đà Nẵng</option>
-                </select>
+        <div class="hero-bg">
+            <div class="hero-blob hero-blob--1"></div>
+            <div class="hero-blob hero-blob--2"></div>
+            <div class="hero-grid"></div>
+        </div>
 
-                <select name="loai" class="form-select w-auto">
-                    <option value="">Loại hình</option>
-                    <option>Phòng trọ</option>
-                    <option>Căn hộ mini</option>
-                    <option>Nhà nguyên căn</option>
-                </select>
+        <div class="hero-inner" data-anim="up" class="anim-in">
+            <div class="hero-pill">
+                <span class="hero-pill__dot"></span>
+                Nền tảng tìm kiếm phòng trọ số 1
+            </div>
 
-                <select name="gia" class="form-select w-auto">
-                    <option value="">Giá</option>
-                    <option value="1">Dưới 2 triệu</option>
-                    <option value="2">2 - 5 triệu</option>
-                    <option value="3">Trên 5 triệu</option>
-                </select>
+            <h1 class="hero-heading">Tìm <em>Phòng Trọ</em> & Nhà Cho Thuê</h1>
+            <p class="hero-sub">Nhanh chóng - An toàn - Tiện lợi</p>
 
-                <input type="text" name="keyword" class="form-control w-auto" placeholder="Nhập từ khóa..." />
+            <div class="search-bar">
+                <form asp-controller="Home" asp-action="Search" method="get" class="search-bar__form">
 
-                <button type="submit" class="btn btn-primary">
-                    🔍 Tìm Kiếm
-                </button>
-            </form>
+                    <div class="search-bar__field">
+                        <i class="fas fa-map-marker-alt search-bar__icon"></i>
+                        <div class="search-bar__inner">
+                            <label>Khu vực</label>
+                            <select name="khuvuc">
+                                <option value="">Tất cả</option>
+                                @if (ViewBag.KhuVucs != null)
+                                {
+                                    foreach (var k in ViewBag.KhuVucs)
+                                    {
+                                        <option value="@k">@k</option>
+                                    }
+                                }
+                            </select>
+                        </div>
+                    </div>
+
+                    <div class="search-bar__sep"></div>
+
+                    <div class="search-bar__field">
+                        <i class="fas fa-home search-bar__icon"></i>
+                        <div class="search-bar__inner">
+                            <label>Loại hình</label>
+                            <select name="categoryId">
+                                <option value="">Tất cả</option>
+                                @if (ViewBag.Categories != null)
+                                {
+                                    foreach (var c in ViewBag.Categories)
+                                    {
+                                        <option value="@c.Id">@c.TenDanhMuc</option>
+                                    }
+                                }
+                            </select>
+                        </div>
+                    </div>
+
+                    <div class="search-bar__sep"></div>
+
+                    <div class="search-bar__field">
+                        <i class="fas fa-coins search-bar__icon"></i>
+                        <div class="search-bar__inner">
+                            <label>Mức giá</label>
+                            <select name="gia">
+                                <option value="">Tất cả</option>
+                                <option value="0-1000000">Dưới 1 triệu</option>
+                                <option value="1000000-2000000">1 - 2 triệu</option>
+                                <option value="2000000-4000000">2 - 4 triệu</option>
+                                <option value="4000000-max">Trên 4 triệu</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <div class="search-bar__sep"></div>
+
+                    <div class="search-bar__field search-bar__field--kw">
+                        <i class="fas fa-search search-bar__icon"></i>
+                        <div class="search-bar__inner">
+                            <label>Từ khóa</label>
+                            <input type="text" name="tukhoa" placeholder="Tên đường, phường..." />
+                        </div>
+                    </div>
+
+                    <button type="submit" class="search-bar__btn">Tìm Kiếm</button>
+                </form>
+            </div>
+
+            <div class="hero-stats">
+          
+                <div class="hero-stat"><strong>98%</strong><span>Hài lòng</span></div>
+            </div>
         </div>
     </section>
 
-    @* --- PHẦN CHỈNH SỬA: PHÒNG TRỌ NỔI BẬT --- *@
-    <section class="container mt-5">
-        <div class="section-header mb-4">
-            <h2 class="fw-bold">Phòng Trọ Nổi Bật</h2>
+    @* ─────────────────────────────────────────
+       2. ROOMS SECTION (Danh sách phòng)
+    ───────────────────────────────────────── *@
+    <section class="rooms-section container">
+        <div class="section-head" data-anim="up" class="anim-in">
+            <div class="section-head__label"><span class="section-head__dot"></span> Dành cho bạn</div>
+            <h2 class="section-head__title">Phòng Trọ <span>Nổi Bật</span></h2>
+            <p class="section-head__sub">Khám phá những không gian sống tiện nghi, sạch sẽ và an ninh nhất được cập nhật mỗi ngày.</p>
         </div>
 
-        @* g-4: Tạo khoảng cách đều giữa các Card *@
-        <div class="row g-4">
+        <div class="room-grid">
             @if (Model != null && Model.Any())
             {
                 foreach (var item in Model)
                 {
-                    var img = (item.AnhPhongs != null && item.AnhPhongs.Any())
-                    ? item.AnhPhongs.First().Url
-                    : "/images/favicon.ico";
+                    var img = (item.AnhPhongs != null && item.AnhPhongs.Any()) ? item.AnhPhongs.First().Url : "https://via.placeholder.com/400x300?text=Chưa+có+ảnh";
 
-                    @* THAY ĐỔI: col-lg-3 để chia 4 cột trên màn hình máy tính *@
-                    <div class="col-md-6 col-lg-3">
-                        <a asp-controller="Tro" asp-action="Details" asp-route-id="@item.Id" class="text-decoration-none">
-                            <div class="room-card card h-100 border-0 shadow-sm overflow-hidden">
-                                <div class="room-img-container">
-                                    <img src="@img" alt="@item.TieuDe" class="card-img-top" loading="lazy" />
-                                </div>
-                                <div class="card-body p-3">
-                                    <h3 class="room-title h6 fw-bold text-dark text-truncate">@item.TieuDe</h3>
-                                    <p class="price text-danger fw-bold mb-1">
-                                        @String.Format("{0:N0} VNĐ", item.Gia)
-                                    </p>
-                                    <p class="location small text-muted mb-0 text-truncate">
-                                        📍 @item.DiaChi
-                                    </p>
-                                </div>
-                            </div>
-                        </a>
-                    </div>
+                    <a href="@Url.Action("Details", "Home", new { id = item.Id })" class="room-card" data-anim="up" class="anim-in">
+                        <div class="room-card__img-wrap">
+                            @if (!string.IsNullOrEmpty(item.KhuVuc))
+                            {
+                                <span class="room-card__badge">@item.KhuVuc</span>
+                            }
+                            <img src="@img" alt="@item.TieuDe" loading="lazy" />
+                            <div class="room-card__overlay"></div>
+                        </div>
+                        <div class="room-card__body">
+                            <div class="room-card__price">@String.Format("{0:N0}", item.Gia) <span>VNĐ/tháng</span></div>
+                            <h3 class="room-card__title">@item.TieuDe</h3>
+                            <div class="room-card__address"><i class="fas fa-map-marker-alt"></i> @item.DiaChi</div>
+                        </div>
+                        <div class="room-card__footer">
+                            <div class="room-card__cta">Xem chi tiết <i class="fas fa-arrow-right"></i></div>
+                        </div>
+                    </a>
                 }
             }
             else
             {
-                <div class="col-12 text-center py-5">
-                    <p class="display-6">😢 Hiện chưa có phòng nào</p>
+                <div class="rooms-empty">
+                    <div class="rooms-empty__icon">😢</div>
+                    <p>Hiện chưa có phòng nào được đăng tải.</p>
                 </div>
             }
         </div>
     </section>
+    @* ─────────────────────────────────────────
+       3. PROCESS SECTION (Quy trình thuê phòng - THÊM MỚI TỪ ẢNH)
+    ───────────────────────────────────────── *@
+    <section class="process-section">
+        <div class="container">
+            <div class="section-head" data-anim="up" class="anim-in">
+                <div class="section-head__label"><span class="section-head__dot"></span> QUY TRÌNH</div>
+                <h2 class="section-head__title">Thuê phòng <span>dễ dàng</span></h2>
+                <p class="section-head__sub">Chỉ 4 bước đơn giản để tìm được phòng trọ ưng ý</p>
+            </div>
 
-    @* --- Các phần Tin tức và CTA Giữ Nguyên --- *@
-    <section class="container mt-5 text-center">
-        <h2 class="mb-4">Tin tức</h2>
+            <div class="process-grid">
+                <div class="process-step" data-anim="up" style="--i: 1" class="anim-in">
+                    <div class="step-number">1</div>
+                    <div class="step-icon"><i class="fas fa-search"></i></div>
+                    <h3>Tìm kiếm</h3>
+                    <p>Duyệt qua hàng ngàn phòng trọ với bộ lọc thông minh theo khu vực, giá cả và tiện ích.</p>
+                </div>
+                <div class="process-step" data-anim="up" style="--i: 2" class="anim-in">
+                    <div class="step-number">2</div>
+                    <div class="step-icon"><i class="far fa-comment-dots"></i></div>
+                    <h3>Liên hệ</h3>
+                    <p>Chat trực tiếp với chủ phòng, đặt lịch xem phòng và thỏa thuận nhanh chóng.</p>
+                </div>
+                <div class="process-step" data-anim="up" style="--i: 3" class="anim-in">
+                    <div class="step-number">3</div>
+                    <div class="step-icon"><i class="fas fa-shield-alt"></i></div>
+                    <h3>Xác minh</h3>
+                    <p>Mọi phòng trọ đều được xác minh thực tế, đảm bảo thông tin chính xác 100%.</p>
+                </div>
+                <div class="process-step" data-anim="up" style="--i: 4" class="anim-in">
+                    <div class="step-number">4</div>
+                    <div class="step-icon"><i class="fas fa-key"></i></div>
+                    <h3>Nhận phòng</h3>
+                    <p>Ký hợp đồng an toàn, thanh toán bảo mật và nhận phòng ngay lập tức.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+    @* ─────────────────────────────────────────
+       4. WHY SECTION (Tiện ích bổ sung)
+    ───────────────────────────────────────── *@
+    <section class="why-section">
+        <div class="container">
+            <div class="section-head">
+                <h2 class="section-head__title">Vì sao chọn <span>House88</span>?</h2>
+            </div>
+            <div class="why-grid">
+                <div class="why-card">
+                    <i class="fas fa-shield-alt why-card__icon" style="color: var(--pink)"></i>
+                    <h3>An Ninh Tuyệt Đối</h3>
+                    <p>100% phòng trọ được xác thực và kiểm duyệt kỹ càng.</p>
+                </div>
+                <div class="why-card">
+                    <i class="fas fa-bolt why-card__icon" style="color: var(--pink)"></i>
+                    <h3>Tìm Kiếm Nhanh Chóng</h3>
+                    <p>Bộ lọc thông minh giúp bạn tìm phòng ưng ý chỉ trong vài giây.</p>
+                </div>
+                <div class="why-card">
+                    <i class="fas fa-headset why-card__icon" style="color: var(--pink)"></i>
+                    <h3>Hỗ Trợ 24/7</h3>
+                    <p>Đội ngũ chăm sóc khách hàng luôn sẵn sàng đồng hành cùng bạn.</p>
+                </div>
+            </div>
+        </div>
     </section>
 
-    <section class="cta bg-primary text-white text-center py-5 mt-5 rounded mx-3">
-        <h2>Đăng Tin Cho Thuê Ngay!</h2>
-        <p>Tiếp cận hàng ngàn khách hàng tiềm năng mỗi ngày</p>
-        <a asp-controller="Tro" asp-action="Create" class="btn btn-light btn-lg mt-3 rounded-pill px-4">
-            🚀 Đăng Tin Ngay
-        </a>
-    </section>
+
 </div>
+
+@section Scripts {
+    <script src="~/js/Index.js" asp-append-version="true"></script>
+}

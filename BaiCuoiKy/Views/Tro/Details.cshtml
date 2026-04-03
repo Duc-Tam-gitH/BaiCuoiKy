@@ -31,8 +31,10 @@
                             var index = 0;
                             foreach (var anh in Model.AnhPhongs)
                             {
+                                var safeUrl = anh.Url.StartsWith("http") ? anh.Url : Url.Content("~/images/" + anh.Url);
+
                                 <div class="carousel-item @(index == 0 ? "active" : "")">
-                                    <img src="@anh.Url" class="d-block w-100" alt="Ảnh phòng @Model.TieuDe" />
+                                    <img src="@safeUrl" class="d-block w-100" alt="Ảnh phòng @Model.TieuDe" />
                                 </div>
                                 index++;
                             }
@@ -53,7 +55,6 @@
                         <span class="visually-hidden">Next</span>
                     </button>
                 </div>
-            </div>
 
             <div class="room-details__header">
                 <h2 class="room-details__title">@Model.TieuDe</h2>

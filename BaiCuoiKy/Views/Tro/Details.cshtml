@@ -31,18 +31,22 @@
                             var index = 0;
                             foreach (var anh in Model.AnhPhongs)
                             {
-                                var safeUrl = anh.Url.StartsWith("http") ? anh.Url : Url.Content("~/images/" + anh.Url);
+                               
+                                var safeUrl = anh.Url.StartsWith("http")
+                                ? anh.Url
+                                : Url.Content("~/images/" + anh.Url);
 
                                 <div class="carousel-item @(index == 0 ? "active" : "")">
                                     <img src="@safeUrl" class="d-block w-100" alt="Ảnh phòng @Model.TieuDe" />
                                 </div>
+
                                 index++;
                             }
                         }
                         else
                         {
                             <div class="carousel-item active">
-                                <img src="https://via.placeholder.com/800x480?text=House88" class="d-block w-100" alt="House88 Placeholder" />
+                                <img src="@Url.Content("~/images/Tro.png")" class="d-block w-100" alt="Ảnh mặc định" />
                             </div>
                         }
                     </div>
@@ -55,8 +59,7 @@
                         <span class="visually-hidden">Next</span>
                     </button>
                 </div>
-
-            <div class="room-details__header">
+            </div> <div class="room-details__header">
                 <h2 class="room-details__title">@Model.TieuDe</h2>
                 <p class="room-details__price">
                     @String.Format("{0:N0}", Model.Gia)
@@ -100,7 +103,6 @@
                                     @for (int i = 1; i <= 5; i++)
                                     {
                                         <i class="fas fa-star @(i <= review.Rating ? "" : "text-light") opacity-75 me-1"></i>
-                                    }
                                     }
                                 </div>
                                 <p class="review-item__text">@review.Comment</p>

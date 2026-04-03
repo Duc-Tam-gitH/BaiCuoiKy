@@ -1,21 +1,19 @@
 ﻿/**
  * Xử lý hiển thị Modal Thanh Toán và tạo mã QR VietQR động
  */
-function openPaymentModal(id, amount, roomName) {
-    document.getElementById('bookingIdInput').value = id;
-    document.getElementById('roomNameDisplay').innerText = "Phòng: " + roomName;
+function openPaymentModal(bookingId, roomName, amount) {
+    // 1. Chỉ gán chữ (Tên phòng và Số tiền)
+    document.getElementById('roomNameDisplay').innerText = roomName;
+    document.getElementById('amountDisplay').innerText = amount.toLocaleString('vi-VN') + " VNĐ";
 
-    // Định dạng tiền VNĐ để hiển thị cho người dùng dễ nhìn
-    let formattedAmount = new Intl.NumberFormat('vi-VN').format(amount) + " VNĐ";
-    document.getElementById('amountDisplay').innerText = formattedAmount;
+    // 2. Gán ID đơn hàng
+    document.getElementById('bookingIdInput').value = bookingId;
 
-    // Tự động tạo mã QR VietQR theo thông tin thanh toán của House88
-    let bankId = "MB";
-    let accountNo = "999988887777";
-    let content = "CocPhong_" + id;
-    document.getElementById('qrImage').src = `https://img.vietqr.io/image/${bankId}-${accountNo}-compact.png?amount=${amount}&addInfo=${content}`;
+    // TUYỆT ĐỐI KHÔNG CÓ LỆNH GÁN ẢNH qrImage.src Ở ĐÂY NỮA NHÉ!
 
-    new bootstrap.Modal(document.getElementById('paymentModal')).show();
+    // 3. Mở Modal
+    var myModal = new bootstrap.Modal(document.getElementById('paymentModal'));
+    myModal.show();
 }
 
 /**

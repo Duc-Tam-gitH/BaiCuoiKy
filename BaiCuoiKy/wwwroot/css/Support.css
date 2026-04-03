@@ -1,4 +1,23 @@
-﻿
+﻿/* =======================================================
+   Đồng bộ với biến toàn cục của site.css
+======================================================= */
+:root {
+    /* Trỏ các biến cũ sang biến hệ thống để đồng bộ giao diện */
+    --navy: var(--primary);
+    --pink: var(--accent);
+    --bg: var(--bg-body);
+    /* Các biến dành riêng cho hiệu ứng trang Support */
+    --navy-deep: #001829;
+    --pink-hover: #c4004a;
+    --border: #e0e6ed;
+    --shadow-sm: 0 4px 6px rgba(0, 0, 0, 0.05);
+    --shadow-md: 0 10px 30px rgba(0, 0, 0, 0.08);
+    --font-display: 'Inter', 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+
+/* =======================================================
+   Hero Section
+======================================================= */
 .support-hero {
     background: linear-gradient(145deg, var(--navy) 0%, var(--navy-deep) 100%);
     padding: 70px 0;
@@ -8,6 +27,9 @@
     margin-bottom: 50px;
 }
 
+/* =======================================================
+   Info Cards
+======================================================= */
 .info-card {
     background: #fff;
     border-radius: 16px;
@@ -22,11 +44,13 @@
         font-family: var(--font-display);
         font-weight: 700;
         margin-bottom: 20px;
-        border-bottom: 2px solid rgba(0,38,65,0.05);
+        border-bottom: 2px solid rgba(0, 38, 65, 0.05);
         padding-bottom: 15px;
     }
 
-/* Team Member Styles */
+/* =======================================================
+   Team Member Styles
+======================================================= */
 .team-member {
     display: flex;
     align-items: center;
@@ -68,7 +92,9 @@
     font-weight: 500;
 }
 
-/* Form Styles */
+/* =======================================================
+   Form Styles
+======================================================= */
 .support-form-wrapper {
     background: #fff;
     border-radius: 16px;
@@ -77,6 +103,14 @@
     border: 1px solid var(--border);
 }
 
+.form-label {
+    font-weight: 600;
+    color: var(--navy);
+    font-size: 0.9rem;
+    margin-bottom: 8px;
+}
+
+/* Ô nhập liệu được kế thừa focus từ site.css, chỉ cần chỉnh cấu trúc cơ bản */
 .form-control {
     border: 1px solid #dce6ef;
     border-radius: 10px;
@@ -84,19 +118,6 @@
     font-size: 0.95rem;
     transition: all 0.3s ease;
     background: #f8fafc;
-}
-
-    .form-control:focus {
-        background: #fff;
-        border-color: var(--pink);
-        box-shadow: 0 0 0 4px var(--pink-soft);
-    }
-
-.form-label {
-    font-weight: 600;
-    color: var(--navy);
-    font-size: 0.9rem;
-    margin-bottom: 8px;
 }
 
 .btn-submit {
@@ -115,5 +136,3 @@
         box-shadow: 0 8px 20px rgba(237, 0, 90, 0.3);
         color: #fff;
     }
-
-

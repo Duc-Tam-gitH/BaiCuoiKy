@@ -22,6 +22,7 @@
 
 
 <div class="admin-rooms-container">
+
     <div class="admin-page-header">
         <div>
             <h1 class="admin-page-title">Quản lý phòng trọ</h1>
@@ -34,6 +35,67 @@
             </a>
         </div>
     </div>
+    <div class="admin-rooms-container">
+        <div class="admin-page-header">
+        </div>
+
+        <div class="admin-filter-section">
+            <form method="get" action="">
+                <input type="hidden" name="section" value="rooms" />
+
+                <div class="filter-grid">
+                    <div class="filter-group">
+                        <label>Tìm kiếm</label>
+                        <input type="text" name="searchKeyword" value="@ViewBag.SearchKeyword" class="admin-input" placeholder="Tên phòng, địa chỉ..." />
+                    </div>
+
+                    <div class="filter-group">
+                        <label>Trạng thái</label>
+                        <select name="status" class="admin-input">
+                            <option value="">-- Tất cả trạng thái --</option>
+                            <option value="0" selected="@(ViewBag.Status?.ToString() == "0")">Đang trống</option>
+                            <option value="1" selected="@(ViewBag.Status?.ToString() == "1")">Đang xử lý</option>
+                            <option value="2" selected="@(ViewBag.Status?.ToString() == "2")">Đã cho thuê</option>
+                        </select>
+                    </div>
+                    <div class="filter-group">
+                        <label>Danh mục</label>
+                        <select name="categoryId" class="admin-input">
+                            <option value="">-- Tất cả danh mục --</option>
+                            @if (ViewBag.Categories != null)
+                            {
+                                foreach (var cat in ViewBag.Categories)
+                                {
+                                    <option value="@cat.Id" selected="@(ViewBag.CategoryId?.ToString() == cat.Id.ToString())">
+                                        @cat.TenDanhMuc
+                                    </option>
+                                }
+                            }
+                        </select>
+                    </div>
+
+                    <div class="filter-group">
+                        <label>Giá từ (VNĐ)</label>
+                        <input type="number" name="minPrice" value="@ViewBag.MinPrice" class="admin-input" placeholder="Tối thiểu..." min="0" />
+                    </div>
+
+                    <div class="filter-group">
+                        <label>Đến giá (VNĐ)</label>
+                        <input type="number" name="maxPrice" value="@ViewBag.MaxPrice" class="admin-input" placeholder="Tối đa..." min="0" />
+                    </div>
+
+                    <div class="filter-group admin-filter-actions">
+                        <button type="submit" class="admin-btn admin-btn-primary">
+                            <i class="fas fa-search"></i> Lọc
+                        </button>
+                        <a href="?section=rooms" class="admin-btn admin-btn-outline">
+                            <i class="fas fa-sync"></i> Khôi phục
+                        </a>
+                    </div>
+                </div>
+            </form>
+        </div>
+        <div class="admin-rooms-table-wrapper">
 
     <div class="admin-rooms-table-wrapper">
         <table class="admin-table">

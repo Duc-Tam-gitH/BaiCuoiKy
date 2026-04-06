@@ -1,6 +1,6 @@
 ﻿/* ============================================================
    _Booking.css — Quản lý đặt phòng | Admin Panel
-   Palette: #002641 (Navy) · #ED005A (Crimson Pink)
+   Navy #002641 · Crimson #ED005A
    ============================================================ */
 
 @import url('https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:wght@300;400;500;600;700;800&display=swap');
@@ -8,125 +8,150 @@
 :root {
     --navy: #002641;
     --navy-light: #003a61;
-    --navy-deep: #001829;
     --crimson: #ED005A;
-    --crimson-dim: #c0004a;
     --crimson-soft: #ff2e78;
     --white: #ffffff;
     --off-white: #f4f7fb;
     --muted: #7a8fa6;
     --border: #dce8f5;
     --success: #00b87a;
-    --warning: #f59e0b;
-    --radius-sm: 6px;
-    --radius-md: 12px;
-    --radius-lg: 18px;
-    --shadow-card: 0 4px 32px 0 rgba(0, 38, 65, 0.10);
-    --shadow-btn: 0 4px 16px 0 rgba(237, 0, 90, 0.30);
-    --transition: 0.22s cubic-bezier(.4,0,.2,1);
+    --info: #0ea5e9;
+    --warning-text: #7a4700;
+    --T: 0.2s cubic-bezier(.4,0,.2,1);
 }
 
-/* ── Page wrapper ────────────────────────────────────────── */
+/* ── Page ─────────────────────────────────────────────────── */
 .p-4 {
-    font-family: 'Be Vietnam Pro', sans-serif;
-    background: linear-gradient(135deg, #eaf2fb 0%, #f4f7fb 60%, #fde8f1 100%) !important;
+    font-family: 'Be Vietnam Pro', sans-serif !important;
+    background: radial-gradient(ellipse 65% 55% at 8% 5%, rgba(0,38,65,.07) 0%, transparent 55%), radial-gradient(ellipse 55% 45% at 92% 95%, rgba(237,0,90,.07) 0%, transparent 55%), linear-gradient(150deg, #eaf2fb 0%, #f4f7fb 55%, #fde8f1 100%) !important;
     min-height: 100vh;
 }
 
-/* ── Card ────────────────────────────────────────────────── */
+/* ── Card shell ───────────────────────────────────────────── */
 .card.shadow-sm.border-0.rounded-3 {
-    border-radius: var(--radius-lg) !important;
-    box-shadow: var(--shadow-card) !important;
-    overflow: hidden;
-    background: var(--white);
+    border-radius: 20px !important;
+    box-shadow: 0 2px 32px rgba(0,38,65,.10), 0 1px 4px rgba(0,38,65,.06) !important;
+    background: #fff;
     border: 1.5px solid var(--border) !important;
-    animation: fadeSlideUp 0.45s ease both;
+    overflow: hidden;
+    animation: slideUp .45s cubic-bezier(.22,.68,0,1.18) both;
 }
 
-@keyframes fadeSlideUp {
+@keyframes slideUp {
     from {
         opacity: 0;
-        transform: translateY(22px);
+        transform: translateY(24px) scale(.99);
     }
 
     to {
         opacity: 1;
-        transform: translateY(0);
+        transform: translateY(0) scale(1);
     }
 }
 
-/* ── Card Header ─────────────────────────────────────────── */
+/* ── Card header ──────────────────────────────────────────── */
 .card-header.bg-white {
-    background: linear-gradient(90deg, var(--navy) 0%, var(--navy-light) 100%) !important;
+    background: linear-gradient(105deg, #002641 0%, #003a61 55%, #004f8c 100%) !important;
     border-bottom: none !important;
-    padding: 20px 28px !important;
+    padding: 20px 26px !important;
     position: relative;
     overflow: hidden;
 }
 
-    .card-header.bg-white::after {
+    .card-header.bg-white::before {
         content: '';
         position: absolute;
-        right: -40px;
-        top: -40px;
-        width: 160px;
-        height: 160px;
+        right: -55px;
+        top: -55px;
+        width: 210px;
+        height: 210px;
         border-radius: 50%;
-        background: rgba(237, 0, 90, 0.12);
+        background: rgba(237,0,90,.12);
         pointer-events: none;
     }
 
-/* Icon box */
+    .card-header.bg-white::after {
+        content: '';
+        position: absolute;
+        left: -60px;
+        bottom: -70px;
+        width: 190px;
+        height: 190px;
+        border-radius: 50%;
+        background: rgba(255,255,255,.04);
+        pointer-events: none;
+    }
+/* icon box */
 .card-header .p-2.bg-danger {
-    background: linear-gradient(135deg, var(--crimson) 0%, var(--crimson-soft) 100%) !important;
-    border-radius: var(--radius-md) !important;
-    box-shadow: 0 4px 18px rgba(237,0,90,0.35);
-    width: 52px;
-    height: 52px;
+    background: linear-gradient(135deg, #ED005A 0%, #ff2e78 100%) !important;
+    border-radius: 12px !important;
+    box-shadow: 0 4px 18px rgba(237,0,90,.42), inset 0 1px 0 rgba(255,255,255,.22);
+    width: 50px;
+    height: 50px;
     display: flex !important;
     align-items: center;
     justify-content: center;
     flex-shrink: 0;
+    position: relative;
+    z-index: 1;
 }
 
     .card-header .p-2.bg-danger i {
-        font-size: 1.35rem !important;
-        color: var(--white) !important;
+        font-size: 1.3rem !important;
+        color: #fff !important;
     }
 
-/* Heading text */
 .card-header h5.mb-0.fw-bold {
-    color: var(--white) !important;
-    font-size: 1.1rem;
+    color: #fff !important;
+    font-size: 1.08rem;
     font-weight: 700;
-    letter-spacing: -0.01em;
+    letter-spacing: -.02em;
+    position: relative;
+    z-index: 1;
 }
 
 .card-header small.text-muted {
-    color: rgba(255,255,255,0.65) !important;
-    font-size: 0.8rem;
-    font-weight: 400;
+    color: rgba(255,255,255,.58) !important;
+    font-size: .78rem;
+    position: relative;
+    z-index: 1;
 }
 
-/* ── Card Body ───────────────────────────────────────────── */
+/* ── Card body ────────────────────────────────────────────── */
 .card-body {
     padding: 0 !important;
 }
 
-/* ── Table ───────────────────────────────────────────────── */
+/* ── Table wrapper ────────────────────────────────────────── */
 .table-responsive {
-    border-radius: 0 0 var(--radius-lg) var(--radius-lg);
-    overflow: hidden;
+    border-radius: 0 0 20px 20px;
+    overflow: auto;
 }
 
+    .table-responsive::-webkit-scrollbar {
+        height: 4px;
+        width: 4px;
+    }
+
+    .table-responsive::-webkit-scrollbar-track {
+        background: var(--off-white);
+    }
+
+    .table-responsive::-webkit-scrollbar-thumb {
+        background: var(--crimson);
+        border-radius: 99px;
+    }
+
+/* ── Table ────────────────────────────────────────────────── */
 .table {
     margin-bottom: 0;
-    font-size: 0.875rem;
+    font-size: .875rem;
     border-collapse: separate;
     border-spacing: 0;
+    width: 100%;
+    font-family: 'Be Vietnam Pro', sans-serif;
 }
 
-    /* Head */
     .table thead tr {
         background: var(--off-white);
     }
@@ -134,11 +159,12 @@
     .table thead th {
         color: var(--navy) !important;
         font-weight: 700;
-        font-size: 0.72rem;
-        letter-spacing: 0.08em;
+        font-size: .69rem;
+        letter-spacing: .09em;
         text-transform: uppercase;
         padding: 14px 20px;
-        border-bottom: 2px solid var(--border) !important;
+        border-bottom: 2px solid #c5d8ee !important;
+        border-top: none !important;
         white-space: nowrap;
         position: sticky;
         top: 0;
@@ -146,145 +172,255 @@
         z-index: 2;
     }
 
-    /* Body rows */
     .table tbody tr {
-        transition: background var(--transition), box-shadow var(--transition);
-        border-bottom: 1px solid var(--border);
+        transition: background var(--T), box-shadow var(--T);
     }
 
-        .table tbody tr:last-child {
-            border-bottom: none;
+        .table tbody tr:last-child td {
+            border-bottom: none !important;
         }
 
     .table.table-hover tbody tr:hover {
-        background: linear-gradient(90deg, rgba(0,38,65,0.04) 0%, rgba(237,0,90,0.03) 100%) !important;
+        background: linear-gradient(90deg, rgba(0,38,65,.042) 0%, rgba(237,0,90,.022) 100%) !important;
         box-shadow: inset 3px 0 0 var(--crimson);
     }
 
     .table tbody td {
         padding: 14px 20px;
         vertical-align: middle !important;
-        border-bottom: 1px solid var(--border);
+        border-bottom: 1px solid var(--border) !important;
         color: #1a2e40;
     }
 
-/* ── Avatar circle ───────────────────────────────────────── */
+/* ── Avatar ───────────────────────────────────────────────── */
 .bg-light.rounded-circle {
     background: linear-gradient(135deg, var(--navy) 0%, var(--navy-light) 100%) !important;
-    color: var(--white) !important;
-    font-size: 0.85rem;
+    color: #fff !important;
+    font-size: .82rem;
     font-weight: 700;
-    border: 2px solid rgba(237,0,90,0.25);
-    box-shadow: 0 2px 8px rgba(0,38,65,0.18);
+    border: 2px solid rgba(237,0,90,.22);
+    box-shadow: 0 2px 10px rgba(0,38,65,.2);
     flex-shrink: 0;
 }
 
-/* ── Customer name ───────────────────────────────────────── */
-.table td .fw-bold {
+/* ── Cell text helpers ────────────────────────────────────── */
+.table td .fw-bold,
+.table td div.fw-bold,
+.table td span.fw-bold {
     color: var(--navy);
     font-weight: 600;
 }
 
-/* ── Room code ───────────────────────────────────────────── */
+.table td div.small.text-muted,
 .table td .small.text-muted {
     color: var(--muted) !important;
-    font-size: 0.75rem;
+    font-size: .73rem;
+    margin-top: 2px;
 }
 
-/* ── Deposit amount ──────────────────────────────────────── */
-.text-danger {
+.table td.small {
+    color: var(--muted);
+    font-size: .8rem;
+    font-variant-numeric: tabular-nums;
+}
+
+.text-danger,
+.table td.text-danger,
+.table td.fw-bold.text-danger {
     color: var(--crimson) !important;
     font-weight: 700 !important;
-    font-size: 0.93rem;
+    font-size: .93rem;
 }
 
-/* ── Badges ──────────────────────────────────────────────── */
+/* ============================================================
+   BADGES — all states
+   ============================================================ */
 .badge {
     font-family: 'Be Vietnam Pro', sans-serif;
     font-weight: 600;
-    font-size: 0.72rem;
-    letter-spacing: 0.03em;
+    font-size: .70rem;
+    letter-spacing: .04em;
     border-radius: 999px !important;
+    padding: 5px 13px !important;
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    line-height: 1.4;
+}
+    /* bg-warning: Chờ duyệt đơn */
+    span.badge.bg-warning,
+    .badge.bg-warning.text-dark {
+        background: linear-gradient(135deg, #e08800 0%, #f5a623 100%) !important;
+        color: #fff !important;
+        box-shadow: 0 2px 10px rgba(224,136,0,.30);
+    }
+    /* bg-info: Chờ khách cọc / Yêu cầu trả phòng */
+    span.badge.bg-info,
+    .badge.bg-info.text-dark {
+        background: linear-gradient(135deg, #0284c7 0%, #0ea5e9 100%) !important;
+        color: #fff !important;
+        box-shadow: 0 2px 10px rgba(14,165,233,.28);
+    }
+/* bg-primary: Khách đã báo cọc */
+span.badge.bg-primary {
+    background: linear-gradient(135deg, var(--navy) 0%, #0055a5 100%) !important;
+    color: #fff !important;
+    box-shadow: 0 2px 10px rgba(0,38,65,.26);
+}
+/* bg-success: Đang thuê */
+span.badge.bg-success {
+    background: linear-gradient(135deg, #009e65 0%, #00b87a 100%) !important;
+    color: #fff !important;
+    box-shadow: 0 2px 10px rgba(0,184,122,.28);
+}
+/* bg-dark: Đã trả phòng */
+span.badge.bg-dark {
+    background: linear-gradient(135deg, #1a2e40 0%, #2d4a63 100%) !important;
+    color: #fff !important;
+    box-shadow: 0 2px 8px rgba(0,0,0,.22);
+}
+/* bg-secondary: fallback */
+span.badge.bg-secondary {
+    background: linear-gradient(135deg, #64748b 0%, #94a3b8 100%) !important;
+    color: #fff !important;
 }
 
-    /* Pending */
-    .badge.bg-primary {
-        background: linear-gradient(135deg, var(--navy) 0%, #0055a5 100%) !important;
-        color: var(--white) !important;
-        box-shadow: 0 2px 10px rgba(0,38,65,0.25);
-    }
-
-    /* Success */
-    .badge.bg-success {
-        background: linear-gradient(135deg, #00a06a 0%, var(--success) 100%) !important;
-        color: var(--white) !important;
-        box-shadow: 0 2px 10px rgba(0,184,122,0.25);
-    }
-
-    /* Warning */
-    .badge.bg-warning {
-        background: linear-gradient(135deg, #f59e0b 0%, #fbbf24 100%) !important;
-        color: #1a1a1a !important;
-        box-shadow: 0 2px 10px rgba(245,158,11,0.25);
-    }
-
-/* ── Confirm button ──────────────────────────────────────── */
-.btn.btn-dark.btn-sm.rounded-3 {
-    background: linear-gradient(135deg, var(--crimson) 0%, var(--crimson-soft) 100%) !important;
+/* ============================================================
+   BUTTONS — all action states (high-specificity overrides)
+   ============================================================ */
+/* Reset Bootstrap defaults that win on lower-specificity rules */
+.table .btn,
+.d-inline .btn,
+form.d-inline .btn {
+    font-family: 'Be Vietnam Pro', sans-serif !important;
+    font-weight: 600 !important;
+    font-size: .78rem !important;
+    letter-spacing: .02em;
+    padding: 7px 17px !important;
+    border-radius: 8px !important;
     border: none !important;
-    color: var(--white) !important;
-    font-family: 'Be Vietnam Pro', sans-serif;
-    font-weight: 600;
-    font-size: 0.78rem;
-    letter-spacing: 0.02em;
-    padding: 7px 16px !important;
-    border-radius: var(--radius-sm) !important;
-    box-shadow: var(--shadow-btn);
-    transition: transform var(--transition), box-shadow var(--transition), filter var(--transition);
+    transition: transform var(--T), box-shadow var(--T), filter var(--T) !important;
     white-space: nowrap;
+    display: inline-flex !important;
+    align-items: center;
+    gap: 5px;
+    cursor: pointer;
 }
 
-    .btn.btn-dark.btn-sm.rounded-3:hover {
-        transform: translateY(-2px) scale(1.03);
-        box-shadow: 0 8px 24px rgba(237,0,90,0.42);
-        filter: brightness(1.08);
+    .table .btn:active,
+    .d-inline .btn:active,
+    form.d-inline .btn:active {
+        transform: scale(.96) !important;
+        filter: brightness(.93) !important;
     }
 
-    .btn.btn-dark.btn-sm.rounded-3:active {
-        transform: scale(0.97);
-        filter: brightness(0.95);
+    .table .btn i,
+    .d-inline .btn i,
+    form.d-inline .btn i {
+        font-size: .76rem;
     }
 
-    .btn.btn-dark.btn-sm.rounded-3 i {
-        font-size: 0.78rem;
+    /* btn-warning → Duyệt đơn */
+    .table .btn.btn-warning,
+    .d-inline .btn.btn-warning,
+    form.d-inline .btn.btn-warning,
+    .btn.btn-warning.btn-sm {
+        background: linear-gradient(135deg, #d47d00 0%, #f59e0b 100%) !important;
+        color: #fff !important;
+        box-shadow: 0 4px 16px rgba(212,125,0,.36) !important;
     }
 
-/* ── Scrollbar (chromium) ────────────────────────────────── */
-.table-responsive::-webkit-scrollbar {
-    height: 5px;
+        .table .btn.btn-warning:hover,
+        .d-inline .btn.btn-warning:hover,
+        form.d-inline .btn.btn-warning:hover,
+        .btn.btn-warning.btn-sm:hover {
+            transform: translateY(-2px) scale(1.03) !important;
+            box-shadow: 0 8px 24px rgba(212,125,0,.48) !important;
+            filter: brightness(1.06) !important;
+        }
+
+    /* btn-dark → Xác nhận tiền cọc */
+    .table .btn.btn-dark,
+    .d-inline .btn.btn-dark,
+    form.d-inline .btn.btn-dark,
+    .btn.btn-dark.btn-sm {
+        background: linear-gradient(135deg, #ED005A 0%, #ff2e78 100%) !important;
+        color: #fff !important;
+        box-shadow: 0 4px 16px rgba(237,0,90,.34) !important;
+    }
+
+        .table .btn.btn-dark:hover,
+        .d-inline .btn.btn-dark:hover,
+        form.d-inline .btn.btn-dark:hover,
+        .btn.btn-dark.btn-sm:hover {
+            transform: translateY(-2px) scale(1.03) !important;
+            box-shadow: 0 8px 26px rgba(237,0,90,.46) !important;
+            filter: brightness(1.07) !important;
+        }
+
+    /* btn-info → Duyệt trả phòng */
+    .table .btn.btn-info,
+    .d-inline .btn.btn-info,
+    form.d-inline .btn.btn-info,
+    .btn.btn-info.btn-sm {
+        background: linear-gradient(135deg, #0284c7 0%, #0ea5e9 100%) !important;
+        color: #fff !important;
+        box-shadow: 0 4px 16px rgba(14,165,233,.34) !important;
+    }
+
+        .table .btn.btn-info:hover,
+        .d-inline .btn.btn-info:hover,
+        form.d-inline .btn.btn-info:hover,
+        .btn.btn-info.btn-sm:hover {
+            transform: translateY(-2px) scale(1.03) !important;
+            box-shadow: 0 8px 24px rgba(14,165,233,.46) !important;
+            filter: brightness(1.07) !important;
+        }
+
+/* ── Row left-border accent by state ─────────────────────── */
+.table tbody tr:has(.badge.bg-warning) {
+    border-left: 3px solid #f59e0b;
 }
 
-.table-responsive::-webkit-scrollbar-track {
-    background: var(--off-white);
+.table tbody tr:has(.badge.bg-primary) {
+    border-left: 3px solid var(--navy);
 }
 
-.table-responsive::-webkit-scrollbar-thumb {
-    background: var(--crimson);
-    border-radius: 99px;
+.table tbody tr:has(.badge.bg-success) {
+    border-left: 3px solid var(--success);
 }
 
-/* ── Responsive tweaks ───────────────────────────────────── */
+.table tbody tr:has(.badge.bg-info) {
+    border-left: 3px solid var(--info);
+}
+
+.table tbody tr:has(.badge.bg-dark) {
+    border-left: 3px solid #2d4a63;
+}
+
+/* ── Responsive ───────────────────────────────────────────── */
+@media (max-width: 992px) {
+    .table thead th, .table tbody td {
+        padding: 12px 15px;
+    }
+}
+
 @media (max-width: 768px) {
     .card-header.bg-white {
         padding: 16px 18px !important;
     }
 
-    .table thead th,
-    .table tbody td {
-        padding: 11px 14px;
+    .card-header h5.mb-0.fw-bold {
+        font-size: .96rem;
     }
 
-    .card-header h5.mb-0.fw-bold {
-        font-size: 0.97rem;
+    .table thead th, .table tbody td {
+        padding: 10px 12px;
+        font-size: .82rem;
+    }
+
+    .table .btn, .d-inline .btn, form.d-inline .btn {
+        padding: 6px 12px !important;
+        font-size: .73rem !important;
     }
 }

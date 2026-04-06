@@ -1,9 +1,12 @@
 ﻿using BaiCuoiKy.Models;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 using System.Diagnostics;
+using System.Net;
+using System.Net.Mail;
 using System.Security.Claims;
 
 namespace BaiCuoiKy.Controllers
@@ -12,12 +15,15 @@ namespace BaiCuoiKy.Controllers
     {
         private readonly ILogger<HomeController> _logger;
         private readonly AppDbContext _context;
+        private readonly UserManager<ApplicationUser> _userManager;
 
-        public HomeController(ILogger<HomeController> logger, AppDbContext context)
+        public HomeController(ILogger<HomeController> logger, AppDbContext context, UserManager<ApplicationUser> userManager)
         {
             _logger = logger;
             _context = context;
+            _userManager = userManager; 
         }
+
 
         // ==================== TRANG CHỦ ====================
         public async Task<IActionResult> Index()
@@ -231,7 +237,7 @@ namespace BaiCuoiKy.Controllers
             try
             {
                 // 1. Đóng gói dữ liệu từ Form vào Model
-                var ticket = new BaiCuoiKy.Models.SupportTicket
+                var ticket = new SupportTicket
                 {
                     Name = Name,
                     Email = Email,
@@ -241,16 +247,77 @@ namespace BaiCuoiKy.Controllers
                     IsResolved = false // Mặc định là chưa giải quyết
                 };
 
-                // 2. Lưu vào cơ sở dữ liệu
+                // Lưu vào cơ sở dữ liệu
                 _context.SupportTickets.Add(ticket);
+                await _context.SaveChangesAsync(); // Lưu để sinh ra ID (nếu cần)
+
+                // 2. THÔNG BÁO TỚI TÀI KHOẢN ADMIN (In-app Notification)
+                // Lấy danh sách các user có quyền "Admin"
+                var admins = await _userManager.GetUsersInRoleAsync("Admin");
+                foreach (var admin in admins)
+                {
+                    var notification = new Notification
+                    {
+                        UserId = admin.Id,
+                        CreatedAt = DateTime.Now,
+                        IsRead = false,
+                        Message = $"Khách hàng {Name} vừa gửi một yêu cầu hỗ trợ mới.",
+                        Url = "/Admin/Dashboard?section=support" 
+                    };
+                    _context.Notifications.Add(notification);
+                }
                 await _context.SaveChangesAsync();
 
-                // 3. Thông báo thành công
+                // 3. GỬI THÔNG BÁO TỚI GMAIL ADMIN
+               
+                string fromEmail = "tamv5771@gmail.com"; 
+                string emailPassword = "okfz qiob zlym somn";      
+                string adminGmail = "mytaam2005mt@gmail.com";              
+                var smtpClient = new SmtpClient("smtp.gmail.com")
+                {
+                    Port = 587,
+                    Credentials = new NetworkCredential(fromEmail, emailPassword),
+                    EnableSsl = true,
+                };
+
+                var mailMessage = new MailMessage
+                {
+                    From = new MailAddress(fromEmail, "House88 Support System"),
+                    Subject = $"[House88] Yêu cầu hỗ trợ mới từ {Name}",
+                    Body = $@"
+                <div style='font-family: Arial, sans-serif; padding: 20px;'>
+                    <h2 style='color: #002641;'>Có yêu cầu hỗ trợ mới trên hệ thống</h2>
+                    <p><strong>Người gửi:</strong> {Name}</p>
+                    <p><strong>Số điện thoại:</strong> {Phone}</p>
+                    <p><strong>Email khách:</strong> {Email}</p>
+                    <hr/>
+                    <p><strong>Nội dung hỗ trợ:</strong></p>
+                    <div style='background: #f8fafc; padding: 15px; border-left: 4px solid #ED005A;'>
+                        {Message.Replace("\n", "<br/>")}
+                    </div>
+                </div>",
+                    IsBodyHtml = true, 
+                };
+
+                mailMessage.To.Add(adminGmail);
+
+               
+                try
+                {
+                    await smtpClient.SendMailAsync(mailMessage);
+                }
+                catch (Exception mailEx)
+                {
+                   
+                    Console.WriteLine("Lỗi gửi mail: " + mailEx.Message);
+                }
+
+              
                 TempData["SuccessMessage"] = "Cảm ơn bạn! Yêu cầu hỗ trợ đã được gửi thành công. Chúng tôi sẽ liên hệ lại sớm nhất.";
             }
             catch (Exception ex)
             {
-                // Thông báo nếu có lỗi (chưa nhập đủ thông tin, lỗi mạng...)
+                
                 TempData["ErrorMessage"] = "Có lỗi xảy ra khi lưu dữ liệu. Vui lòng thử lại sau!";
             }
 

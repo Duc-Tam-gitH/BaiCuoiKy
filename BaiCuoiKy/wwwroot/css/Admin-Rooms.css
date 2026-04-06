@@ -212,5 +212,62 @@
     .admin-empty-state p {
         margin-bottom: 16px;
     }
+/* =========================================
+   THÊM CSS CHO BỘ LỌC (FILTER SECTION)
+   ========================================= */
+.admin-filter-section {
+    background: white;
+    padding: 20px;
+    border-radius: 12px;
+    margin-bottom: 24px;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+}
+
+.filter-grid {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 16px;
+    align-items: flex-end;
+}
+
+.filter-group {
+    flex: 1;
+    min-width: 180px;
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+}
+
+    .filter-group label {
+        font-size: 13px;
+        font-weight: 500;
+        color: #475569;
+    }
+
+.admin-input {
+    width: 100%;
+    padding: 10px 12px;
+    border: 1px solid #cbd5e1;
+    border-radius: 8px;
+    font-size: 14px;
+    color: #1e293b;
+    outline: none;
+    transition: all 0.2s;
+    background-color: #f8fafc;
+}
+
+    .admin-input:focus {
+        border-color: #002641;
+        background-color: #fff;
+        box-shadow: 0 0 0 3px rgba(0, 38, 65, 0.1);
+    }
+
+.admin-filter-actions {
+    flex: 0 0 auto;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    gap: 10px;
+}
 
 

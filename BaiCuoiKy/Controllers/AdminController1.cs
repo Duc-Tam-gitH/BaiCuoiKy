@@ -274,7 +274,17 @@ namespace BaiCuoiKy.Controllers
         // =====================================================
         // DASHBOARD ADMIN (OVERVIEW / USERS / ROOMS)
         // =====================================================
-        public async Task<IActionResult> Dashboard(string section = "overview")
+        public async Task<IActionResult> Dashboard(
+     string section = "overview",
+     string searchKeyword = null,
+     int? status = null,
+     int? categoryId = null,
+     decimal? minPrice = null,
+     decimal? maxPrice = null,
+     string searchName = null,
+    string searchEmail = null,
+    string searchPhone = null,
+    int? lockStatus = null)
         {
             ViewBag.ActiveSection = section;
 
@@ -282,25 +292,105 @@ namespace BaiCuoiKy.Controllers
             {
                 case "bookings":
                     var allBookings = await _context.Bookings
-                        .Include(b => b.User)  // Để biết ai đặt
-                        .Include(b => b.Tro)   // Để biết đặt phòng nào
+                        .Include(b => b.User)  
+                        .Include(b => b.Tro)   
                         .OrderByDescending(b => b.NgayDat)
                         .ToListAsync();
 
                     ViewBag.Bookings = allBookings;
-                    return View("_Bookings"); 
+                    return View("_Bookings");
+
                 case "rooms":
-                    var rooms = await _context.Tros
-                        .Include(t => t.User)
-                        .Include(t => t.AnhPhongs)
-                        .OrderByDescending(t => t.NgayDang)
+                    // 1. Lấy danh mục để hiển thị lên Dropdown lọc
+                    ViewBag.Categories = await _context.Categories
+                        .Where(c => c.TrangThai == true)
                         .ToListAsync();
 
-                    ViewBag.Rooms = rooms;
+                    // 2. Khởi tạo Query thay vì lấy list ngay
+                    var roomQuery = _context.Tros
+                        .Include(t => t.User)
+                        .Include(t => t.AnhPhongs)
+                        .Include(t => t.Category) 
+                        .AsQueryable();
+
+                    // 3. Áp dụng các điều kiện lọc (nếu có)
+                    if (!string.IsNullOrEmpty(searchKeyword))
+                    {
+                        var keyword = searchKeyword.ToLower();
+                        roomQuery = roomQuery.Where(t => t.TieuDe.ToLower().Contains(keyword) || t.DiaChi.ToLower().Contains(keyword));
+                    }
+
+                    if (categoryId.HasValue)
+                    {
+                        roomQuery = roomQuery.Where(t => t.CategoryId == categoryId.Value);
+                    }
+
+                    if (status.HasValue)
+                    {
+                        roomQuery = roomQuery.Where(t => (int)t.TrangThai == status.Value);
+                    }
+
+                    if (minPrice.HasValue)
+                    {
+                        roomQuery = roomQuery.Where(t => t.Gia >= minPrice.Value);
+                    }
+
+                    if (maxPrice.HasValue)
+                    {
+                        roomQuery = roomQuery.Where(t => t.Gia <= maxPrice.Value);
+                    }
+
+                    // 4. Lấy danh sách cuối cùng và gán vào ViewBag
+                    ViewBag.Rooms = await roomQuery.OrderByDescending(t => t.NgayDang).ToListAsync();
+
+                    // 5. Lưu lại tham số để View hiển thị lại trạng thái cũ trên form
+                    ViewBag.SearchKeyword = searchKeyword;
+                    ViewBag.Status = status;
+                    ViewBag.CategoryId = categoryId;
+                    ViewBag.MinPrice = minPrice;
+                    ViewBag.MaxPrice = maxPrice;
+
                     return View("_Rooms");
 
                 case "users":
-                    var users = await _userManager.Users.ToListAsync();
+                    // 1. Khởi tạo Query thay vì lấy List luôn
+                    var userQuery = _userManager.Users.AsQueryable();
+
+                    // 2. Lọc theo Tên (Tìm trong FullName hoặc UserName)
+                    if (!string.IsNullOrEmpty(searchName))
+                    {
+                        var keywordName = searchName.ToLower();
+                        userQuery = userQuery.Where(u =>
+                            (u.FullName != null && u.FullName.ToLower().Contains(keywordName)) ||
+                            (u.UserName != null && u.UserName.ToLower().Contains(keywordName)));
+                    }
+
+                    // 3. Lọc theo Email
+                    if (!string.IsNullOrEmpty(searchEmail))
+                    {
+                        var keywordEmail = searchEmail.ToLower();
+                        userQuery = userQuery.Where(u => u.Email.ToLower().Contains(keywordEmail));
+                    }
+
+                    // 4. Lọc theo Số điện thoại
+                    if (!string.IsNullOrEmpty(searchPhone))
+                    {
+                        userQuery = userQuery.Where(u => u.PhoneNumber.Contains(searchPhone));
+                    }
+                    if (lockStatus.HasValue)
+                    {
+                        if (lockStatus == 1) 
+                        {
+                            userQuery = userQuery.Where(u => u.LockoutEnd == null || u.LockoutEnd <= DateTimeOffset.UtcNow);
+                        }
+                        else if (lockStatus == 2) 
+                        {
+                            userQuery = userQuery.Where(u => u.LockoutEnd != null && u.LockoutEnd > DateTimeOffset.UtcNow);
+                        }
+                    }
+
+                    // Lấy danh sách sau khi đã lọc
+                    var users = await userQuery.ToListAsync();
                     var userList = new List<ManagerUsersViewModel>();
 
                     foreach (var u in users)
@@ -312,11 +402,19 @@ namespace BaiCuoiKy.Controllers
                         {
                             User = u,
                             Roles = roles.ToList(),
-                            IsLocked = isLocked
+                            IsLocked = isLocked,
+                            
                         });
                     }
 
                     ViewBag.Users = userList;
+
+                    // 5. Lưu lại tham số để View hiển thị trạng thái cũ
+                    ViewBag.SearchName = searchName;
+                    ViewBag.SearchEmail = searchEmail;
+                    ViewBag.SearchPhone = searchPhone;
+
+
                     return View("Users");
 
                 default:

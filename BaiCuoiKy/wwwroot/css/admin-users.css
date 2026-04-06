@@ -317,4 +317,73 @@
     background: linear-gradient(135deg, #002641 0%, #ED005A 100%);
     border-radius: 3px;
 }
+/* =========================================
+   FILTER SECTION (TÌM KIẾM NGƯỜI DÙNG)
+   ========================================= */
+.admin-filter-section {
+    background: white;
+    padding: 20px;
+    border-radius: 1rem;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+    animation: fadeInUp 0.4s ease;
+}
+
+.filter-grid {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 16px;
+    align-items: flex-end;
+}
+
+.filter-group {
+    flex: 1;
+    min-width: 200px;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+    .filter-group label {
+        font-size: 0.85rem;
+        font-weight: 600;
+        color: #002641;
+    }
+
+.admin-input {
+    width: 100%;
+    padding: 0.6rem 1rem;
+    border: 1px solid #cbd5e1;
+    border-radius: 0.5rem;
+    font-size: 0.85rem;
+    color: #1e293b;
+    outline: none;
+    transition: all 0.2s;
+    background-color: #f8fafc;
+}
+
+    .admin-input:focus {
+        border-color: #002641;
+        background-color: #fff;
+        box-shadow: 0 0 0 3px rgba(0, 38, 65, 0.1);
+    }
+
+.admin-filter-actions {
+    flex: 0 0 auto;
+    display: flex;
+    flex-direction: row;
+    gap: 10px;
+}
+
+/* Thêm style cho nút outline để đồng bộ UI */
+.admin-btn-outline {
+    background: transparent;
+    border: 1px solid #002641;
+    color: #002641;
+}
+
+    .admin-btn-outline:hover {
+        background: #f8fafc;
+        transform: translateY(-2px);
+        box-shadow: 0 4px 12px rgba(0, 38, 65, 0.1);
+    }
 

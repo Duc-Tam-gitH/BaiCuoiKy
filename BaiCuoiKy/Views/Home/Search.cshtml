@@ -48,7 +48,7 @@
                             {
                                 foreach (var kv in ViewBag.KhuVucs)
                                 {
-                                    <option value="@kv" selected="@(ViewBag.KhuVuc == kv ? "selected" : null)">@kv</option>
+                                    <option value="@kv" selected="@(ViewBag.KhuVucDaChon == kv ? "selected" : null)">@kv</option>
                                 }
                             }
                         </select>
@@ -61,13 +61,15 @@
                     <i class="fas fa-home search-bar__icon"></i>
                     <div class="search-bar__inner">
                         <label>Loại hình</label>
-                        <select name="loai">
+                        <select name="categoryId">
                             <option value="">Tất cả</option>
                             @if (ViewBag.Categories != null)
                             {
                                 foreach (var cat in ViewBag.Categories)
                                 {
-                                    <option value="@cat.TenDanhMuc" selected="@(ViewBag.Loai == cat.TenDanhMuc ? "selected" : null)">@cat.TenDanhMuc</option>
+                                    <option value="@cat.Id" selected="@(ViewBag.CategoryIdDaChon == cat.Id ? "selected" : null)">
+                                        @cat.TenDanhMuc
+                                    </option>
                                 }
                             }
                         </select>
@@ -82,9 +84,9 @@
                         <label>Mức giá</label>
                         <select name="gia">
                             <option value="">Tất cả</option>
-                            <option value="1" selected="@(ViewBag.Gia == "1" ? "selected" : null)">Dưới 2 triệu</option>
-                            <option value="2" selected="@(ViewBag.Gia == "2" ? "selected" : null)">2 - 5 triệu</option>
-                            <option value="3" selected="@(ViewBag.Gia == "3" ? "selected" : null)">Trên 5 triệu</option>
+                            <option value="0-2000000" selected="@(ViewBag.GiaDaChon == "0-2000000" ? "selected" : null)">Dưới 2 triệu</option>
+                            <option value="2000000-5000000" selected="@(ViewBag.GiaDaChon == "2000000-5000000" ? "selected" : null)">2 - 5 triệu</option>
+                            <option value="5000000-max" selected="@(ViewBag.GiaDaChon == "5000000-max" ? "selected" : null)">Trên 5 triệu</option>
                         </select>
                     </div>
                 </div>
@@ -95,7 +97,7 @@
                     <i class="fas fa-search search-bar__icon"></i>
                     <div class="search-bar__inner">
                         <label>Từ khóa</label>
-                        <input type="text" name="keyword" value="@ViewBag.Keyword" placeholder="Tên đường, phường..." />
+                        <input type="text" name="tukhoa" value="@ViewBag.TuKhoa" placeholder="Tên đường, phường..." />
                     </div>
                 </div>
 

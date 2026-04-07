@@ -3,10 +3,20 @@
 
 @{
     ViewData["Title"] = Model.TieuDe;
+    bool isFavorited = (ViewBag.IsFavorited as bool?) ?? false;
 }
 
 @section Styles {
     <link rel="stylesheet" href="~/css/Details.css" asp-append-version="true" />
+}
+
+@section Scripts{
+    <script src="~/js/Details.js"></script>
+    <script>
+        window.bookingUrl = '@Url.Action("Create", "Booking")';
+        window.successMessage = '@TempData["Success"]';
+        window.errorMessage = '@TempData["Error"]';
+    </script>
 }
 
 <div class="details-container">
@@ -60,7 +70,26 @@
                     </button>
                 </div>
             </div> <div class="room-details__header">
+                <div class="d-flex justify-content-between align-items-start position-relative" style="z-index: 2;">
                 <h2 class="room-details__title">@Model.TieuDe</h2>
+
+                    @if (User.Identity?.IsAuthenticated == true)
+                    {
+                        <button class="btn-favorite @(isFavorited ? "active" : "")"
+                                data-id="@Model.Id"
+                                data-url="@Url.Action("ToggleFavorite", "Tro")"
+                                onclick="toggleFavorite(this)">
+                            <i class="@(isFavorited ? "fas" : "far") fa-heart"></i>
+                        </button>
+                    }
+                    else
+                    {
+                        <a href="@Url.Action("Login", "Account")" class="btn-favorite" title="Đăng nhập để lưu phòng">
+                            <i class="far fa-heart"></i>
+                        </a>
+                    }
+                </div>
+                
                 <p class="room-details__price">
                     @String.Format("{0:N0}", Model.Gia)
                     <span>VNĐ / tháng</span>
@@ -202,4 +231,4 @@
             </div>
         </div>
     </div>
-</div>
+</div>  

@@ -1,19 +1,36 @@
 ﻿/**
  * Xử lý hiển thị Modal Thanh Toán và tạo mã QR VietQR động
  */
-function openPaymentModal(bookingId, roomName, amount) {
-    // 1. Chỉ gán chữ (Tên phòng và Số tiền)
-    document.getElementById('roomNameDisplay').innerText = roomName;
-    document.getElementById('amountDisplay').innerText = amount.toLocaleString('vi-VN') + " VNĐ";
-
-    // 2. Gán ID đơn hàng
+function openPaymentModal(bookingId, amount, roomName) {
+    // 1. Gán ID booking và hiển thị tên phòng/số tiền (giữ nguyên logic cũ của bạn nếu có)
     document.getElementById('bookingIdInput').value = bookingId;
+    document.getElementById('roomNameDisplay').innerText = roomName;
+    document.getElementById('amountDisplay').innerText = new Intl.NumberFormat('vi-VN', { style: 'currency', currency: 'VND' }).format(amount);
 
-    // TUYỆT ĐỐI KHÔNG CÓ LỆNH GÁN ẢNH qrImage.src Ở ĐÂY NỮA NHÉ!
+    // 2. CẤU HÌNH THÔNG TIN NGÂN HÀNG CỦA BẠN (HOẶC ADMIN)
+    const bankId = "MB"; // Mã ngân hàng (VD: MB, VCB, TCB, ACB, TPB...)
+    const accountNo = "0932096623"; // Số tài khoản nhận tiền
+    const accountName = "NGUYEN PHAM DUC TAM"; // Tên chủ tài khoản (Viết hoa không dấu)
+    const template = "compact2"; // Giao diện QR (compact, compact2, print)
 
-    // 3. Mở Modal
-    var myModal = new bootstrap.Modal(document.getElementById('paymentModal'));
-    myModal.show();
+    // 3. Xử lý dữ liệu để đưa vào URL
+    // Chuyển số tiền thành chuỗi số nguyên chuẩn (xóa dấu phẩy/chấm nếu có)
+    const cleanAmount = String(amount).replace(/[^0-9]/g, '');
+
+    // Tạo nội dung chuyển khoản (Bỏ dấu tiếng Việt để ngân hàng không bị lỗi font)
+    let description = `Coc phong ${roomName} mã ${bookingId}`;
+    description = description.normalize('NFD').replace(/[\u0300-\u036f]/g, ''); // Bỏ dấu
+    description = description.replace(/[^a-zA-Z0-9 ]/g, "").replace(/\s+/g, "%20"); // Xóa ký tự đặc biệt và thay khoảng trắng bằng %20
+
+    // 4. Tạo URL VietQR
+    const qrUrl = `https://img.vietqr.io/image/${bankId}-${accountNo}-${template}.png?amount=${cleanAmount}&addInfo=${description}&accountName=${encodeURIComponent(accountName)}`;
+
+    // 5. Cập nhật thẻ img tĩnh thành ảnh QR động
+    document.getElementById('qrImage').src = qrUrl;
+
+    // Hiển thị modal (nếu bạn dùng bootstrap modal qua JS)
+    const modal = new bootstrap.Modal(document.getElementById('paymentModal'));
+    modal.show();
 }
 
 /**

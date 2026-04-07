@@ -132,14 +132,48 @@ namespace BaiCuoiKy.Controllers
             ViewBag.IsOwner = User.FindFirstValue(ClaimTypes.NameIdentifier) == room.UserId;
             ViewBag.CanEdit = ViewBag.IsAdmin || ViewBag.IsOwner;
 
+            bool isFavorited = false;
+            if (User.Identity?.IsAuthenticated == true) 
+            {
+                var currentUserId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+                isFavorited = await _context.Favorites.AnyAsync(f => f.TroId == id && f.UserId == currentUserId);
+            }
+            ViewBag.IsFavorited = isFavorited;
+
             return View(room);
         }
-
-        // =========================================================
-        // 🟠 4. SỬA PHÒNG
-        // =========================================================
-
+        // 2. THÊM ACTION MỚI NÀY VÀO CUỐI CONTROLLER ĐỂ XỬ LÝ NÚT BẤM TIM:
+        [HttpPost]
         [Authorize]
+        public async Task<IActionResult> ToggleFavorite(int troId)
+        {
+            var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+
+            // Tìm xem đã có trong danh sách yêu thích chưa
+            var favorite = await _context.Favorites
+                .FirstOrDefaultAsync(f => f.TroId == troId && f.UserId == userId);
+
+            if (favorite != null)
+            {
+                // Nếu đã tim rồi -> Bỏ tim
+                _context.Favorites.Remove(favorite);
+                await _context.SaveChangesAsync();
+                return Json(new { success = true, isFavorited = false });
+            }
+            else
+            {
+                // Nếu chưa tim -> Thêm tim
+                _context.Favorites.Add(new Favorite { TroId = troId, UserId = userId });
+                await _context.SaveChangesAsync();
+                return Json(new { success = true, isFavorited = true });
+            }
+        }
+
+            // =========================================================
+            // 🟠 4. SỬA PHÒNG
+            // =========================================================
+
+            [Authorize]
         [HttpGet]
         public async Task<IActionResult> Edit(int id)
         {
@@ -239,22 +273,41 @@ namespace BaiCuoiKy.Controllers
                 .FirstOrDefaultAsync(t => t.Id == id);
 
             if (tro == null) return NotFound();
+            // KIỂM TRA QUYỀN TRƯỚC KHI XEM TRANG XÓA
+            var currentUserId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+            if (tro.UserId != currentUserId && !User.IsInRole("Admin"))
+            {
+                TempData["Error"] = "Bạn không có quyền xóa phòng này!";
+                return RedirectToAction("Index", "Home");
+            }
 
             return View(tro);
         }
 
         [HttpPost, ActionName("Delete")]
         [Authorize]
+        [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
             var tro = await _context.Tros.FindAsync(id);
             if (tro == null) return NotFound();
 
+            var currentUserId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+            if (tro.UserId != currentUserId && !User.IsInRole("Admin"))
+            {
+                TempData["Error"] = "Bạn không có quyền xóa phòng này!";
+                return RedirectToAction("Index", "Home");
+            }
+
             _context.Tros.Remove(tro);
             await _context.SaveChangesAsync();
 
-            TempData["Success"] = "Đã xóa!";
-            return RedirectToAction("Dashboard", "Admin", new { section = "rooms" });
+            TempData["Success"] = "Đã xóa phòng trọ!!!";
+            if (User.IsInRole("Admin"))
+            {
+                return RedirectToAction("Dashboard", "Admin", new { section = "rooms" });
+            }
+            return RedirectToAction("Manage");
         }
 
         [HttpPost]

@@ -272,7 +272,7 @@ namespace BaiCuoiKy.Controllers
                
                 string fromEmail = "tamv5771@gmail.com"; 
                 string emailPassword = "okfz qiob zlym somn";      
-                string adminGmail = "mytaam2005mt@gmail.com";              
+                string adminGmail = "tamv5771@gmail.com";              
                 var smtpClient = new SmtpClient("smtp.gmail.com")
                 {
                     Port = 587,

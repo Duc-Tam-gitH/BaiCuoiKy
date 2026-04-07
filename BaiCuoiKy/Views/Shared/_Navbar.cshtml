@@ -26,7 +26,7 @@
             else
             {
                 <a asp-controller="Khachthue" asp-action="Bookings" class="nav-link d-inline-block me-2 text-white">
-                    Booking của tôi
+                    Phòng đang thuê
                 </a>
             }
 
@@ -86,13 +86,13 @@
                     @if (User.IsInRole("Admin"))
                     {
                         <li><a class="dropdown-item" asp-controller="Admin" asp-action="ManageSystem">Quản trị hệ thống</a></li>
+                        <li><a class="dropdown-item" asp-controller="Khachthue" asp-action="Favorites">Phòng yêu thích</a></li>
                     }
 
                     <li><a class="dropdown-item" asp-controller="Account" asp-action="Profile">Thông tin cá nhân</a></li>
 
                     @if (!User.IsInRole("Admin"))
                     {
-                        <li><a class="dropdown-item" asp-controller="Khachthue" asp-action="Bookings">Lịch sử đặt phòng</a></li>
                         <li><a class="dropdown-item" asp-controller="Khachthue" asp-action="Favorites">Phòng yêu thích</a></li>
                     }
 

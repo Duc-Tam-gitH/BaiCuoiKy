@@ -203,5 +203,45 @@ namespace BaiCuoiKy.Controllers
             foreach (var error in result.Errors) ModelState.AddModelError("", error.Description);
             return View(model);
         }
+        // =========================
+        // CHANGE PASSWORD
+        // =========================
+        [HttpGet]
+        [Authorize]
+        public IActionResult ChangePassword()
+        {
+            return View();
+        }
+
+        [HttpPost]
+        [Authorize]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> ChangePassword(ChangePasswordViewModel model)
+        {
+            if (!ModelState.IsValid) return View(model);
+
+            var user = await _userManager.GetUserAsync(User);
+            if (user == null) return RedirectToAction("Login");
+
+            // Identity hỗ trợ sẵn hàm ChangePasswordAsync (tự động kiểm tra mật khẩu cũ)
+            var result = await _userManager.ChangePasswordAsync(user, model.CurrentPassword, model.NewPassword);
+
+            if (result.Succeeded)
+            {
+                // Cập nhật lại cookie đăng nhập để người dùng không bị văng ra ngoài sau khi đổi pass
+                await _signInManager.RefreshSignInAsync(user);
+
+                TempData["Message"] = "Đổi mật khẩu thành công!";
+                return RedirectToAction("Profile");
+            }
+
+            // Hiển thị lỗi nếu mật khẩu cũ không đúng hoặc mật khẩu mới không đạt chuẩn
+            foreach (var error in result.Errors)
+            {
+                ModelState.AddModelError(string.Empty, error.Description);
+            }
+            return View(model);
+        }
     }
+
 }
